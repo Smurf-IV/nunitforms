@@ -1,1 +1,0 @@
-lib\nant\nant clean

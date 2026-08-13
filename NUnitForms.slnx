@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="nunitforms/source/NUnitForms.Recorder.Application/NUnitForms.Recorder.Application.csproj" Id="bc434de1-6c78-4216-904a-4c55b5eace88" />
+  <Project Path="nunitforms/source/NUnitForms.Recorder/NUnitForms.Recorder.csproj" Id="daab0423-50e1-4868-b5a7-07d47bf7ce45" />
+  <Project Path="nunitforms/source/NUnitForms.Test/NUnitForms.Test.csproj" Id="e779cbd7-1cce-4796-ae12-00ab56a8a815" />
+  <Project Path="nunitforms/source/NUnitForms/NUnitForms.csproj" Id="e579acda-8c4f-4e35-a18b-c001d9eecd2b" />
+</Solution>
