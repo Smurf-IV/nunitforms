@@ -119,11 +119,12 @@ namespace NUnit.Extensions.Forms.TestApplications
         /// Test finding a control with an invalid index.
         ///</summary>
         [Test]
-        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void BadIndex()
         {
-            object o = new ControlTester("s")[-1];
-            Assert.Fail("Should not find: " + o);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var o = new ControlTester("s")[-1];
+            });
         }
 
         [Test]

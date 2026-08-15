@@ -72,7 +72,7 @@ namespace NUnit.Extensions.Forms.TestApplications
 
         private IntPtr serviceWinStation;
 
-        [TestFixtureSetUp(), Ignore("does not work when run from a service")]
+        [OneTimeSetUp, Ignore("does not work when run from a service")]
         public void PreInit()
         {
             originalWinStation = GetProcessWindowStation();
@@ -93,7 +93,7 @@ namespace NUnit.Extensions.Forms.TestApplications
             }
         }
 
-        [TestFixtureTearDown(), Ignore("does not work when run from a service")]
+        [OneTimeTearDown, Ignore("does not work when run from a service")]
         public void PostVerify()
         {
             if (originalWinStation == IntPtr.Zero)

@@ -43,11 +43,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException))]
         public void AmbiguousName()
         {
             ButtonTester button = new ButtonTester("myButton");
-            button.Click();
+            Assert.Throws<AmbiguousNameException>(() => button.Click());
         }
 
         [Test]
@@ -60,11 +59,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException))]
         public void NoSuchName()
         {
             ButtonTester button = new ButtonTester("junkData");
-            button.Click();
+            Assert.Throws<NoSuchControlException>(() => button.Click());
         }
 
         [Test]

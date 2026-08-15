@@ -31,6 +31,7 @@
 #endregion
 
 using NUnit.Framework;
+using System.Reflection;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -51,17 +52,15 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException))]
         public void CantUseAmpsInName()
         {
-            ClickAndTest("Main.With &Alt Key");
+            Assert.Throws<NoSuchControlException>(() => ClickAndTest("Main.With &Alt Key"));
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException))]
         public void CantUseDotInName()
         {
-            ClickAndTest("Main.With Dots...");
+            Assert.Throws<NoSuchControlException>(() => ClickAndTest("Main.With Dots..."));
         }
 
         [Test]

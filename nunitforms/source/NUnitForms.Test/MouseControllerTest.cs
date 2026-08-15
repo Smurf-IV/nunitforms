@@ -43,7 +43,7 @@ namespace NUnit.Extensions.Forms.TestApplications
     [TestFixture]
     [Category("DisplayHidden")]
     [Category("ControlsMouse")]
-    [Ignore()]
+    [Explicit]
     public class MouseControllerTest : NUnitFormTest
     {
         private Form CurrentForm;
@@ -220,11 +220,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
         public void DragEmpty()
         {
             FormTester formTester = new FormTester(CurrentForm.Name);
-            Mouse.Drag(new PointF(0, 0), new PointF[0]);
+            Assert.Throws<ArgumentException>(() => Mouse.Drag(new PointF(0, 0), new PointF[0]));
         }
 
         [Test]
@@ -247,19 +246,17 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
         public void DragNull()
         {
             FormTester formTester = new FormTester(CurrentForm.Name);
-            Mouse.Drag(new PointF(0, 0), null);
+            Assert.Throws<ArgumentNullException>(() => Mouse.Drag(new PointF(0, 0), null));
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
         public void DragOdd()
         {
             FormTester formTester = new FormTester(CurrentForm.Name);
-            Mouse.Drag(0, 0, 100, 100, 200);
+            Assert.Throws<ArgumentException>(() => Mouse.Drag(0, 0, 100, 100, 200));
         }
 
         [Test]
@@ -286,11 +283,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException))]
         public void MissingControl()
         {
             Mouse.UseOn(new ControlTester("unknownTextBox"));
-            Mouse.Position = new PointF(1, 1);
+            Assert.Throws<NoSuchControlException>(() => { Mouse.Position = new PointF(1, 1); });
         }
 
         [Test]
@@ -321,19 +317,17 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void ModifiersInvalid1()
         {
             FormTester formTester = new FormTester(CurrentForm.Name);
-            Mouse.Press(Keys.A);
+            Assert.Throws<ArgumentOutOfRangeException>(() => Mouse.Press(Keys.A));
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void ModifiersInvalid2()
         {
             FormTester formTester = new FormTester(CurrentForm.Name);
-            Mouse.Release(Keys.A);
+            Assert.Throws<ArgumentOutOfRangeException>(() => Mouse.Release(Keys.A));
         }
 
         [Test]
@@ -429,11 +423,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NotSupportedException))]
         public void PositioningUnitsWorld()
         {
             Mouse.UseOn(new FormTester(CurrentForm.Name));
-            Mouse.PositionUnit = GraphicsUnit.World;
+            Assert.Throws<NotSupportedException>(() => Mouse.PositionUnit = GraphicsUnit.World);
         }
 
         [Test]

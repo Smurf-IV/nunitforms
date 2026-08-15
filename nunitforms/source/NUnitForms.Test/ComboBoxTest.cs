@@ -31,6 +31,8 @@
 #endregion
 
 using NUnit.Framework;
+using System;
+using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -60,12 +62,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [
-            ExpectedException(typeof (FormsTestAssertionException),
-                ExpectedMessage = "Could not find text 'not-in-the-box' in ComboBox 'myComboBox'")]
         public void SelectByBadText()
         {
-            box.Select("not-in-the-box");
+            var ex = Assert.Throws<FormsTestAssertionException>(() => box.Select("not-in-the-box"));
+            Assert.That(ex.Message, Does.Contain("Could not find text 'not-in-the-box' in ComboBox 'myComboBox'"));
         }
 
         [Test]

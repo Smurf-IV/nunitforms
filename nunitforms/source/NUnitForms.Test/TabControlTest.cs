@@ -49,11 +49,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (ControlNotVisibleException))]
         public void ClickNonVisibleButton()
         {
             myTabs.SelectTab(0);
-            button.Click();
+            Assert.Throws<ControlNotVisibleException>(() => button.Click());
         }
 
         [Test]

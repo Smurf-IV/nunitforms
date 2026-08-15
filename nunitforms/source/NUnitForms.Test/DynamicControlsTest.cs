@@ -31,6 +31,7 @@
 #endregion
 
 using NUnit.Framework;
+using System;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -87,7 +88,6 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException))]
         public void DynamicControlsWithDuplicateNameIsAmbiguous()
         {
             ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
@@ -96,11 +96,10 @@ namespace NUnit.Extensions.Forms.TestApplications
             addDuplicateButton.Click();
             addDuplicateButton.Click();
 
-            duplicate.Click();
+            Assert.Throws<AmbiguousNameException>(() => duplicate.Click());
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException), ExpectedMessage = "duplicate[2]")]
         public void DynamicControlsWithDuplicateNameNotFound()
         {
             ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
@@ -111,7 +110,8 @@ namespace NUnit.Extensions.Forms.TestApplications
 
             duplicate[0].Click();
             duplicate[1].Click();
-            duplicate[2].Click();
+            var ex = Assert.Throws<NoSuchControlException>(() => duplicate[2].Click());
+            Assert.That(ex.Message, Does.Contain("duplicate[2]"));
         }
 
         [Test]

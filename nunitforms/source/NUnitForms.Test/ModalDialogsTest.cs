@@ -30,8 +30,9 @@
 
 #endregion
 
-using System.Windows.Forms;
 using NUnit.Framework;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -69,11 +70,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (ControlNotVisibleException), ExpectedMessage = "Message Box not visible")]
         public void NoModalFound()
         {
-            string text = new MessageBoxTester("NotFound").Text;
-            Assert.Fail("Should not find: " + text);
+            var ex = Assert.Throws<ControlNotVisibleException>(() => { new MessageBoxTester("NotFound"); });
+            Assert.That(ex.Message, Does.Contain("Message Box not visible"));
         }
 
         [Test]
@@ -106,21 +106,19 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (FormsTestAssertionException),
-            ExpectedMessage = "Unexpected modals: blah, ")]
         public void UnexpectedModalIsClosedAndFails()
         {
             MessageBox.Show("I didn't expect this!", "blah");
-            Verify();
+            var ex = Assert.Throws<FormsTestAssertionException>(() => Verify());
+            Assert.That(ex.Message, Does.Contain("Unexpected modals: blah, "));
         }
 
         [Test]
-        [ExpectedException(typeof (FormsTestAssertionException),
-            ExpectedMessage = "Unexpected modals: Unnamed, ")]
         public void UnexpectedModalIsClosedAndFailsNoTitle()
         {
             MessageBox.Show("I didn't expect this!"); // no title specified
-            Verify();
+            var ex = Assert.Throws<FormsTestAssertionException>(() => Verify());
+            Assert.That(ex.Message, Does.Contain("Unexpected modals: Unnamed, "));
         }
     }
 }

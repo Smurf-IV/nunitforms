@@ -154,7 +154,6 @@ namespace NUnit.Extensions.Forms.TestApplications
 
 		[Test]
 		[Ignore("This test leaves keyboard controller in a shift state affecting following test.")]
-		[ExpectedException(typeof (ArgumentException))]
 		public void UnbalancedGroupDelimitersThrowsException()
 		{
 			new TextBoxTestForm().Show();
@@ -164,10 +163,10 @@ namespace NUnit.Extensions.Forms.TestApplications
 			Keyboard.UseOn(box);
 
 			Keyboard.Click(Key.A);
-			Keyboard.Press(Key.SHIFT);
+            Assert.Throws<ArgumentException>(() => Keyboard.Press(Key.SHIFT));
 		}
 
-		[Test]
+        [Test]
 		public void KeyDefinitions_ShiftAndRelease()
 		{
 			new TextBoxTestForm().Show();

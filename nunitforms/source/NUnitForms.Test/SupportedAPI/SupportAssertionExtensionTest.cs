@@ -72,17 +72,15 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (AssertionException))]
         public void BaseClassAssertFail()
         {
-            Fail();
+            NUnit.Framework.Assert.Throws<AssertionException>(() => Fail());
         }
 
         [Test]
-        [ExpectedException(typeof (AssertionException))]
         public void BaseClassAssertFailMessage()
         {
-            Fail("message");
+            NUnit.Framework.Assert.Throws<AssertionException>(() => Fail("message"));
         }
 
         [Test]

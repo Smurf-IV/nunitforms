@@ -31,6 +31,7 @@
 #endregion
 
 using NUnit.Framework;
+using System;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -76,17 +77,15 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (AssertionException))]
         public void BaseClassAssertFail()
         {
-            Fail();
+            Assert.Throws<AssertionException>(() => Fail());
         }
 
         [Test]
-        [ExpectedException(typeof (AssertionException))]
         public void BaseClassAssertFailMessage()
         {
-            Fail("message");
+            Assert.Throws<AssertionException>(() => Fail("message"));
         }
 
         [Test]

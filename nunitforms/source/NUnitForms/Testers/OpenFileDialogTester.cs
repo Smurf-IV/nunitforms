@@ -51,7 +51,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Unreliable, kept for compatibility. The title is not actually used.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Unreliable, kept for compatibility. The title is not actually used.")]
         public OpenFileDialogTester(string title)
             : base(title)
         {

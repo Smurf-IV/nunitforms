@@ -30,10 +30,11 @@
 
 #endregion
 
+using NUnit.Framework;
 using System;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Windows.Forms;
-using NUnit.Framework;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -93,20 +94,17 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [
-            ExpectedException(typeof (FormsTestAssertionException),
-                ExpectedMessage = "Could not find text 'NotFound' in ComboBox 'myListBox'")]
         public void ListBoxSelectionBad()
         {
-            new ListBoxTester("myListBox").Select("NotFound");
+            var ex = Assert.Throws<FormsTestAssertionException>(() => { new ListBoxTester("myListBox").Select("NotFound"); });
+            Assert.That(ex.Message, Does.Contain("Could not find text 'NotFound' in ComboBox 'myListBox'"));
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void SelectDoesNotExist()
         {
             ListBoxTester myListBox = new ListBoxTester("myListBox");
-            myListBox.SetSelected("blah", true);
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => myListBox.SetSelected("blah", true));
         }
     }
 }

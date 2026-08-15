@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 [assembly : AssemblyTitle("NUnitForms.Recorder")]
 [assembly : AssemblyProduct("NUnitForms.Recorder")]
 [assembly : AssemblyCopyright("Copyright ©  2003-2007, Luke T. Maxon")]
-[assembly : AssemblyVersion("2.0.*")]
+[assembly : AssemblyVersion("2.0.0.0")]
 [assembly : AssemblyFileVersion("1.0.0.0")]
 [assembly : ComVisible(false)]
 [assembly : CLSCompliant(true)]

@@ -315,7 +315,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectFileDialog(string modalHandler)
         {
             ExpectModal(FileDialogTester.InitialFileDialogName, modalHandler);
@@ -324,7 +324,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectFileDialog(string modalHandler, bool expected)
         {
             ExpectModal(FileDialogTester.InitialFileDialogName, modalHandler, expected);
@@ -333,7 +333,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectFileDialog(ModalFormActivated handler)
         {
             modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
@@ -342,7 +342,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectFileDialog(ModalFormActivated handler, bool expected)
         {
             modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
@@ -351,7 +351,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectModal(string name, ModalFormActivated handler)
         {
             modal.ExpectModal(name, handler, true);
@@ -360,7 +360,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectModal(string name, ModalFormActivated handler, bool expected)
         {
             modal.ExpectModal(name, handler, expected);
@@ -369,7 +369,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectModal(string name, string handlerName, bool expected)
         {
             ExpectModal(name,
@@ -380,7 +380,7 @@ namespace NUnit.Extensions.Forms
         /// <summary>
         /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
         protected void ExpectModal(string name, string handlerName)
         {
             ExpectModal(name, handlerName, true);

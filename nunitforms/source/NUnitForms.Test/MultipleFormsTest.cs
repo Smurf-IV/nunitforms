@@ -30,8 +30,9 @@
 
 #endregion
 
-using System.Windows.Forms;
 using NUnit.Framework;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -44,14 +45,13 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException))]
         public void AmbiguousNameWithMultipleForms()
         {
             ShowForm(new ButtonTestForm());
             ShowForm(new ButtonTestForm());
 
             ButtonTester myButton = new ButtonTester("myButton");
-            myButton.Click();
+            Assert.Throws<AmbiguousNameException>(() => myButton.Click());
         }
 
         [Test]
@@ -96,7 +96,6 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException), ExpectedMessage= "Could not find form with name 'Form-1'")]
         public void TestMultipleFormsShouldNotFindLastButton()
         {
             MultiForm form = new MultiForm();
@@ -110,7 +109,8 @@ namespace NUnit.Extensions.Forms.TestApplications
             buttonOne.Click();
             buttonTwo.Click();
             buttonThree.Click();
-            buttonFour.Click();
+            var ex = Assert.Throws<NoSuchControlException>(() => buttonFour.Click());
+            Assert.That(ex.Message, Does.Contain("Could not find form with name 'Form-1'"));
         }
     }
 }

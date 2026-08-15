@@ -46,27 +46,24 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException))]
         public void AmbiguousNameBecauseInSubMenusButNotQualified()
         {
             MenuItemTester myMenuItem = new MenuItemTester("Not Ambiguous");
-            myMenuItem.Click();
+            Assert.Throws<AmbiguousNameException>(() => myMenuItem.Click());
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException))]
         public void AmbiguousNameBecauseInTwoMenus()
         {
             MenuItemTester myMenuItem = new MenuItemTester("Test 2.Not Ambiguous");
-            myMenuItem.Click();
+            Assert.Throws<AmbiguousNameException>(() => myMenuItem.Click());
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException))]
         public void AmbiguousNameBecauseWeUseTextNotNameForMenuItems()
         {
             MenuItemTester myMenuItem = new MenuItemTester("Ambiguous");
-            myMenuItem.Click();
+            Assert.Throws<AmbiguousNameException>(() => myMenuItem.Click());
         }
 
         [Test]
@@ -93,11 +90,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException))]
         public void NoSuchControlFinder()
         {
             MenuItemTester myMenuItem = new MenuItemTester("junkData");
-            myMenuItem.Click();
+            Assert.Throws<NoSuchControlException>(() => myMenuItem.Click());
         }
 
         [Test]

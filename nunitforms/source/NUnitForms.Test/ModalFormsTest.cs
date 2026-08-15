@@ -52,16 +52,14 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (FormsTestAssertionException),
-            ExpectedMessage = "Expected Modal Form did not show")]
         public void ModalFormDoesntShow()
         {
             ModalMultiForm f = new ModalMultiForm();
             f.Show();
             ModalFormHandler = handler;
             f.Close();
-            Verify();
-
+            var ex = Assert.Throws<FormsTestAssertionException>(() => Verify());
+            Assert.That(ex.Message, Does.Contain("Expected Modal Form did not show"));
         }
 
         [Test]

@@ -49,12 +49,12 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (Exception), ExpectedMessage= "Your type is not a form!  -->System.String")]
         public void NewException()
         {
-            new FormFactory().New(typeof (string));
+            var ex = Assert.Throws<Exception>(() => { new FormFactory().New(typeof(string)); });
+            Assert.That(ex.Message, Does.Contain("Your type is not a form!  -->System.String"));
         }
-        
+
         [Test]
         public void MultiConstructor()
         {

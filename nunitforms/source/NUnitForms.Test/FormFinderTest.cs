@@ -30,10 +30,11 @@
 
 #endregion
 
+using NUnit.Extensions.Forms.Recorder;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using NUnit.Framework;
 
 namespace NUnit.Extensions.Forms.TestApplications
 {
@@ -69,10 +70,10 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (Exception), ExpectedMessage = "Object name not defined")]
         public void FinderWithBadObjectHasNoName()
         {
-            new Finder<Control>().Name("a");
+            var ex = Assert.Throws<Exception>(() => { new Finder<Control>().Name("a"); });
+            Assert.That(ex.Message, Does.Contain("Object name not defined"));
         }
 
         [Test]
@@ -97,20 +98,19 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (NoSuchControlException), ExpectedMessage = "Could not find form with name 'form'")]
         public void FindOneFormWhenThereAreNone()
         {
-            finder.Find("form");
+            var ex = Assert.Throws<NoSuchControlException>(() => finder.Find("form"));
+            Assert.That(ex.Message, Does.Contain("Could not find form with name 'form'"));
         }
 
         [Test]
-        [ExpectedException(typeof (AmbiguousNameException), ExpectedMessage="Found too many forms with the name 'form'")
-        ]
         public void FindOneFormWhenThereAreTwo()
         {
             ShowNewForm("form");
             ShowNewForm("form");
-            finder.Find("form");
+            var ex = Assert.Throws<AmbiguousNameException>(() => finder.Find("form"));
+            Assert.That(ex.Message, Does.Contain("Found too many forms with the name 'form'"));
         }
 
         [Test]

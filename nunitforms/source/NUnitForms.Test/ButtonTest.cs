@@ -64,19 +64,17 @@ namespace NUnit.Extensions.Forms.TestApplications
         }
 
         [Test]
-        [ExpectedException(typeof (ControlNotEnabledException))]
         public void Click_ThrowsException_IfNotEnabled()
         {
             button.Properties.Enabled = false;
-            button.Click();
+            Assert.Throws<ControlNotEnabledException>(() => button.Click());
         }
 
         [Test]
-        [ExpectedException(typeof (ControlNotVisibleException))]
         public void Click_ThrowsException_IfNotVisible()
         {
             button.Properties.Visible = false;
-            button.Click();
+            Assert.Throws<ControlNotVisibleException>(() => button.Click());
         }
 
         [Test]

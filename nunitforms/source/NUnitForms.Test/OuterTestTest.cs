@@ -42,25 +42,25 @@ namespace NUnit.Extensions.Forms.TestApplications
 
         // Put this here, because ExpectedException does not work when the exn is thrown in teardown
         [Test]
-        [ExpectedException(typeof(FormsTestAssertionException),
-            ExpectedMessage = "Unexpected modals: Blah, ")]
         public void DanglingWindowMessage()
         {
-            using (OuterTest nuf = new OuterTest())
+            var ex = Assert.Throws<FormsTestAssertionException>(() =>
             {
-                Form f = new Form();
-                f.Show();
-                System.Threading.EventWaitHandle w = new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset);
-                System.Threading.ThreadPool.QueueUserWorkItem(delegate(object o)
+                using (OuterTest nuf = new OuterTest())
                 {
-                    f.BeginInvoke(new MethodInvoker(delegate()
+                    Form f = new Form();
+                    f.Show();
+                    System.Threading.EventWaitHandle w =
+                        new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset);
+                    System.Threading.ThreadPool.QueueUserWorkItem(delegate(object o)
                     {
-                        MessageBox.Show("", "Blah");
-                    }));
-                    w.Set();
-                });
-                w.WaitOne();
-            }
+                        f.BeginInvoke(new MethodInvoker(delegate() { MessageBox.Show("", "Blah"); }));
+                        w.Set();
+                    });
+                    w.WaitOne();
+                }
+            });
+            Assert.That(ex.Message, Does.Contain("Unexpected modals: Blah, "));
         }
 
     }
