@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,39 +27,39 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
-{
-    ///<summary>
-    /// Test form for the OpenFileDialogTester
-    ///</summary>
-    public partial class OpenFileDialogTestForm : Form
-    {
-        /// <summary>
-        /// Constructes a new OpenFileDialogTestForm.
-        /// </summary>
-        public OpenFileDialogTestForm()
-        {
-            InitializeComponent();
-        }
 
-        private void btOpenFile_Click(object sender, EventArgs e)
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+///<summary>
+/// Test form for the OpenFileDialogTester
+///</summary>
+public partial class OpenFileDialogTestForm : Form
+{
+    /// <summary>
+    /// Constructes a new OpenFileDialogTestForm.
+    /// </summary>
+    public OpenFileDialogTestForm()
+    {
+        InitializeComponent();
+    }
+
+    private void btOpenFile_Click(object sender, EventArgs e)
+    {
+        var open_dlg = new OpenFileDialog();
+        if (open_dlg.ShowDialog() == DialogResult.OK)
         {
-            OpenFileDialog open_dlg = new OpenFileDialog();
-            if (open_dlg.ShowDialog() == DialogResult.OK)
-            {
-                lblFileName.Text = open_dlg.FileName;
-            }
-            else
-            {
-                lblFileName.Text = "cancel pressed";
-            }
+            lblFileName.Text = open_dlg.FileName;
+        }
+        else
+        {
+            lblFileName.Text = "cancel pressed";
         }
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,49 +27,46 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+using NUnit.Extensions.Forms.Testers;
+
+
+namespace NUnitForms.Recorder;
+
+/// <summary>
+/// A <see cref="ControlRecorder"/> class for <see cref="Form"/>s.
+/// </summary>
+public class FormRecorder : ControlRecorder
 {
     /// <summary>
-    /// A <see cref="ControlRecorder"/> class for <see cref="Form"/>s.
+    /// Constructs a new <see cref="FormRecorder"/> with the given listener.
     /// </summary>
-    public class FormRecorder : ControlRecorder
+    public FormRecorder(Listener listener)
+        : base(listener)
     {
-        /// <summary>
-        /// Constructes a new <see cref="FormRecorder"/> with the given listener.
-        /// </summary>
-        public FormRecorder(Listener listener) : base(listener)
-        {
-        }
+    }
 
-        /// <summary>
-        /// The type of control being recorded, <see cref="Form"/>.
-        /// </summary>
-        public override Type RecorderType
-        {
-            get { return typeof (Form); }
-        }
+    /// <summary>
+    /// The type of control being recorded, <see cref="Form"/>.
+    /// </summary>
+    public override Type RecorderType => typeof(Form);
 
-        /// <summary>
-        /// The tester type for this recorder, <see cref="FormTester"/>.
-        /// </summary>
-        public override Type TesterType
-        {
-            get { return typeof (FormTester); }
-        }
+    /// <summary>
+    /// The tester type for this recorder, <see cref="FormTester"/>.
+    /// </summary>
+    public override Type TesterType => typeof(FormTester);
 
-        /// <summary>
-        /// Fires the "Close" event for a form.
-        /// </summary>
-        public void Closed(object sender, EventArgs args)
-        {
-            Listener.FireEvent(TesterType, sender, "Close");
-        }
+    /// <summary>
+    /// Fires the "Close" event for a form.
+    /// </summary>
+    public void Closed(object sender, EventArgs args)
+    {
+        Listener.FireEvent(TesterType, sender, "Close");
     }
 }

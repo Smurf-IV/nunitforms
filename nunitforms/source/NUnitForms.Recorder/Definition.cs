@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,112 +27,103 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
+using NUnit.Extensions.Forms.Util;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+///<summary>
+/// This class represents a C# variable initialization.
+///</summary>
+public class Definition
 {
+    private string formName;
+
     ///<summary>
-    /// This class represents a C# variable initialization.
+    /// Constructs a new <see cref="Definition"/>.
     ///</summary>
-    public class Definition
+    public Definition(object control, string name, Type testerType, string formName)
     {
-        private object control;
-        private string formName;
-        private string name;
-        private Type testerType;
+        Control = control;
+        Name = name;
+        TesterType = testerType;
+        this.formName = formName;
+    }
 
-        ///<summary>
-        /// Constructs a new <see cref="Definition"/>.
-        ///</summary>
-        public Definition(object control, string name, Type testerType, string formName)
-        {
-            this.control = control;
-            this.name = name;
-            this.testerType = testerType;
-            this.formName = formName;
-        }
+    ///<summary>
+    /// The control being defined.
+    ///</summary>
+    public object Control { get; }
 
-        ///<summary>
-        /// The control being defined.
-        ///</summary>
-        public object Control
-        {
-            get { return control; }
-        }
+    ///<summary>
+    /// The control name to use.
+    ///</summary>
+    public string Name
+    {
+        get;
+        set => field = value;
+    }
 
-        ///<summary>
-        /// The control name to use.
-        ///</summary>
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        /// <summary>
-        /// The variable name of an instance.
-        /// </summary>
-        /// <example>
-        /// <i>toolStripSplitButton1</i> Is the variable name of an instance:
-        /// <code>
-        /// ToolStripSplitButtonTester toolStripSplitButton1 = new ToolStripSplitButtonTester("toolStripSplitButton1");
-        /// </code>
-        /// </example>
-        public string VarName
-        {
-            get
-            {
-                if (FormName == null)
-                    return Name.Replace('.', '_');
-                else
-                    return (FormName + "_" + Name).Replace('.', '_');
-            }
-        }
-
-        ///<summary>
-        /// The parent form name.
-        ///</summary>
-        public string FormName
-        {
-            get { return formName; }
-            set { formName = value; }
-        }
-
-        ///<summary>
-        /// Gets the <see cref="TesterType"/> associated with this <see cref="Definition"/>.
-        ///</summary>
-        public Type TesterType
-        {
-            get { return testerType; }
-        }
-
-        ///<summary>
-        /// 
-        ///</summary>
-        ///<returns>C# code to initialize the defined variable.</returns>
-        public override string ToString()
+    /// <summary>
+    /// The variable name of an instance.
+    /// </summary>
+    /// <example>
+    /// <i>toolStripSplitButton1</i> Is the variable name of an instance:
+    /// <code>
+    /// ToolStripSplitButtonTester toolStripSplitButton1 = new ToolStripSplitButtonTester("toolStripSplitButton1");
+    /// </code>
+    /// </example>
+    public string VarName
+    {
+        get
         {
             if (FormName == null)
             {
-                return string.Format(
-                    "{0} {1} = new {0}(\"{2}\");",
-                    TesterType.Name,
-                    Strings.SafeRemoveSpaces(VarName),
-                    Name);
+                return Name.Replace('.', '_');
             }
-            else
-            {
-                return string.Format(
-                    "{0} {1} = new {0}(\"{2}\", \"{3}\");",
-                    TesterType.Name,
-                    Strings.SafeRemoveSpaces(VarName),
-                    Name,
-                    FormName);
-            }
+
+            return (FormName + "_" + Name).Replace('.', '_');
         }
+    }
+
+    ///<summary>
+    /// The parent form name.
+    ///</summary>
+    public string? FormName
+    {
+        get => formName;
+        set => formName = value;
+    }
+
+    ///<summary>
+    /// Gets the <see cref="TesterType"/> associated with this <see cref="Definition"/>.
+    ///</summary>
+    public Type TesterType { get; }
+
+    ///<summary>
+    /// 
+    ///</summary>
+    ///<returns>C# code to initialize the defined variable.</returns>
+    public override string ToString()
+    {
+        if (FormName == null)
+        {
+            return string.Format(
+                "{0} {1} = new {0}(\"{2}\");",
+                TesterType.Name,
+                Strings.SafeRemoveSpaces(VarName),
+                Name);
+        }
+
+        return string.Format(
+            "{0} {1} = new {0}(\"{2}\", \"{3}\");",
+            TesterType.Name,
+            Strings.SafeRemoveSpaces(VarName),
+            Name,
+            FormName);
     }
 }

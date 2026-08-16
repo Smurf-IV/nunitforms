@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,150 +36,149 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for MainMenuTestForm.
+/// </summary>
+public class MainMenuTestForm : Form
 {
     /// <summary>
-    /// Summary description for MainMenuTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class MainMenuTestForm : Form
+    private readonly Container? components = null;
+
+    private Label label;
+
+    private MainMenu mainMenu1;
+
+    private MenuItem menuItem1;
+
+    private MenuItem menuItem2;
+
+    private MenuItem menuItem3;
+
+    private MenuItem menuItem4;
+
+    private MenuItem menuItem5;
+
+    private MenuItem menuItem6;
+
+    public MainMenuTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private Label label;
-
-        private MainMenu mainMenu1;
-
-        private MenuItem menuItem1;
-
-        private MenuItem menuItem2;
-
-        private MenuItem menuItem3;
-
-        private MenuItem menuItem4;
-
-        private MenuItem menuItem5;
-
-        private MenuItem menuItem6;
-
-        public MainMenuTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void menuItem_Click(object sender, EventArgs e)
-        {
-            label.Text = "clicked";
-        }
-
-        private void menuItem_Popup(object sender, EventArgs e)
-        {
-            label.Text = "shown";
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.mainMenu1 = new MainMenu();
-            this.menuItem1 = new MenuItem();
-            this.menuItem6 = new MenuItem();
-            this.menuItem2 = new MenuItem();
-            this.menuItem3 = new MenuItem();
-            this.menuItem4 = new MenuItem();
-            this.menuItem5 = new MenuItem();
-            this.label = new Label();
-            this.SuspendLayout();
-            // 
-            // mainMenu1
-            // 
-            this.mainMenu1.MenuItems.AddRange(new MenuItem[] {this.menuItem1});
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.Index = 0;
-            this.menuItem1.MenuItems.AddRange(
-                new MenuItem[] {this.menuItem6, this.menuItem2, this.menuItem4, this.menuItem5});
-            this.menuItem1.Text = "Main";
-            this.menuItem1.Popup += new EventHandler(this.menuItem_Popup);
-            // 
-            // menuItem6
-            // 
-            this.menuItem6.Index = 0;
-            this.menuItem6.Text = "Item";
-            this.menuItem6.Click += new EventHandler(this.menuItem_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 1;
-            this.menuItem2.MenuItems.AddRange(new MenuItem[] {this.menuItem3});
-            this.menuItem2.Text = "Sub Menu";
-            // 
-            // menuItem3
-            // 
-            this.menuItem3.Index = 0;
-            this.menuItem3.Text = "Sub Menu Item";
-            this.menuItem3.Click += new EventHandler(this.menuItem_Click);
-            // 
-            // menuItem4
-            // 
-            this.menuItem4.Index = 2;
-            this.menuItem4.Text = "With &Alt Key";
-            this.menuItem4.Click += new EventHandler(this.menuItem_Click);
-            // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 3;
-            this.menuItem5.Text = "With Dots...";
-            this.menuItem5.Click += new EventHandler(this.menuItem_Click);
-            // 
-            // label
-            // 
-            this.label.Location = new Point(88, 40);
-            this.label.Name = "label";
-            this.label.Size = new Size(96, 16);
-            this.label.TabIndex = 0;
-            this.label.Text = "not clicked";
-            // 
-            // MainMenuTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(292, 94);
-            this.Controls.Add(this.label);
-            this.Menu = this.mainMenu1;
-            this.Name = "MainMenuTestForm";
-            this.Text = "MainMenuTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void menuItem_Click(object sender, EventArgs e)
+    {
+        label.Text = "clicked";
+    }
+
+    private void menuItem_Popup(object sender, EventArgs e)
+    {
+        label.Text = "shown";
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        mainMenu1 = new MainMenu();
+        menuItem1 = new MenuItem();
+        menuItem6 = new MenuItem();
+        menuItem2 = new MenuItem();
+        menuItem3 = new MenuItem();
+        menuItem4 = new MenuItem();
+        menuItem5 = new MenuItem();
+        label = new Label();
+        SuspendLayout();
+        // 
+        // mainMenu1
+        // 
+        mainMenu1.MenuItems.AddRange(new MenuItem[] {menuItem1});
+        // 
+        // menuItem1
+        // 
+        menuItem1.Index = 0;
+        menuItem1.MenuItems.AddRange(
+            new MenuItem[] {menuItem6, menuItem2, menuItem4, menuItem5});
+        menuItem1.Text = "Main";
+        menuItem1.Popup += new EventHandler(menuItem_Popup);
+        // 
+        // menuItem6
+        // 
+        menuItem6.Index = 0;
+        menuItem6.Text = "Item";
+        menuItem6.Click += new EventHandler(menuItem_Click);
+        // 
+        // menuItem2
+        // 
+        menuItem2.Index = 1;
+        menuItem2.MenuItems.AddRange(new MenuItem[] {menuItem3});
+        menuItem2.Text = "Sub Menu";
+        // 
+        // menuItem3
+        // 
+        menuItem3.Index = 0;
+        menuItem3.Text = "Sub Menu Item";
+        menuItem3.Click += new EventHandler(menuItem_Click);
+        // 
+        // menuItem4
+        // 
+        menuItem4.Index = 2;
+        menuItem4.Text = "With &Alt Key";
+        menuItem4.Click += new EventHandler(menuItem_Click);
+        // 
+        // menuItem5
+        // 
+        menuItem5.Index = 3;
+        menuItem5.Text = "With Dots...";
+        menuItem5.Click += new EventHandler(menuItem_Click);
+        // 
+        // label
+        // 
+        label.Location = new Point(88, 40);
+        label.Name = "label";
+        label.Size = new Size(96, 16);
+        label.TabIndex = 0;
+        label.Text = "not clicked";
+        // 
+        // MainMenuTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(292, 94);
+        Controls.Add(label);
+        Menu = mainMenu1;
+        Name = "MainMenuTestForm";
+        Text = "MainMenuTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

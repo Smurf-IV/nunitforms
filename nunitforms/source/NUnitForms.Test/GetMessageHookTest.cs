@@ -1,8 +1,9 @@
-﻿#region Copyright (c) 2003-2005, Luke T. Maxon
+﻿#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,40 +27,40 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Framework;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Util;
+using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+public class GetMessageHookTest
 {
-    public class GetMessageHookTest
+    [Test]
+    public void Test000()
     {
-        [Test]
-        public void Test000()
+        var i = 0;
+        try
         {
-            int i = 0;
-            try
+            GetMessageHook.InstallHook();
+            GetMessageHook.Record(delegate
             {
-                Util.GetMessageHook.InstallHook();
-                Util.GetMessageHook.Record(delegate()
-                {
-                    ++i;
-                    return i == 2;
-                });
-                Assert.AreEqual(0, i);
-                Application.DoEvents();
-                Assert.AreEqual(2, i);
-                Application.DoEvents();
-                Assert.AreEqual(2, i);
-            }
-            finally
-            {
-                Util.GetMessageHook.RemoveHook();
-            }
-                        
+                ++i;
+                return i == 2;
+            });
+            Assert.AreEqual(0, i);
+            Application.DoEvents();
+            Assert.AreEqual(2, i);
+            Application.DoEvents();
+            Assert.AreEqual(2, i);
         }
+        finally
+        {
+            GetMessageHook.RemoveHook();
+        }
+                        
     }
 }

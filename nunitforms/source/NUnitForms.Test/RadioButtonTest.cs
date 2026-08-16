@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,47 +27,49 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class RadioButtonTest : NUnitFormTest
 {
-    [TestFixture]
-    public class RadioButtonTest : NUnitFormTest
+    public override void Setup()
     {
-        public override void Setup()
-        {
-            new RadioButtonTestForm().Show();
-        }
+        new RadioButtonTestForm().Show();
+    }
 
-        [Test]
-        public void SelectOption()
-        {
-            RadioButtonTester rbRed = new RadioButtonTester("rbRed");
-            LabelTester lblSelectedColor = new LabelTester("lblSelectedColor");
-            RadioButtonTester rbOrange = new RadioButtonTester("rbOrange");
-            RadioButtonTester rbGreen = new RadioButtonTester("rbGreen");
-            RadioButtonTester rbYellow = new RadioButtonTester("rbYellow");
-            RadioButtonTester rbBlue = new RadioButtonTester("rbBlue");
-            RadioButtonTester rbIndigo = new RadioButtonTester("rbIndigo");
-            RadioButtonTester rbViolet = new RadioButtonTester("rbViolet");
+    [Test]
+    public void SelectOption()
+    {
+        var rbRed = new RadioButtonTester("rbRed");
+        var lblSelectedColor = new LabelTester("lblSelectedColor");
+        var rbOrange = new RadioButtonTester("rbOrange");
+        var rbGreen = new RadioButtonTester("rbGreen");
+        var rbYellow = new RadioButtonTester("rbYellow");
+        var rbBlue = new RadioButtonTester("rbBlue");
+        var rbIndigo = new RadioButtonTester("rbIndigo");
+        var rbViolet = new RadioButtonTester("rbViolet");
 
-            rbRed.Click();
-            Assert.AreEqual("Red", lblSelectedColor.Properties.Text);
-            Assert.AreEqual(true, rbRed.Properties.Checked);
-            Assert.AreEqual(false, rbOrange.Properties.Checked);
-            Assert.AreEqual("Red", rbRed.Text);
-            Assert.AreEqual("Red", rbRed.Properties.Text);
+        rbRed.Click();
+        Assert.AreEqual("Red", lblSelectedColor.Properties.Text);
+        Assert.AreEqual(true, rbRed.Properties.Checked);
+        Assert.AreEqual(false, rbOrange.Properties.Checked);
+        Assert.AreEqual("Red", rbRed.Text);
+        Assert.AreEqual("Red", rbRed.Properties.Text);
 
-            rbOrange.Click();
-            Assert.AreEqual("Orange", lblSelectedColor.Properties.Text);
-            Assert.AreEqual(false, rbRed.Properties.Checked);
-            Assert.AreEqual(true, rbOrange.Properties.Checked);
-            Assert.AreEqual("Orange", rbOrange.Text);
-            Assert.AreEqual("Orange", rbOrange.Properties.Text);
-        }
+        rbOrange.Click();
+        Assert.AreEqual("Orange", lblSelectedColor.Properties.Text);
+        Assert.AreEqual(false, rbRed.Properties.Checked);
+        Assert.AreEqual(true, rbOrange.Properties.Checked);
+        Assert.AreEqual("Orange", rbOrange.Text);
+        Assert.AreEqual("Orange", rbOrange.Properties.Text);
     }
 }

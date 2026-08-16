@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,32 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+using NUnitForms.Recorder;
+
+
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class TestWriterTest : NUnitFormTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class TestWriterTest : NUnitFormTest
+    [Test]
+    public void SimpleButton()
     {
-        [Test]
-        public void SimpleButton()
-        {
-            ButtonTestForm form = new ButtonTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+        var form = new ButtonTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            ButtonTester button = new ButtonTester("myButton", form);
-            button.Click();
+        var button = new ButtonTester("myButton", form);
+        button.Click();
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -60,7 +65,6 @@ public void Test()
 	myButton.Click();
 
 }",
-                writer.Test);
-        }
+            writer.Test);
     }
 }

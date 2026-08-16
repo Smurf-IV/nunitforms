@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,127 +35,120 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Finders;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Generic_Testers;
+
+public class Tester<T, TThis> : ReflectionTester, IEnumerable<TThis>
+    where TThis : Tester<T, TThis>, new()
 {
-    public class Tester<T, TThis> : ReflectionTester, IEnumerable<TThis>
-        where TThis : Tester<T, TThis>, new()
+    private Form? form;
+    private string? formName;
+    private int index = -1;
+
+    /// <summary>
+    /// The name of the underlying test object (sometimes acontrol).
+    /// </summary>
+    protected string? name;
+
+    public Tester(string name, string formName)
     {
-        private Form form;
-        private string formName;
-        private int index = -1;
+        this.formName = formName;
+        this.name = name;
+    }
 
-        /// <summary>
-        /// The name of the underlying test object (sometimes acontrol).
-        /// </summary>
-        protected string name;
+    public Tester(string name, Form form)
+    {
+        this.form = form;
+        this.name = name;
+    }
 
-        public Tester(string name, string formName)
+    public Tester(string? name)
+    {
+        this.name = name;
+    }
+
+    public Tester(Tester<T, TThis> tester, int index)
+    {
+        InitFromTester(tester, index);
+    }
+
+    ///<summary>
+    /// Default constructor for generic support.
+    ///</summary>
+    protected Tester()
+    {
+    }
+
+    public int Count => GetFinder().Count;
+
+    /// <summary>
+    /// The underlying <see cref="Control"/> for this tester.
+    /// </summary>
+    public virtual T Properties => GetFinder().Find(index);
+
+    /// <summary>
+    /// The Control being tested.
+    /// </summary>
+    public override object TheObject => Properties;
+
+    public virtual TThis this[int index]
+    {
+        get
         {
-            this.formName = formName;
-            this.name = name;
+            var newTester = new TThis();
+            newTester.InitFromTester(this, index);
+            return newTester;
+        }
+    }
+
+    #region IEnumerable<TThis> Members
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    ///<summary>
+    ///Returns an enumerator that iterates through the collection.
+    ///</summary>
+    public IEnumerator<TThis> GetEnumerator()
+    {
+        var items = new List<TThis>();
+        for (var i = 0; i < Count; i++)
+        {
+            items.Add(this[i]);
+        }
+        return items.GetEnumerator();
+    }
+
+    #endregion
+
+    protected void InitFromTester(Tester<T, TThis> tester, int controlIndex)
+    {
+        if (controlIndex < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(controlIndex), controlIndex, "Should not have index < 0");
         }
 
-        public Tester(string name, Form form)
+        index = controlIndex;
+        form = tester.form;
+        formName = tester.formName;
+        name = tester.name;
+    }
+
+    private Finder<T> GetFinder()
+    {
+        if (form != null)
         {
-            this.form = form;
-            this.name = name;
+            return new Finder<T>(name, form);
         }
 
-        public Tester(string name)
+        if (formName != null)
         {
-            this.name = name;
+            return new Finder<T>(name, new FormFinder().Find(formName));
         }
 
-        public Tester(Tester<T, TThis> tester, int index)
-        {
-            InitFromTester(tester, index);
-        }
-
-        ///<summary>
-        /// Default constructor for generic support.
-        ///</summary>
-        protected Tester()
-        {
-        }
-
-        public int Count
-        {
-            get { return GetFinder().Count; }
-        }
-
-        /// <summary>
-        /// The underlying <see cref="Control"/> for this tester.
-        /// </summary>
-        public virtual T Properties
-        {
-            get { return GetFinder().Find(index); }
-        }
-
-        /// <summary>
-        /// The Control being tested.
-        /// </summary>
-        public override object TheObject
-        {
-            get { return Properties; }
-        }
-
-        public virtual TThis this[int index]
-        {
-            get
-            {
-                TThis newTester = new TThis();
-                newTester.InitFromTester(this, index);
-                return newTester;
-            }
-        }
-
-        #region IEnumerable<TThis> Members
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        ///<summary>
-        ///Returns an enumerator that iterates through the collection.
-        ///</summary>
-        public IEnumerator<TThis> GetEnumerator()
-        {
-            List<TThis> items = new List<TThis>();
-            for (int i = 0; i < Count; i++)
-            {
-                items.Add(this[i]);
-            }
-            return items.GetEnumerator();
-        }
-
-        #endregion
-
-        protected void InitFromTester(Tester<T, TThis> tester, int controlIndex)
-        {
-            if (controlIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(controlIndex), controlIndex, "Should not have index < 0");
-            index = controlIndex;
-            form = tester.form;
-            formName = tester.formName;
-            name = tester.name;
-        }
-
-        private Finder<T> GetFinder()
-        {
-            if (form != null)
-            {
-                return new Finder<T>(name, form);
-            }
-            else if (formName != null)
-            {
-                return new Finder<T>(name, new FormFinder().Find(formName));
-            }
-            else
-            {
-                return new Finder<T>(name);
-            }
-        }
+        return new Finder<T>(name);
     }
 }

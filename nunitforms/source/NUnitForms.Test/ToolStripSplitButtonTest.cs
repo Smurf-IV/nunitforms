@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,28 +27,32 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
-{
-    [TestFixture]
-    public class ToolStripSplitButtonTest : NUnitFormTest
-    {
-        [Test]
-        public void MainToolbar()
-        {
-            Form form = new ToolStripSplitButtonTestForm();
-            form.Show();
-            LabelTester label = new LabelTester("label1", form);
+using ToolStripSplitButtonTester = NUnit.Extensions.Forms.Testers.ToolStripSplitButtonTester;
 
-            ToolStripSplitButtonTester tester = new ToolStripSplitButtonTester("toolStripSplitButton1", form);
-            tester.Click();
-            Assert.IsTrue(label.Text == "toolStripSplitButton1 clicked");
-        }
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ToolStripSplitButtonTest : NUnitFormTest
+{
+    [Test]
+    public void MainToolbar()
+    {
+        Form form = new TestForms.ToolStripSplitButtonTestForm();
+        form.Show();
+        var label = new LabelTester("label1", form);
+
+        var tester = new ToolStripSplitButtonTester("toolStripSplitButton1", form);
+        tester.Click();
+        Assert.IsTrue(label.Text == "toolStripSplitButton1 clicked");
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,44 +27,50 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
-using NUnit.Extensions.Forms.TestApplications;
+
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+using NUnitForms.Recorder;
+
+using Action = NUnitForms.Recorder.Action;
+
+
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class ListenerTest : NUnitFormTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class ListenerTest : NUnitFormTest
+    private int FireCount;
+
+    public void EventListener(Type testerType, object control, Action action)
     {
-        private int FireCount = 0;
+        Assert.AreEqual(typeof(ButtonTester), testerType);
+        FireCount++;
+    }
 
-        public void EventListener(Type testerType, object control, Action action)
-        {
-            Assert.AreEqual(typeof (ButtonTester), testerType);
-            FireCount++;
-        }
+    [Test]
+    public void Listen()
+    {
+        var form = new ButtonTestForm();
+        form.Show();
+        FireCount = 0;
+        var listener = new Listener();
+        listener.ListenTo(form);
 
-        [Test]
-        public void Listen()
-        {
-            ButtonTestForm form = new ButtonTestForm();
-            form.Show();
-            FireCount = 0;
-            Listener listener = new Listener();
-            listener.ListenTo(form);
+        listener.Event += EventListener;
 
-            listener.Event += EventListener;
-
-            ButtonTester button = new ButtonTester("myButton", form);
-            button.Click();
-            Assert.AreEqual(1, FireCount);
-            button.Click();
-            Assert.AreEqual(2, FireCount);
-        }
+        var button = new ButtonTester("myButton", form);
+        button.Click();
+        Assert.AreEqual(1, FireCount);
+        button.Click();
+        Assert.AreEqual(2, FireCount);
     }
 }

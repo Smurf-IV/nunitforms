@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,80 +27,78 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using NUnit.Framework;
-using System;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.SupportedAPI;
+
+[TestFixture]
+public class SupportsAssertExtensionTest : NUnitFormsAssertTest
 {
-    [TestFixture]
-    public class SupportsAssertExtensionTest : NUnitFormsAssertTest
+    //a note about this class.. it only tests that those methods exist on the
+    //base.. and not that they are completely implemented correctly.  I think
+    //that it works, tell me if it does not.  
+
+    public void BaseClassIsNull()
     {
-        //a note about this class.. it only tests that those methods exist on the
-        //base.. and not that they are completely implemented correctly.  I think
-        //that it works, tell me if it does not.  
+        IsNull(null);
+        IsNull(null, "message");
+    }
 
-        public void BaseClassIsNull()
-        {
-            IsNull(null);
-            IsNull(null, "message");
-        }
+    public void BaseClassIsNotNull()
+    {
+        IsNotNull("test");
+        IsNotNull("test", "message");
+    }
 
-        public void BaseClassIsNotNull()
-        {
-            IsNotNull("test");
-            IsNotNull("test", "message");
-        }
+    [Test]
+    public void BaseClassAreEqual()
+    {
+        AreEqual(1.0d, 1.0d, 0.0d);
+        AreEqual(1.0f, 1.0f, 0.0f);
+        AreEqual("test", "test");
+        AreEqual(1, 1);
+        AreEqual(new decimal(1.0d), new decimal(1.0d));
+        AreEqual(1.0d, 1.0d, 0.0d, "message");
+        AreEqual(1.0f, 1.0f, 0.0f, "message");
+        AreEqual("test", "test", "message");
+        AreEqual(1, 1, "message");
+        AreEqual(new decimal(1.0d), new decimal(1.0d), "message");
+    }
 
-        [Test]
-        public void BaseClassAreEqual()
-        {
-            AreEqual(1.0d, 1.0d, 0.0d);
-            AreEqual(1.0f, 1.0f, 0.0f);
-            AreEqual("test", "test");
-            AreEqual(1, 1);
-            AreEqual(new decimal(1.0d), new decimal(1.0d));
-            AreEqual(1.0d, 1.0d, 0.0d, "message");
-            AreEqual(1.0f, 1.0f, 0.0f, "message");
-            AreEqual("test", "test", "message");
-            AreEqual(1, 1, "message");
-            AreEqual(new decimal(1.0d), new decimal(1.0d), "message");
-        }
+    [Test]
+    public void BaseClassAreSame()
+    {
+        AreSame("test", "test");
+        AreSame("test", "test", "message");
+    }
 
-        [Test]
-        public void BaseClassAreSame()
-        {
-            AreSame("test", "test");
-            AreSame("test", "test", "message");
-        }
+    [Test]
+    public void BaseClassAssertFail()
+    {
+        Assert.Throws<AssertionException>(Fail);
+    }
 
-        [Test]
-        public void BaseClassAssertFail()
-        {
-            Assert.Throws<AssertionException>(() => Fail());
-        }
+    [Test]
+    public void BaseClassAssertFailMessage()
+    {
+        Assert.Throws<AssertionException>(() => Fail("message"));
+    }
 
-        [Test]
-        public void BaseClassAssertFailMessage()
-        {
-            Assert.Throws<AssertionException>(() => Fail("message"));
-        }
+    [Test]
+    public void BaseClassIsFalse()
+    {
+        IsFalse(false);
+        IsFalse(false, "message");
+    }
 
-        [Test]
-        public void BaseClassIsFalse()
-        {
-            IsFalse(false);
-            IsFalse(false, "message");
-        }
-
-        [Test]
-        public void BaseClassIsTrue()
-        {
-            IsTrue(true);
-            IsTrue(true, "message");
-        }
+    [Test]
+    public void BaseClassIsTrue()
+    {
+        IsTrue(true);
+        IsTrue(true, "message");
     }
 }

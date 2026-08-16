@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,91 +27,97 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Framework;
-using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Framework;
+
+
+using TabControlTester = NUnit.Extensions.Forms.Testers.TabControlTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class MultipleFormsTest : NUnitFormTest
 {
-    [TestFixture]
-    public class MultipleFormsTest : NUnitFormTest
+    private void ShowForm(Form f)
     {
-        private void ShowForm(Form f)
-        {
-            f.Show();
-        }
+        f.Show();
+    }
 
-        [Test]
-        public void AmbiguousNameWithMultipleForms()
-        {
-            ShowForm(new ButtonTestForm());
-            ShowForm(new ButtonTestForm());
+    [Test]
+    public void AmbiguousNameWithMultipleForms()
+    {
+        ShowForm(new ButtonTestForm());
+        ShowForm(new ButtonTestForm());
 
-            ButtonTester myButton = new ButtonTester("myButton");
-            Assert.Throws<AmbiguousNameException>(() => myButton.Click());
-        }
+        var myButton = new ButtonTester("myButton");
+        Assert.Throws<AmbiguousNameException>(myButton.Click);
+    }
 
-        [Test]
-        public void DontNeedToSpecifyForm()
-        {
-            ShowForm(new ButtonTestForm());
-            ShowForm(new TabControlTestForm());
+    [Test]
+    public void DontNeedToSpecifyForm()
+    {
+        ShowForm(new ButtonTestForm());
+        ShowForm(new TabControlTestForm());
 
-            ButtonTester myButton = new ButtonTester("myButton");
-            LabelTester myLabel = new LabelTester("myLabel");
-            TabControlTester myTabs = new TabControlTester("myTabs");
-            ButtonTester tabButton = new ButtonTester("button2");
-            LabelTester tabLabel = new LabelTester("label2");
+        var myButton = new ButtonTester("myButton");
+        var myLabel = new LabelTester("myLabel");
+        var myTabs = new TabControlTester("myTabs");
+        var tabButton = new ButtonTester("button2");
+        var tabLabel = new LabelTester("label2");
 
-            myTabs.SelectTab(1);
-            Assert.AreEqual("0", tabLabel.Text);
+        myTabs.SelectTab(1);
+        Assert.AreEqual("0", tabLabel.Text);
 
-            Assert.AreEqual("0", myLabel.Text);
-            myButton.Click();
-            Assert.AreEqual("1", myLabel.Text);
+        Assert.AreEqual("0", myLabel.Text);
+        myButton.Click();
+        Assert.AreEqual("1", myLabel.Text);
 
-            tabButton.Click();
-            Assert.AreEqual("1", tabLabel.Text);
-        }
+        tabButton.Click();
+        Assert.AreEqual("1", tabLabel.Text);
+    }
 
-        [Test]
-        public void TestMultipleForms()
-        {
-            MultiForm form = new MultiForm();
-            form.Show();
+    [Test]
+    public void TestMultipleForms()
+    {
+        var form = new MultiForm();
+        form.Show();
 
-            ButtonTester buttonOne = new ButtonTester("myButton", "Form");
-            ButtonTester buttonTwo = new ButtonTester("myButton", "Form-0");
-            ButtonTester buttonThree = new ButtonTester("myButton", "Form-0-0");
-            ButtonTester buttonFour = new ButtonTester("myButton", "Form-1");
+        var buttonOne = new ButtonTester("myButton", "Form");
+        var buttonTwo = new ButtonTester("myButton", "Form-0");
+        var buttonThree = new ButtonTester("myButton", "Form-0-0");
+        var buttonFour = new ButtonTester("myButton", "Form-1");
 
-            buttonOne.Click();
-            buttonTwo.Click();
-            buttonThree.Click();
-            buttonOne.Click();
-            buttonFour.Click();
-        }
+        buttonOne.Click();
+        buttonTwo.Click();
+        buttonThree.Click();
+        buttonOne.Click();
+        buttonFour.Click();
+    }
 
-        [Test]
-        public void TestMultipleFormsShouldNotFindLastButton()
-        {
-            MultiForm form = new MultiForm();
-            form.Show();
+    [Test]
+    public void TestMultipleFormsShouldNotFindLastButton()
+    {
+        var form = new MultiForm();
+        form.Show();
 
-            ButtonTester buttonOne = new ButtonTester("myButton", "Form");
-            ButtonTester buttonTwo = new ButtonTester("myButton", "Form-0");
-            ButtonTester buttonThree = new ButtonTester("myButton", "Form-0-0");
-            ButtonTester buttonFour = new ButtonTester("myButton", "Form-1");
+        var buttonOne = new ButtonTester("myButton", "Form");
+        var buttonTwo = new ButtonTester("myButton", "Form-0");
+        var buttonThree = new ButtonTester("myButton", "Form-0-0");
+        var buttonFour = new ButtonTester("myButton", "Form-1");
 
-            buttonOne.Click();
-            buttonTwo.Click();
-            buttonThree.Click();
-            var ex = Assert.Throws<NoSuchControlException>(() => buttonFour.Click());
-            Assert.That(ex.Message, Does.Contain("Could not find form with name 'Form-1'"));
-        }
+        buttonOne.Click();
+        buttonTwo.Click();
+        buttonThree.Click();
+        var ex = Assert.Throws<NoSuchControlException>(buttonFour.Click);
+        Assert.That(ex.Message, Does.Contain("Could not find form with name 'Form-1'"));
     }
 }

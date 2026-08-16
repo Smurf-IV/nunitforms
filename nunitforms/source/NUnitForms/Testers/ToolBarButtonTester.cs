@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,114 +27,104 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
-
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+public class ToolBarButtonTester
 {
-    public class ToolBarButtonTester
+    private readonly ToolBarTester bar;
+
+    public ToolBarButtonTester(ToolBarButton button, ToolBarTester bar)
     {
-        private readonly ToolBarTester bar;
-        private readonly ToolBarButton button;
-
-        public ToolBarButtonTester(ToolBarButton button, ToolBarTester bar)
-        {
-            this.bar = bar;
-            this.button = button;
-        }
-
-        #region Properties
-
-        /// <summary>
-        /// The toolbar that this button refers too
-        /// </summary>
-        public ToolBar Bar
-        {
-            get { return bar.Properties; }
-        }
-
-        /// <summary>
-        /// The button that this tester encapsulates
-        /// </summary>
-        public ToolBarButton Button
-        {
-            get { return button; }
-        }
-
-        /// <summary>
-        /// Helper method to get the dropdown menu from a button
-        /// </summary>
-        public Menu DropDownMenu
-        {
-            get
-            {
-                FormsAssert.IsTrue(button.Style == ToolBarButtonStyle.DropDownButton);
-                return button.DropDownMenu;
-            }
-        }
-
-        public bool Pushed
-        {
-            set { Button.Pushed = value; }
-            get { return Button.Pushed; }
-        }
-
-        public bool PartialPushed
-        {
-            set { Button.PartialPush = value; }
-            get { return Button.PartialPush; }
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Click a pushbutton
-        /// </summary>
-        public void Click()
-        {
-            FormsAssert.IsTrue((button.Style == ToolBarButtonStyle.PushButton) ||
-                               (button.Style == ToolBarButtonStyle.ToggleButton ||
-                                button.Style == ToolBarButtonStyle.DropDownButton));
-            ToolBarButtonClickEventArgs buttonArg = new ToolBarButtonClickEventArgs(Button);
-            bar.FireEvent("ButtonClick", buttonArg);
-        }
-
-        /// <summary>
-        /// Click an item in a dropdown menu
-        /// </summary>
-        /// <param name="menuText">The name of the menu item to click</param>
-        public void ClickDropDownMenuItem(string menuText)
-        {
-            FormsAssert.IsTrue(button.Style == ToolBarButtonStyle.DropDownButton);
-            foreach (MenuItem item in button.DropDownMenu.MenuItems)
-            {
-                if (item.Text == menuText)
-                {
-                    item.PerformClick();
-                    return;
-                }
-            }
-        }
-
-        public void Push()
-        {
-            FormsAssert.IsTrue(button.Style == ToolBarButtonStyle.ToggleButton);
-            Pushed = !Pushed;
-        }
-
-        public void PartialPush()
-        {
-            FormsAssert.IsTrue(button.Style == ToolBarButtonStyle.ToggleButton);
-            PartialPushed = !PartialPushed;
-        }
-
-        #endregion
+        this.bar = bar;
+        Button = button;
     }
+
+    #region Properties
+
+    /// <summary>
+    /// The toolbar that this button refers too
+    /// </summary>
+    public ToolBar Bar => bar.Properties;
+
+    /// <summary>
+    /// The button that this tester encapsulates
+    /// </summary>
+    public ToolBarButton Button { get; }
+
+    /// <summary>
+    /// Helper method to get the dropdown menu from a button
+    /// </summary>
+    public Menu DropDownMenu
+    {
+        get
+        {
+            FormsAssert.IsTrue(Button.Style == ToolBarButtonStyle.DropDownButton);
+            return Button.DropDownMenu;
+        }
+    }
+
+    public bool Pushed
+    {
+        set => Button.Pushed = value;
+        get => Button.Pushed;
+    }
+
+    public bool PartialPushed
+    {
+        set => Button.PartialPush = value;
+        get => Button.PartialPush;
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Click a pushbutton
+    /// </summary>
+    public void Click()
+    {
+        FormsAssert.IsTrue((Button.Style == ToolBarButtonStyle.PushButton) ||
+                           (Button.Style == ToolBarButtonStyle.ToggleButton ||
+                            Button.Style == ToolBarButtonStyle.DropDownButton));
+        var buttonArg = new ToolBarButtonClickEventArgs(Button);
+        bar.FireEvent("ButtonClick", buttonArg);
+    }
+
+    /// <summary>
+    /// Click an item in a dropdown menu
+    /// </summary>
+    /// <param name="menuText">The name of the menu item to click</param>
+    public void ClickDropDownMenuItem(string menuText)
+    {
+        FormsAssert.IsTrue(Button.Style == ToolBarButtonStyle.DropDownButton);
+        foreach (MenuItem item in Button.DropDownMenu.MenuItems)
+        {
+            if (item.Text == menuText)
+            {
+                item.PerformClick();
+                return;
+            }
+        }
+    }
+
+    public void Push()
+    {
+        FormsAssert.IsTrue(Button.Style == ToolBarButtonStyle.ToggleButton);
+        Pushed = !Pushed;
+    }
+
+    public void PartialPush()
+    {
+        FormsAssert.IsTrue(Button.Style == ToolBarButtonStyle.ToggleButton);
+        PartialPushed = !PartialPushed;
+    }
+
+    #endregion
 }

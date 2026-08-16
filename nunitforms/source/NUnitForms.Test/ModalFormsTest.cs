@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,54 +27,54 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using System;
+using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ModalFormsTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ModalFormsTest : NUnitFormTest
+    public override bool UseHidden => false;
+
+    public void handler(string name, IntPtr hWnd, Form form)
     {
-        public override bool UseHidden
-        {
-            get
-            {
-                return false;
-            }
-        }
+        var btnClose = new ButtonTester("btnClose", "Form-0");
+        btnClose.Click();
+    }
 
-        public void handler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            ButtonTester btnClose = new ButtonTester("btnClose", "Form-0");
-            btnClose.Click();
-        }
+    [Test]
+    public void ModalFormDoesntShow()
+    {
+        var f = new ModalMultiForm();
+        f.Show();
+        ModalFormHandler = handler;
+        f.Close();
+        var ex = Assert.Throws<FormsTestAssertionException>(Verify);
+        Assert.That(ex.Message, Does.Contain("Expected Modal Form did not show"));
+    }
 
-        [Test]
-        public void ModalFormDoesntShow()
-        {
-            ModalMultiForm f = new ModalMultiForm();
-            f.Show();
-            ModalFormHandler = handler;
-            f.Close();
-            var ex = Assert.Throws<FormsTestAssertionException>(() => Verify());
-            Assert.That(ex.Message, Does.Contain("Expected Modal Form did not show"));
-        }
+    [Test]
+    public void TestModalForm()
+    {
+        var form = new ModalMultiForm();
+        form.Show();
 
-        [Test]
-        public void TestModalForm()
-        {
-            ModalMultiForm form = new ModalMultiForm();
-            form.Show();
-            
-            ButtonTester buttonOne = new ButtonTester("myButton", "Form");
-            ModalFormHandler = handler;
-            buttonOne.Click();
-            form.Close();
-            Verify();
+        var buttonOne = new ButtonTester("myButton", "Form");
+        ModalFormHandler = handler;
+        buttonOne.Click();
+        form.Close();
+        Verify();
 
-        }
     }
 }

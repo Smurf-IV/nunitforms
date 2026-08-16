@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,46 +27,39 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Testers;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+public class TreeViewRecorder : ControlRecorder
 {
-    public class TreeViewRecorder : ControlRecorder
+    public TreeViewRecorder(Listener listener) : base(listener)
     {
-        public TreeViewRecorder(Listener listener) : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (TreeView); }
-        }
+    public override Type RecorderType => typeof (TreeView);
 
-        public override Type TesterType
-        {
-            get { return typeof (TreeViewTester); }
-        }
+    public override Type TesterType => typeof (TreeViewTester);
 
-        public void AfterSelect(object sender, TreeViewEventArgs e)
+    public void AfterSelect(object sender, TreeViewEventArgs e)
+    {
+        TreeNode node = e.Node;
+        var list = new List<object>();
+        while (node.Parent != null)
         {
-            TreeNode node = e.Node;
-            var list = new List<object>();
-            while (node.Parent != null)
-            {
-                list.Add(node.Parent.Nodes.IndexOf(node));
-                node = node.Parent;
-            }
-            list.Add(((TreeView) sender).Nodes.IndexOf(node));
-            list.Reverse();
-
-            Listener.FireEvent(TesterType, sender, new EventAction("SelectNode", list.ToArray()));
+            list.Add(node.Parent.Nodes.IndexOf(node));
+            node = node.Parent;
         }
+        list.Add(((TreeView) sender).Nodes.IndexOf(node));
+        list.Reverse();
+
+        Listener.FireEvent(TesterType, sender, new EventAction("SelectNode", [.. list]));
     }
 }

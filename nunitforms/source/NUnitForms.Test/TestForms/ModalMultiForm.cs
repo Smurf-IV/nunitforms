@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,140 +36,139 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for MultiForm.
+/// </summary>
+public class ModalMultiForm : Form
 {
+    private Button btnClose;
+
     /// <summary>
-    /// Summary description for MultiForm.
+    /// Required designer variable.
     /// </summary>
-    public class ModalMultiForm : Form
+    private readonly Container? components = null;
+
+    private Button myButton;
+    private Label myLabel;
+    private Button nothingButton;
+
+    public ModalMultiForm()
     {
-        private Button btnClose;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
-
-        private Button myButton;
-        private Label myLabel;
-        private Button nothingButton;
-
-        public ModalMultiForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-            Name = "Form";
-            Text = "Form";
-        }
-
-        ~ModalMultiForm()
-        {
-            Dispose(false);
-        }
-
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            lock (this)
-            {
-                if (disposing)
-                {
-                    if (components != null)
-                    {
-                        components.Dispose();
-                    }
-                }
-                ////if (Handle != IntPtr.Zero)
-                ////{
-                //bool closeHandle = Win32.CloseHandle(Handle);
-                //System.Console.WriteLine("disposing ModalMultiForm : " + closeHandle);
-                ////}
-                base.Dispose(disposing);
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            int i = int.Parse(myLabel.Text) + 1;
-            myLabel.Text = i.ToString();
-
-            ModalMultiForm newForm = new ModalMultiForm();
-            newForm.Name = Name + "-" + (i - 1);
-            newForm.Text = newForm.Name;
-            newForm.ShowDialog();
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myButton = new Button();
-            this.myLabel = new Label();
-            this.nothingButton = new Button();
-            this.btnClose = new Button();
-            this.SuspendLayout();
-            // 
-            // myButton
-            // 
-            this.myButton.Location = new Point(104, 88);
-            this.myButton.Name = "myButton";
-            this.myButton.TabIndex = 0;
-            this.myButton.Text = "Click me";
-            this.myButton.Click += new EventHandler(this.button1_Click);
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(112, 144);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "0";
-            // 
-            // nothingButton
-            // 
-            this.nothingButton.Location = new Point(104, 208);
-            this.nothingButton.Name = "nothingButton";
-            this.nothingButton.TabIndex = 2;
-            this.nothingButton.Text = "Nothing";
-            // 
-            // btnClose
-            // 
-            this.btnClose.Location = new Point(200, 208);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.TabIndex = 3;
-            this.btnClose.Text = "Close";
-            this.btnClose.Click += new EventHandler(this.btnClose_Click);
-            // 
-            // MultiForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(292, 273);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.nothingButton);
-            this.Controls.Add(this.myLabel);
-            this.Controls.Add(this.myButton);
-            this.Name = "MultiForm";
-            this.Text = "MultiForm1";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
+        Name = "Form";
+        Text = "Form";
     }
+
+    ~ModalMultiForm()
+    {
+        Dispose(false);
+    }
+
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        lock (this)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            ////if (Handle != IntPtr.Zero)
+            ////{
+            //bool closeHandle = Win32.CloseHandle(Handle);
+            //System.Console.WriteLine("disposing ModalMultiForm : " + closeHandle);
+            ////}
+            base.Dispose(disposing);
+        }
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        int i = int.Parse(myLabel.Text) + 1;
+        myLabel.Text = i.ToString();
+
+        var newForm = new ModalMultiForm();
+        newForm.Name = Name + "-" + (i - 1);
+        newForm.Text = newForm.Name;
+        newForm.ShowDialog();
+    }
+
+    private void btnClose_Click(object sender, EventArgs e)
+    {
+        Close();
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myButton = new Button();
+        myLabel = new Label();
+        nothingButton = new Button();
+        btnClose = new Button();
+        SuspendLayout();
+        // 
+        // myButton
+        // 
+        myButton.Location = new Point(104, 88);
+        myButton.Name = "myButton";
+        myButton.TabIndex = 0;
+        myButton.Text = "Click me";
+        myButton.Click += new EventHandler(button1_Click);
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(112, 144);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "0";
+        // 
+        // nothingButton
+        // 
+        nothingButton.Location = new Point(104, 208);
+        nothingButton.Name = "nothingButton";
+        nothingButton.TabIndex = 2;
+        nothingButton.Text = "Nothing";
+        // 
+        // btnClose
+        // 
+        btnClose.Location = new Point(200, 208);
+        btnClose.Name = "btnClose";
+        btnClose.TabIndex = 3;
+        btnClose.Text = "Close";
+        btnClose.Click += new EventHandler(btnClose_Click);
+        // 
+        // MultiForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(292, 273);
+        Controls.Add(btnClose);
+        Controls.Add(nothingButton);
+        Controls.Add(myLabel);
+        Controls.Add(myButton);
+        Name = "MultiForm";
+        Text = "MultiForm1";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,61 +27,61 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-using System;
-using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ComboBoxTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ComboBoxTest : NUnitFormTest
+    private ComboBoxTester box;
+
+    public override void Setup()
     {
-        private ComboBoxTester box;
+        new ComboBoxTestForm().Show();
+        box = new ComboBoxTester("myComboBox");
+    }
 
-        public override void Setup()
-        {
-            new ComboBoxTestForm().Show();
-            box = new ComboBoxTester("myComboBox");
-        }
+    [Test]
+    public void MethodInvokeOnControlTester()
+    {
+        object foundIndex = box.Invoke("FindStringExact", "three");
+        Assert.AreEqual(2, foundIndex);
+    }
 
-        [Test]
-        public void MethodInvokeOnControlTester()
-        {
-            object foundIndex = box.Invoke("FindStringExact", "three");
-            Assert.AreEqual(2, foundIndex);
-        }
+    [Test]
+    public void Select()
+    {
+        box.Select(2);
+        Assert.AreEqual("three", box.Text);
+    }
 
-        [Test]
-        public void Select()
-        {
-            box.Select(2);
-            Assert.AreEqual("three", box.Text);
-        }
+    [Test]
+    public void SelectByBadText()
+    {
+        var ex = Assert.Throws<FormsTestAssertionException>(() => box.Select("not-in-the-box"));
+        Assert.That(ex.Message, Does.Contain("Could not find text 'not-in-the-box' in ComboBox 'myComboBox'"));
+    }
 
-        [Test]
-        public void SelectByBadText()
-        {
-            var ex = Assert.Throws<FormsTestAssertionException>(() => box.Select("not-in-the-box"));
-            Assert.That(ex.Message, Does.Contain("Could not find text 'not-in-the-box' in ComboBox 'myComboBox'"));
-        }
+    [Test]
+    public void SelectByText()
+    {
+        box.Select("three");
+        Assert.AreEqual("three", box.Text);
+    }
 
-        [Test]
-        public void SelectByText()
-        {
-            box.Select("three");
-            Assert.AreEqual("three", box.Text);
-        }
-
-        [Test]
-        public void TextBox()
-        {
-            Assert.AreEqual("None", box.Text);
-            box.Enter("Text");
-            Assert.AreEqual("Text", box.Text);
-        }
+    [Test]
+    public void TextBox()
+    {
+        Assert.AreEqual("None", box.Text);
+        box.Enter("Text");
+        Assert.AreEqual("Text", box.Text);
     }
 }

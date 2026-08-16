@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,42 +27,42 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Exceptions;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Form for use in testing <see cref="AmbiguousNameException"/>.
+/// </summary>
+public partial class AmbiguousNameForm : Form
 {
     /// <summary>
-    /// Form for use in testing <see cref="AmbiguousNameException"/>.
+    /// Constructs a new <see cref="AmbiguousNameForm"/>.
     /// </summary>
-    public partial class AmbiguousNameForm : Form
+    public AmbiguousNameForm()
     {
-        /// <summary>
-        /// Constructs a new <see cref="AmbiguousNameForm"/>.
-        /// </summary>
-        public AmbiguousNameForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void onSuperClick1(object sender, EventArgs e)
-        {
-            IncrementLabel(myFirstLabel);
-        }
+    private void onSuperClick1(object sender, EventArgs e)
+    {
+        IncrementLabel(myFirstLabel);
+    }
 
-        private void onSuperClick2(object sender, EventArgs e)
-        {
-            IncrementLabel(mySecondLabel);
-        }
+    private void onSuperClick2(object sender, EventArgs e)
+    {
+        IncrementLabel(mySecondLabel);
+    }
 
-        private static void IncrementLabel(Label label)
-        {
-            int i = int.Parse(label.Text) + 1;
-            label.Text = i.ToString();
-        }
+    private static void IncrementLabel(Label label)
+    {
+        int i = int.Parse(label.Text) + 1;
+        label.Text = i.ToString();
     }
 }

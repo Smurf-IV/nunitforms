@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.9.12105.275 stable
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitForms.Test", "NUnitForms.Test\NUnitForms.Test.csproj", "{E779CBD7-1CCE-4796-AE12-00AB56A8A815}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitForms.Recorder", "NUnitForms.Recorder\NUnitForms.Recorder.csproj", "{DAAB0423-50E1-4868-B5A7-07D47BF7CE45}"
@@ -9,10 +11,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitForms.Recorder.Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitForms", "NUnitForms\NUnitForms.csproj", "{E579ACDA-8C4F-4E35-A18B-C001D9EECD2B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Z_SolutionItems", "Z_SolutionItems", "{219E1436-9569-403A-B731-393309A74653}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\..\.gitignore = ..\..\.gitignore
+		..\license.txt = ..\license.txt
+		..\..\README.md = ..\..\README.md
+		..\..\Release_Notes.md = ..\..\Release_Notes.md
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NUnitForms1.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -37,5 +45,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A7AFECA8-9C82-4CFE-BF9B-714C9EA963AF}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NUnitForms1.vsmdi
 	EndGlobalSection
 EndGlobal

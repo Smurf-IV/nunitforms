@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,68 +27,65 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
-
-//Contributed by: Ian Cooper
 
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public class CheckedListBoxTestForm : Form
 {
-    public class CheckedListBoxTestForm : Form
+    private CheckedListBox checkedListBox;
+
+    private readonly Container? components = null;
+
+    public CheckedListBoxTestForm()
     {
-        private CheckedListBox checkedListBox;
-
-        private Container components = null;
-
-        public CheckedListBoxTestForm()
-        {
-            InitializeComponent();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.checkedListBox = new System.Windows.Forms.CheckedListBox();
-            this.SuspendLayout();
-            // 
-            // checkedListBox
-            // 
-            this.checkedListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkedListBox.Location = new System.Drawing.Point(0, 0);
-            this.checkedListBox.Name = "checkedListBox";
-            this.checkedListBox.Size = new System.Drawing.Size(292, 259);
-            this.checkedListBox.TabIndex = 0;
-            // 
-            // CheckedListBoxTestForm
-            // 
-            this.ClientSize = new System.Drawing.Size(292, 273);
-            this.Controls.Add(this.checkedListBox);
-            this.Name = "CheckedListBoxTestForm";
-            this.Text = "CheckedListBoxTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        InitializeComponent();
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        checkedListBox = new CheckedListBox();
+        SuspendLayout();
+        // 
+        // checkedListBox
+        // 
+        checkedListBox.Dock = DockStyle.Fill;
+        checkedListBox.Location = new System.Drawing.Point(0, 0);
+        checkedListBox.Name = "checkedListBox";
+        checkedListBox.Size = new System.Drawing.Size(292, 259);
+        checkedListBox.TabIndex = 0;
+        // 
+        // CheckedListBoxTestForm
+        // 
+        ClientSize = new System.Drawing.Size(292, 273);
+        Controls.Add(checkedListBox);
+        Name = "CheckedListBoxTestForm";
+        Text = "CheckedListBoxTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

@@ -1,12 +1,11 @@
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class DialogWithNoHandlersForm : Form
 {
-    public partial class DialogWithNoHandlersForm : Form
+    public DialogWithNoHandlersForm()
     {
-        public DialogWithNoHandlersForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

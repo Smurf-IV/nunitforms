@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,34 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Generic_Testers;
 
-namespace NUnit.Extensions.Forms
+#pragma warning disable IDE0130
+namespace NUnit.Extensions.Forms.Testers;
+
+
+public class LabelTester : ControlTester<Label, LabelTester>
 {
-    public class LabelTester : ControlTester<Label, LabelTester>
+    public LabelTester()
     {
-        public LabelTester()
-        {
-        }
+    }
 
-        public LabelTester(string name, Form form) : base(name, form)
-        {
-        }
+    public LabelTester(string name, Form form) : base(name, form)
+    {
+    }
 
-        public LabelTester(string name, string formName) : base(name, formName)
-        {
-        }
+    public LabelTester(string name, string formName) : base(name, formName)
+    {
+    }
 
-        public LabelTester(string name) : base(name)
-        {
-        }
+    public LabelTester(string name) : base(name)
+    {
+    }
 
-        public LabelTester(LabelTester tester, int index) : base(tester, index)
-        {
-        }
+    public LabelTester(LabelTester tester, int index) : base(tester, index)
+    {
     }
 }

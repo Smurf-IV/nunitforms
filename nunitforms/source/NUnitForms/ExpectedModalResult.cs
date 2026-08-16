@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,70 +27,68 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Collections.ObjectModel;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+/// <summary>
+/// This class stores expected and unexpected dialog information.
+/// </summary>
+public class ExpectedModalResult
 {
     /// <summary>
-    /// This class stores expected and unexpected dialog information.
+    /// The actual caption of this window.
     /// </summary>
-    public class ExpectedModalResult
-    {
-        /// <summary>
-        /// The actual caption of this window.
-        /// </summary>
-        public string ActualCaption;
-
-        /// <summary>
-        /// The actual WinForms name of this window, if applicable.
-        /// </summary>
-        public string ActualName;
-
-        /// <summary>
-        /// The expected key for this window.
-        /// </summary>
-        public string ExpectedName;
-
-        /// <summary>
-        /// True if this window was expected.
-        /// </summary>
-        public bool WasExpected;
-
-        /// <summary>
-        /// True if this window was shown.
-        /// </summary>
-        public bool WasShown;
-
-        /// <summary>
-        /// True if this window was expected and shown, or unexpected and not shown.
-        /// </summary>
-        public bool Passed
-        {
-            get { return WasExpected == WasShown; }
-        }
-    }
+    public string ActualCaption;
 
     /// <summary>
-    /// A collection of <see cref="ExpectedModalResult"/>s.
+    /// The actual WinForms name of this window, if applicable.
     /// </summary>
-    public class ExpectedModalResultCollection : Collection<ExpectedModalResult>
+    public string ActualName;
+
+    /// <summary>
+    /// The expected key for this window.
+    /// </summary>
+    public string ExpectedName;
+
+    /// <summary>
+    /// True if this window was expected.
+    /// </summary>
+    public bool WasExpected;
+
+    /// <summary>
+    /// True if this window was shown.
+    /// </summary>
+    public bool WasShown;
+
+    /// <summary>
+    /// True if this window was expected and shown, or unexpected and not shown.
+    /// </summary>
+    public bool Passed => WasExpected == WasShown;
+}
+
+/// <summary>
+/// A collection of <see cref="ExpectedModalResult"/>s.
+/// </summary>
+public class ExpectedModalResultCollection : Collection<ExpectedModalResult>
+{
+    /// <summary>
+    /// Returns a list of all results in this list that did not pass.
+    /// </summary>
+    public ExpectedModalResultCollection GetFailures()
     {
-        /// <summary>
-        /// Returns a list of all results in this list that did not pass.
-        /// </summary>
-        public ExpectedModalResultCollection GetFailures()
+        ExpectedModalResultCollection list = [];
+        foreach (var result in this)
         {
-            ExpectedModalResultCollection list = new ExpectedModalResultCollection();
-            foreach (ExpectedModalResult result in this)
+            if (!result.Passed)
             {
-                if (!result.Passed)
-                    list.Add(result);
+                list.Add(result);
             }
-            return list;
         }
+        return list;
     }
 }

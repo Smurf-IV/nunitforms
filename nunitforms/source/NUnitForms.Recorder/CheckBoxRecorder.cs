@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,46 +27,44 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+using NUnit.Extensions.Forms.Testers;
+
+
+namespace NUnitForms.Recorder;
+
+public class CheckBoxRecorder : ControlRecorder
 {
-    public class CheckBoxRecorder : ControlRecorder
+    public CheckBoxRecorder(Listener listener)
+        : base(listener)
     {
-        public CheckBoxRecorder(Listener listener) : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (CheckBox); }
-        }
+    /// <inheritdoc />
+    public override Type RecorderType => typeof(CheckBox);
 
-        public override Type TesterType
-        {
-            get { return typeof (CheckBoxTester); }
-        }
+    /// <inheritdoc />
+    public override Type TesterType => typeof(CheckBoxTester);
 
-        public void Click(object sender, EventArgs args)
+    public void Click(object sender, EventArgs args)
+    {
+        if (sender is not CheckBox checkBox)
         {
-            CheckBox checkBox = sender as CheckBox;
-            if (checkBox == null)
-            {
-                return;
-            }
-            if (checkBox.Checked)
-            {
-                Listener.FireEvent(TesterType, sender, "Check");
-            }
-            else
-            {
-                Listener.FireEvent(TesterType, sender, "UnCheck");
-            }
+            return;
+        }
+        if (checkBox.Checked)
+        {
+            Listener.FireEvent(TesterType, sender, "Check");
+        }
+        else
+        {
+            Listener.FireEvent(TesterType, sender, "UnCheck");
         }
     }
 }

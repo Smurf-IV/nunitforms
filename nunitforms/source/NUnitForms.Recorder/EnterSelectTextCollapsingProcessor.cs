@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,31 +27,30 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms.Recorder
-{
-    ///<summary>
-    /// A <see cref="CollapsingProcessor"/> that combines entering and selecting text.
-    ///</summary>
-    public class EnterSelectTextCollapsingProcessor : CollapsingProcessor
-    {
-        private const string Enter = "Enter";
-        private const string Select = "Select";
+namespace NUnitForms.Recorder;
 
-        /// <summary>
-        /// Returns true if the given actions can be collapsed.
-        /// </summary>
-        /// <param name="action1">The earlier event to test.</param>
-        /// <param name="action2">The latter event to test.</param>
-        /// <returns>True if these events can be collapsed; else false.</returns>
-        public override bool CanCollapse(EventAction action1, EventAction action2)
-        {
-            return action1.Control == action2.Control &&
-                   action1.MethodName == Enter &&
-                   action2.MethodName == Select;
-        }
+///<summary>
+/// A <see cref="CollapsingProcessor"/> that combines entering and selecting text.
+///</summary>
+public class EnterSelectTextCollapsingProcessor : CollapsingProcessor
+{
+    private const string Enter = "Enter";
+    private const string Select = "Select";
+
+    /// <summary>
+    /// Returns true if the given actions can be collapsed.
+    /// </summary>
+    /// <param name="action1">The earlier event to test.</param>
+    /// <param name="action2">The latter event to test.</param>
+    /// <returns>True if these events can be collapsed; else false.</returns>
+    public override bool CanCollapse(EventAction action1, EventAction action2)
+    {
+        return action1.Control == action2.Control &&
+               action1.MethodName == Enter &&
+               action2.MethodName == Select;
     }
 }

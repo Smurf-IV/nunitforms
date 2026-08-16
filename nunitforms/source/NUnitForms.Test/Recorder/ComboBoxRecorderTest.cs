@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,36 +27,38 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class ComboBoxRecorderTest : NUnitFormTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class ComboBoxRecorderTest : NUnitFormTest
+    [Test]
+    public void ComboBoxEnter()
     {
-        [Test]
-        public void ComboBoxEnter()
-        {
-            Form f = new ComboBoxTestForm();
-            f.Show();
+        Form f = new ComboBoxTestForm();
+        f.Show();
 
-            TestWriter writer = new TestWriter(f);
-            Assert.AreEqual("", writer.Test);
+        var writer = new TestWriter(f);
+        Assert.AreEqual("", writer.Test);
 
-            ComboBoxTester comboBox = new ComboBoxTester("myComboBox");
-            //doing 2 of these tests the collapsing processor.
-            comboBox.Enter("abc");
-            comboBox.Enter("abcd");
+        var comboBox = new ComboBoxTester("myComboBox");
+        //doing 2 of these tests the collapsing processor.
+        comboBox.Enter("abc");
+        comboBox.Enter("abcd");
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -64,27 +67,27 @@ public void Test()
 	myComboBox.Enter(""abcd"");
 
 }",
-                writer.Test);
-        }
+            writer.Test);
+    }
 
-        [Test]
-        public void ComboBoxEnterAndSelect()
-        {
-            Form f = new ComboBoxTestForm();
-            f.Show();
+    [Test]
+    public void ComboBoxEnterAndSelect()
+    {
+        Form f = new ComboBoxTestForm();
+        f.Show();
 
-            TestWriter writer = new TestWriter(f);
-            Assert.AreEqual("", writer.Test);
+        var writer = new TestWriter(f);
+        Assert.AreEqual("", writer.Test);
 
-            ComboBoxTester comboBox = new ComboBoxTester("myComboBox");
-            //doing 2 of these tests the collapsing processor.
-            comboBox.Select(1);
-            comboBox.Enter("abcd");
-            comboBox.Enter("abcde");
-            comboBox.Select(2);
+        var comboBox = new ComboBoxTester("myComboBox");
+        //doing 2 of these tests the collapsing processor.
+        comboBox.Select(1);
+        comboBox.Enter("abcd");
+        comboBox.Enter("abcde");
+        comboBox.Select(2);
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -95,25 +98,25 @@ public void Test()
 	myComboBox.Select(2); //three
 
 }",
-                writer.Test);
-        }
+            writer.Test);
+    }
 
-        [Test]
-        public void ComboBoxSelect()
-        {
-            Form f = new ComboBoxTestForm();
-            f.Show();
+    [Test]
+    public void ComboBoxSelect()
+    {
+        Form f = new ComboBoxTestForm();
+        f.Show();
 
-            TestWriter writer = new TestWriter(f);
-            Assert.AreEqual("", writer.Test);
+        var writer = new TestWriter(f);
+        Assert.AreEqual("", writer.Test);
 
-            ComboBoxTester comboBox = new ComboBoxTester("myComboBox");
-            //doing 2 of these tests the collapsing processor.
-            comboBox.Select(1);
-            comboBox.Select(2);
+        var comboBox = new ComboBoxTester("myComboBox");
+        //doing 2 of these tests the collapsing processor.
+        comboBox.Select(1);
+        comboBox.Select(2);
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -123,7 +126,6 @@ public void Test()
 	myComboBox.Select(2); //three
 
 }",
-                writer.Test);
-        }
+            writer.Test);
     }
 }

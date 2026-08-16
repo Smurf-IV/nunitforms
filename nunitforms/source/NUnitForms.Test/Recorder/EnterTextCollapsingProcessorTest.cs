@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,104 +27,107 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Collections.Generic;
+
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+using NUnitForms.Recorder;
+
+
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class EnterTextCollapsingProcessorTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class EnterTextCollapsingProcessorTest
+    #region Setup/Teardown
+
+    [SetUp]
+    public void setup()
     {
-        #region Setup/Teardown
+        processor = new EnterTextCollapsingProcessor();
+        list = new List<Action>();
+    }
 
-        [SetUp]
-        public void setup()
-        {
-            processor = new EnterTextCollapsingProcessor();
-            list = new List<Action>();
-        }
+    #endregion
 
-        #endregion
+    private IList<Action>? list;
 
-        private IList<Action> list = null;
+    private readonly string control1 = "control1";
 
-        private string control1 = "control1";
+    private readonly string control2 = "control2";
 
-        private string control2 = "control2";
+    private readonly string enter = "Enter";
 
-        private string enter = "Enter";
+    private readonly string notenter = "NotEnter";
 
-        private string notenter = "NotEnter";
+    private EnterTextCollapsingProcessor? processor;
 
-        private EnterTextCollapsingProcessor processor = null;
+    public void Add(string control, string method, string arg)
+    {
+        var action = new EventAction(method, arg);
+        action.Definition = new Definition(null, control, null, null);
+        list.Add(action);
+    }
 
-        public void Add(string control, string method, string arg)
-        {
-            EventAction action = new EventAction(method, arg);
-            action.Definition = new Definition(null, control, null, null);
-            list.Add(action);
-        }
+    public void Process()
+    {
+        list = new List<Action>(processor.Process(list));
+    }
 
-        public void Process()
-        {
-            list = new List<Action>(processor.Process(list));
-        }
+    public EventAction Action(int i)
+    {
+        return list[i] as EventAction;
+    }
 
-        public EventAction Action(int i)
-        {
-            return list[i] as EventAction;
-        }
+    [Test]
+    public void CanCollapse()
+    {
+        Add(control1, enter, "test");
+        Add(control1, enter, "test2");
+        Process();
+        Assert.AreEqual(1, list.Count);
+        Assert.AreEqual("test2", Action(0).Args[0]);
+    }
 
-        [Test]
-        public void CanCollapse()
-        {
-            Add(control1, enter, "test");
-            Add(control1, enter, "test2");
-            Process();
-            Assert.AreEqual(1, list.Count);
-            Assert.AreEqual("test2", Action(0).Args[0]);
-        }
+    [Test]
+    public void CanCollapseMoreComplex()
+    {
+        Add(control1, enter, "test");
+        Add(control1, enter, "test2");
+        Add(control1, enter, "test3");
+        Add(control1, notenter, "test4");
+        Add(control2, enter, "test5");
+        Add(control2, enter, "test6");
+        Add(control1, enter, "test7");
 
-        [Test]
-        public void CanCollapseMoreComplex()
-        {
-            Add(control1, enter, "test");
-            Add(control1, enter, "test2");
-            Add(control1, enter, "test3");
-            Add(control1, notenter, "test4");
-            Add(control2, enter, "test5");
-            Add(control2, enter, "test6");
-            Add(control1, enter, "test7");
+        Process();
+        Assert.AreEqual(4, list.Count);
+        Assert.AreEqual("test3", Action(0).Args[0]);
+        Assert.AreEqual("test4", Action(1).Args[0]);
+        Assert.AreEqual("test6", Action(2).Args[0]);
+        Assert.AreEqual("test7", Action(3).Args[0]);
+    }
 
-            Process();
-            Assert.AreEqual(4, list.Count);
-            Assert.AreEqual("test3", Action(0).Args[0]);
-            Assert.AreEqual("test4", Action(1).Args[0]);
-            Assert.AreEqual("test6", Action(2).Args[0]);
-            Assert.AreEqual("test7", Action(3).Args[0]);
-        }
+    [Test]
+    public void DontCollapseDifferentControls()
+    {
+        Add(control1, enter, "test");
+        Add(control2, enter, "test2");
+        Process();
+        Assert.AreEqual(2, list.Count);
+    }
 
-        [Test]
-        public void DontCollapseDifferentControls()
-        {
-            Add(control1, enter, "test");
-            Add(control2, enter, "test2");
-            Process();
-            Assert.AreEqual(2, list.Count);
-        }
-
-        [Test]
-        public void DontCollapseDifferentMethods()
-        {
-            Add(control1, enter, "test");
-            Add(control1, notenter, "test2");
-            Process();
-            Assert.AreEqual(2, list.Count);
-        }
+    [Test]
+    public void DontCollapseDifferentMethods()
+    {
+        Add(control1, enter, "test");
+        Add(control1, notenter, "test2");
+        Process();
+        Assert.AreEqual(2, list.Count);
     }
 }

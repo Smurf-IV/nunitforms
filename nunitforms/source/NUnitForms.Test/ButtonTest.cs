@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,71 +27,75 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
+
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ButtonTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ButtonTest : NUnitFormTest
+    private LabelTester label;
+
+    private ButtonTester button;
+
+    public override void Setup()
     {
-        private LabelTester label;
+        new ButtonTestForm().Show();
+        button = new ButtonTester("myButton");
+        label = new LabelTester("myLabel");
+    }
 
-        private ButtonTester button;
+    [Test]
+    public void ButtonClick()
+    {
+        Assert.AreEqual("0", label.Text);
+        button.Click();
+        Assert.AreEqual("1", label.Text);
+    }
 
-        public override void Setup()
-        {
-            new ButtonTestForm().Show();
-            button = new ButtonTester("myButton");
-            label = new LabelTester("myLabel");
-        }
+    [Test]
+    public void ButtonText()
+    {
+        Assert.AreEqual("button1", button.Text);
+    }
 
-        [Test]
-        public void ButtonClick()
-        {
-            Assert.AreEqual("0", label.Text);
-            button.Click();
-            Assert.AreEqual("1", label.Text);
-        }
+    [Test]
+    public void Click_ThrowsException_IfNotEnabled()
+    {
+        button.Properties.Enabled = false;
+        Assert.Throws<ControlNotEnabledException>(() => button.Click());
+    }
 
-        [Test]
-        public void ButtonText()
-        {
-            Assert.AreEqual("button1", button.Text);
-        }
+    [Test]
+    public void Click_ThrowsException_IfNotVisible()
+    {
+        button.Properties.Visible = false;
+        Assert.Throws<ControlNotVisibleException>(() => button.Click());
+    }
 
-        [Test]
-        public void Click_ThrowsException_IfNotEnabled()
-        {
-            button.Properties.Enabled = false;
-            Assert.Throws<ControlNotEnabledException>(() => button.Click());
-        }
+    [Test]
+    public void FireEvent()
+    {
+        Assert.AreEqual("0", label.Text);
+        button.FireEvent("Click");
+        Assert.AreEqual("1", label.Text);
+    }
 
-        [Test]
-        public void Click_ThrowsException_IfNotVisible()
-        {
-            button.Properties.Visible = false;
-            Assert.Throws<ControlNotVisibleException>(() => button.Click());
-        }
-
-        [Test]
-        public void FireEvent()
-        {
-            Assert.AreEqual("0", label.Text);
-            button.FireEvent("Click");
-            Assert.AreEqual("1", label.Text);
-        }
-
-        [Test]
-        public void FireEventWithArg()
-        {
-            Assert.AreEqual("0", label.Text);
-            button.FireEvent("Click", new EventArgs());
-            Assert.AreEqual("1", label.Text);
-        }
+    [Test]
+    public void FireEventWithArg()
+    {
+        Assert.AreEqual("0", label.Text);
+        button.FireEvent("Click", new EventArgs());
+        Assert.AreEqual("1", label.Text);
     }
 }

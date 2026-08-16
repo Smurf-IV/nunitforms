@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,54 +27,55 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Exceptions;
+
+namespace NUnit.Extensions.Forms;
+
+///<summary>
+/// Additional assertion methods for NUnitForms.
+///</summary>
+public class FormsAssert
 {
     ///<summary>
-    /// Additional assertion methods for NUnitForms.
+    /// Asserts that the given objects are equal.
     ///</summary>
-    public class FormsAssert
+    ///<param name="o"></param>
+    ///<param name="o2"></param>
+    ///<param name="error"></param>
+    ///<exception cref="FormsTestAssertionException"></exception>
+    public static void AreEqual(object o, object o2, string error)
     {
-        ///<summary>
-        /// Asserts that the given objects are equal.
-        ///</summary>
-        ///<param name="o"></param>
-        ///<param name="o2"></param>
-        ///<param name="error"></param>
-        ///<exception cref="FormsTestAssertionException"></exception>
-        public static void AreEqual(object o, object o2, string error)
+        if (!o.Equals(o2))
         {
-            if (!o.Equals(o2))
-            {
-                throw new FormsTestAssertionException("should be equal " + o + " : " + o2 + " , " + error);
-            }
+            throw new FormsTestAssertionException("should be equal " + o + " : " + o2 + " , " + error);
         }
+    }
 
-        ///<summary>
-        /// Asserts that the given value is true.
-        ///</summary>
-        ///<param name="val"></param>
-        ///<exception cref="FormsTestAssertionException"></exception>
-        public static void IsTrue(bool val)
-        {
-            IsTrue(val, "was not true.");
-        }
+    ///<summary>
+    /// Asserts that the given value is true.
+    ///</summary>
+    ///<param name="val"></param>
+    ///<exception cref="FormsTestAssertionException"></exception>
+    public static void IsTrue(bool val)
+    {
+        IsTrue(val, "was not true.");
+    }
 
-        ///<summary>
-        /// Asserts that the given value is true.
-        ///</summary>
-        ///<param name="val"></param>
-        ///<param name="error"></param> 
-        ///<exception cref="FormsTestAssertionException"></exception>
-        public static void IsTrue(bool val, string error)
+    ///<summary>
+    /// Asserts that the given value is true.
+    ///</summary>
+    ///<param name="val"></param>
+    ///<param name="error"></param> 
+    ///<exception cref="FormsTestAssertionException"></exception>
+    public static void IsTrue(bool val, string error)
+    {
+        if (!val)
         {
-            if (!val)
-            {
-                throw new FormsTestAssertionException(error);
-            }
+            throw new FormsTestAssertionException(error);
         }
     }
 }

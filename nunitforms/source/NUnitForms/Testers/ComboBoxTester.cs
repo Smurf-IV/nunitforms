@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,64 +27,65 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Exceptions;
+
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing ComboBoxes.
+/// </summary>
+/// <remarks>
+/// Has convenience methods for Selecting items and Entering text.
+/// <para>
+/// Fully supported by the recorder application
+/// </para>
+/// </remarks>
+public partial class ComboBoxTester
 {
     /// <summary>
-    /// A ControlTester for testing ComboBoxes.
+    /// Sets the text property of the ComboBox to the specified value.
     /// </summary>
     /// <remarks>
-    /// Has convenience methods for Selecting items and Entering text.
-    /// <para>
-    /// Fully supported by the recorder application
-    /// </para>
+    /// Also calls EndCurrentEdit() so that databinding will happen.
     /// </remarks>
-    public partial class ComboBoxTester
+    /// <param name="text">The specified value for the text property.</param>
+    public void Enter(string text)
     {
-        /// <summary>
-        /// Sets the text property of the ComboBox to the specified value.
-        /// </summary>
-        /// <remarks>
-        /// Also calls EndCurrentEdit() so that databinding will happen.
-        /// </remarks>
-        /// <param name="text">The specified value for the text property.</param>
-        public void Enter(string text)
-        {
-            Properties.Text = text;
-            EndCurrentEdit("Text");
-        }
+        Properties.Text = text;
+        EndCurrentEdit("Text");
+    }
 
-        /// <summary>
-        /// Selects an entry in the ComboBox according to its index.
-        /// </summary>
-        /// <remarks>
-        /// Sets the SelectedIndex property on the underlying control.
-        /// </remarks>
-        /// <param name="i">The index of the ComboBox entry to select.</param>
-        public void Select(int i)
-        {
-            Properties.SelectedIndex = i;
-        }
+    /// <summary>
+    /// Selects an entry in the ComboBox according to its index.
+    /// </summary>
+    /// <remarks>
+    /// Sets the SelectedIndex property on the underlying control.
+    /// </remarks>
+    /// <param name="i">The index of the ComboBox entry to select.</param>
+    public void Select(int i)
+    {
+        Properties.SelectedIndex = i;
+    }
 
-        /// <summary>
-        /// Selects an entry in the ComboBox according to its string value.
-        /// </summary>
-        /// <remarks>
-        /// Sets the Selected Index property on the underlying control after calling
-        /// FindStringExact
-        /// </remarks>
-        /// <param name="text">The string value of the entry to select.</param>
-        public void Select(string text)
+    /// <summary>
+    /// Selects an entry in the ComboBox according to its string value.
+    /// </summary>
+    /// <remarks>
+    /// Sets the Selected Index property on the underlying control after calling
+    /// FindStringExact
+    /// </remarks>
+    /// <param name="text">The string value of the entry to select.</param>
+    public void Select(string text)
+    {
+        int index;
+        if ((index = Properties.FindStringExact(text)) == -1)
         {
-            int index;
-            if ((index = Properties.FindStringExact(text)) == -1)
-            {
-                throw new FormsTestAssertionException("Could not find text '" + text + "' in ComboBox '" + name + "'");
-            }
-            Select(index);
+            throw new FormsTestAssertionException("Could not find text '" + text + "' in ComboBox '" + name + "'");
         }
+        Select(index);
     }
 }

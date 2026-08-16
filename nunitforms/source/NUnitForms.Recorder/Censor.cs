@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,48 +27,47 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Collections.Generic;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+/// <summary>
+/// This class can be used to prevent <see cref="Recorder"/>-derived
+/// classes from automatically being added to a <see cref="SupportedEventsRegistry"/>.
+/// </summary>
+public static class Censor
 {
-    /// <summary>
-    /// This class can be used to prevent <see cref="Recorder"/>-derived
-    /// classes from automatically being added to a <see cref="SupportedEventsRegistry"/>.
-    /// </summary>
-    public static class Censor
+    //can suppress the effect of specific recorder assemblies during testing.
+    //this is easier (and more hackish) than loading / unloading app domains.
+
+    private static readonly IList<string> CensoredRecorders = new List<string>();
+
+    ///<summary>
+    /// Adds the named class to the list of censored <see cref="Recorder"/>s.
+    ///</summary>
+    public static void Add(string recorderName)
     {
-        //can suppress the effect of specific recorder assemblies during testing.
-        //this is easier (and more hackish) than loading / unloading app domains.
+        CensoredRecorders.Add(recorderName);
+    }
 
-        private static IList<string> CensoredRecorders = new List<string>();
+    /// <summary>
+    /// Removes the named class from the list of censored <see cref="Recorder"/>s.
+    /// </summary>
+    public static void Remove(string recorderName)
+    {
+        CensoredRecorders.Remove(recorderName);
+    }
 
-        ///<summary>
-        /// Adds the named class to the list of censored <see cref="Recorder"/>s.
-        ///</summary>
-        public static void Add(string recorderName)
-        {
-            CensoredRecorders.Add(recorderName);
-        }
-
-        /// <summary>
-        /// Removes the named class from the list of censored <see cref="Recorder"/>s.
-        /// </summary>
-        public static void Remove(string recorderName)
-        {
-            CensoredRecorders.Remove(recorderName);
-        }
-
-        ///<summary>
-        /// Returns true if the <see cref="Censor"/> is blocking
-        /// the given <see cref="Recorder"/> name.
-        ///</summary>
-        public static bool Contains(string recorderName)
-        {
-            return CensoredRecorders.Contains(recorderName);
-        }
+    ///<summary>
+    /// Returns true if the <see cref="Censor"/> is blocking
+    /// the given <see cref="Recorder"/> name.
+    ///</summary>
+    public static bool Contains(string recorderName)
+    {
+        return CensoredRecorders.Contains(recorderName);
     }
 }

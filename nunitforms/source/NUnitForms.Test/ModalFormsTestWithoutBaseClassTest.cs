@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,67 +27,61 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using System;
+using System.Windows.Forms;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ModalFormsTestWithoutBaseClassTest
 {
-    [TestFixture]
-    public class ModalFormsTestWithoutBaseClassTest
+    //this is a working test by itself, but it is not on hidden desktop without base class.
+    //so i called this method from another test that uses the desktop
+    //[Test]
+    public void ModalFormExample()
     {
-        //this is a working test by itself, but it is not on hidden desktop without base class.
-        //so i called this method from another test that uses the desktop
-        //[Test]
-        public void ModalFormExample()
-        {
-            using (ModalFormTester tester = new ModalFormTester())
-            {
-                tester.FormHandler = ModalFormHandler;
+        using var tester = new ModalFormTester();
+        tester.FormHandler = ModalFormHandler;
 
-                //using (ModalMultiForm form = new ModalMultiForm())
-                //{
-                //    ////    form.Show();
+        //using (ModalMultiForm form = new ModalMultiForm())
+        //{
+        //    ////    form.Show();
 
-                //    ////    new ButtonTester("myButton", "Form").Click();
+        //    ////    new ButtonTester("myButton", "Form").Click();
 
-                //    ////    form.Close();                        
-                //}
-            }
-        }
+        //    ////    form.Close();                        
+        //}
+    }
 
-        public void ModalFormHandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            ButtonTester btnClose = new ButtonTester("btnClose", "Form-0");
-            btnClose.Click();
-        }
+    public void ModalFormHandler(string name, IntPtr hWnd, Form form)
+    {
+        var btnClose = new ButtonTester("btnClose", "Form-0");
+        btnClose.Click();
+    }
 
-        //[Test]
-        public void CompleteExampleWithoutBaseClass() //still not promising to clean up EVERYTHING
-        {
-            using (new Desktop())
-            {
-                using (new FormTester("Form"))
-                {
-                    using (ModalFormTester modalTester = new ModalFormTester())
-                    {
-                        modalTester.FormHandler = ModalFormHandler;
-                        new ModalMultiForm().Show();
-                        new ButtonTester("myButton", "Form").Click();
-                    }
-                }
-            }
-        }
+    //[Test]
+    public void CompleteExampleWithoutBaseClass() //still not promising to clean up EVERYTHING
+    {
+        using var desktop = new Desktop();
+        using var formTester = new FormTester("Form");
+        using var modalTester = new ModalFormTester();
+        modalTester.FormHandler = ModalFormHandler;
+        new ModalMultiForm().Show();
+        new ButtonTester("myButton", "Form").Click();
+    }
 
-        [Test]
-        public void AnExampleOnAHiddenDesktopWithoutBaseClass()
-        {
-            using (new Desktop())
-            {
-                ModalFormExample();
-            }
-        }
+    [Test]
+    public void AnExampleOnAHiddenDesktopWithoutBaseClass()
+    {
+        using var desktop = new Desktop();
+        ModalFormExample();
     }
 }

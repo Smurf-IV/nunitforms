@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,29 +27,28 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Exceptions;
+
+/// <summary>
+/// Exception is thrown when a control can not be found
+/// by its specified name.
+/// </summary>
+public class NoSuchControlException : Exception
 {
     /// <summary>
-    /// Exception is thrown when a control can not be found
-    /// by its specified name.
+    /// Creates a NoSuchControlException.
     /// </summary>
-    public class NoSuchControlException : Exception
+    /// <remarks>
+    /// The message string can be specified.
+    /// </remarks>
+    /// <param name="message">The messasge for the exception.</param>
+    public NoSuchControlException(string message) : base(message)
     {
-        /// <summary>
-        /// Creates a NoSuchControlException.
-        /// </summary>
-        /// <remarks>
-        /// The message string can be specified.
-        /// </remarks>
-        /// <param name="message">The messasge for the exception.</param>
-        public NoSuchControlException(string message) : base(message)
-        {
-        }
     }
 }

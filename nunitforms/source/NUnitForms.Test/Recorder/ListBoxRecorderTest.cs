@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,38 +27,40 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class ListBoxRecorderTest : NUnitFormTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class ListBoxRecorderTest : NUnitFormTest
+    [Test]
+    public void MutlipleSelection()
     {
-        [Test]
-        public void MutlipleSelection()
-        {
-            Form form = new ListBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+        Form form = new ListBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            ListBoxTester myListBox = new ListBoxTester("myListBox", form);
+        var myListBox = new ListBoxTester("myListBox", form);
 
-            myListBox.ClearSelected();
-            myListBox.SetSelected(0, true); //Red
-            myListBox.SetSelected(2, true); //Yellow
-            myListBox.SetSelected(4, true); //Blue
-            myListBox.SetSelected(6, true); //Violet
+        myListBox.ClearSelected();
+        myListBox.SetSelected(0, true); //Red
+        myListBox.SetSelected(2, true); //Yellow
+        myListBox.SetSelected(4, true); //Blue
+        myListBox.SetSelected(6, true); //Violet
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -79,23 +82,23 @@ public void Test()
 	myListBox.SetSelected(6, true); //Violet
 
 }",
-                writer.Test);
-        }
+            writer.Test);
+    }
 
-        [Test]
-        public void SelectItem()
-        {
-            Form form = new ListBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+    [Test]
+    public void SelectItem()
+    {
+        Form form = new ListBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            ListBoxTester myListBox = new ListBoxTester("myListBox", form);
+        var myListBox = new ListBoxTester("myListBox", form);
 
-            myListBox.Select(0);
+        myListBox.Select(0);
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -105,27 +108,27 @@ public void Test()
 	myListBox.SetSelected(0, true); //Red
 
 }",
-                writer.Test);
-        }
+            writer.Test);
+    }
 
-        [Test]
-        public void SingleSelectBox()
-        {
-            Form form = new ListBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+    [Test]
+    public void SingleSelectBox()
+    {
+        Form form = new ListBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            ListBoxTester myListBox = new ListBoxTester("mySingleSelectBox", form);
+        var myListBox = new ListBoxTester("mySingleSelectBox", form);
 
-            myListBox.ClearSelected();
-            myListBox.SetSelected(0, true); //Red
-            myListBox.SetSelected(2, true); //Yellow
-            myListBox.SetSelected(4, true); //Blue
-            myListBox.SetSelected(6, true); //Violet
+        myListBox.ClearSelected();
+        myListBox.SetSelected(0, true); //Red
+        myListBox.SetSelected(2, true); //Yellow
+        myListBox.SetSelected(4, true); //Blue
+        myListBox.SetSelected(6, true); //Violet
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -137,7 +140,6 @@ public void Test()
 	mySingleSelectBox.Select(6); //Time
 
 }",
-                writer.Test);
-        }
+            writer.Test);
     }
 }

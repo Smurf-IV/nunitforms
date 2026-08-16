@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,73 +27,79 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using System;
+using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using RichTextBoxTester = NUnit.Extensions.Forms.Testers.RichTextBoxTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+///<summary>
+/// Test Fixture for the <see cref="RichTextBoxTester"/> class.
+///</summary>
+[TestFixture]
+public class RichTextBoxTest : NUnitFormTest
 {
-    ///<summary>
-    /// Test Fixture for the <see cref="RichTextBoxTester"/> class.
-    ///</summary>
-    [TestFixture]
-    public class RichTextBoxTest : NUnitFormTest
+    public void oldhandler(string name, IntPtr hWnd, Form form)
     {
-        public void oldhandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("Old", mb.Text);
-            mb.ClickOk();
-        }
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("Old", mb.Text);
+        mb.ClickOk();
+    }
 
-        public void newhandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("New", mb.Text);
-            mb.ClickOk();
-        }
+    public void newhandler(string name, IntPtr hWnd, Form form)
+    {
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("New", mb.Text);
+        mb.ClickOk();
+    }
 
-        [Test]
-        public void DataSetBinding()
-        {
-            RichTextBoxDataSetBindingTestForm f = new RichTextBoxDataSetBindingTestForm();
-            f.Show();
-            ModalFormHandler = oldhandler;
-            new ButtonTester("btnView").Click();
-            new RichTextBoxTester("myRichTextBox").Enter("New");
-            ModalFormHandler = newhandler;
-            new ButtonTester("btnView").Click();
-            f.Close();
-        }
+    [Test]
+    public void DataSetBinding()
+    {
+        var f = new TestForms.RichTextBoxDataSetBindingTestForm();
+        f.Show();
+        ModalFormHandler = oldhandler;
+        new ButtonTester("btnView").Click();
+        new RichTextBoxTester("myRichTextBox").Enter("New");
+        ModalFormHandler = newhandler;
+        new ButtonTester("btnView").Click();
+        f.Close();
+    }
 
-        [Test]
-        public void DataSetBindingWithGenericPropertySetter()
-        {
-            RichTextBoxDataSetBindingTestForm f = new RichTextBoxDataSetBindingTestForm();
-            f.Show();
+    [Test]
+    public void DataSetBindingWithGenericPropertySetter()
+    {
+        var f = new TestForms.RichTextBoxDataSetBindingTestForm();
+        f.Show();
 
-            ModalFormHandler = oldhandler;
-            new ButtonTester("btnView").Click();
+        ModalFormHandler = oldhandler;
+        new ButtonTester("btnView").Click();
 
-            new RichTextBoxTester("myRichTextBox")["Text"] = "New";
+        new RichTextBoxTester("myRichTextBox")["Text"] = "New";
 
-            ModalFormHandler = newhandler;
-            new ButtonTester("btnView").Click();
-            f.Close();
-        }
+        ModalFormHandler = newhandler;
+        new ButtonTester("btnView").Click();
+        f.Close();
+    }
 
-        [Test]
-        public void RichTextBox()
-        {
-            RichTextBoxTestForm f = new RichTextBoxTestForm();
-            f.Show();
-            RichTextBoxTester box = new RichTextBoxTester("myTextBox");
-            Assert.AreEqual("default", box.Text);
-            box.Enter("Text");
-            Assert.AreEqual("Text", box.Text);
-            f.Close();
-        }
+    [Test]
+    public void RichTextBox()
+    {
+        var f = new TestForms.RichTextBoxTestForm();
+        f.Show();
+        var box = new RichTextBoxTester("myRichTextBox", f);
+        Assert.AreEqual("default", box.Text);
+        box.Enter("Text");
+        Assert.AreEqual("Text", box.Text);
+        f.Close();
     }
 }

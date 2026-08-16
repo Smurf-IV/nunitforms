@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,102 +27,101 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.Recorder;
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Finders;
+using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class FormFinderTest : NUnitFormTest
 {
-    [TestFixture]
-    public class FormFinderTest : NUnitFormTest
+    private FormFinder finder;
+
+    public override void Setup()
     {
-        private FormFinder finder;
+        finder = new FormFinder();
+    }
 
-        public override void Setup()
-        {
-            finder = new FormFinder();
-        }
+    private Form ShowNewForm(string name)
+    {
+        var form = new Form();
+        form.Name = name;
+        form.Show();
+        return form;
+    }
 
-        private Form ShowNewForm(string name)
-        {
-            Form form = new Form();
-            form.Name = name;
-            form.Show();
-            return form;
-        }
+    [Test]
+    public void FindAll()
+    {
+        Form one = ShowNewForm("form");
+        Form two = ShowNewForm("form2");
+        Form three = ShowNewForm("form3");
+        var found = finder.FindAll();
+        Assert.AreEqual(3, found.Count);
+        Assert.IsTrue(found.Contains(one));
+        Assert.IsTrue(found.Contains(two));
+        Assert.IsTrue(found.Contains(three));
+    }
 
-        [Test]
-        public void FindAll()
-        {
-            Form one = ShowNewForm("form");
-            Form two = ShowNewForm("form2");
-            Form three = ShowNewForm("form3");
-            List<Form> found = finder.FindAll();
-            Assert.AreEqual(3, found.Count);
-            Assert.IsTrue(found.Contains(one));
-            Assert.IsTrue(found.Contains(two));
-            Assert.IsTrue(found.Contains(three));
-        }
+    [Test]
+    public void FinderWithBadObjectHasNoName()
+    {
+        var ex = Assert.Throws<Exception>(() => { new Finder<Control>().Name("a"); });
+        Assert.That(ex.Message, Does.Contain("Object name not defined"));
+    }
 
-        [Test]
-        public void FinderWithBadObjectHasNoName()
-        {
-            var ex = Assert.Throws<Exception>(() => { new Finder<Control>().Name("a"); });
-            Assert.That(ex.Message, Does.Contain("Object name not defined"));
-        }
+    [Test]
+    public void FindOneForm()
+    {
+        Form form = ShowNewForm("form");
+        Form found = finder.Find("form");
+        Assert.AreSame(form, found);
+    }
 
-        [Test]
-        public void FindOneForm()
-        {
-            Form form = ShowNewForm("form");
-            Form found = finder.Find("form");
-            Assert.AreSame(form, found);
-        }
+    [Test]
+    public void FindOneFormOutOfTwo()
+    {
+        Form one = ShowNewForm("form");
+        Form two = ShowNewForm("form2");
+        Assert.AreEqual(2, finder.FindAll().Count);
 
-        [Test]
-        public void FindOneFormOutOfTwo()
-        {
-            Form one = ShowNewForm("form");
-            Form two = ShowNewForm("form2");
-            Assert.AreEqual(2, finder.FindAll().Count);
+        Form found = finder.Find("form");
+        Assert.AreSame(one, found);
+        found = finder.Find("form2");
+        Assert.AreSame(two, found);
+    }
 
-            Form found = finder.Find("form");
-            Assert.AreSame(one, found);
-            found = finder.Find("form2");
-            Assert.AreSame(two, found);
-        }
+    [Test]
+    public void FindOneFormWhenThereAreNone()
+    {
+        var ex = Assert.Throws<NoSuchControlException>(() => finder.Find("form"));
+        Assert.That(ex.Message, Does.Contain("Could not find form with name 'form'"));
+    }
 
-        [Test]
-        public void FindOneFormWhenThereAreNone()
-        {
-            var ex = Assert.Throws<NoSuchControlException>(() => finder.Find("form"));
-            Assert.That(ex.Message, Does.Contain("Could not find form with name 'form'"));
-        }
+    [Test]
+    public void FindOneFormWhenThereAreTwo()
+    {
+        ShowNewForm("form");
+        ShowNewForm("form");
+        var ex = Assert.Throws<AmbiguousNameException>(() => finder.Find("form"));
+        Assert.That(ex.Message, Does.Contain("Found too many forms with the name 'form'"));
+    }
 
-        [Test]
-        public void FindOneFormWhenThereAreTwo()
-        {
-            ShowNewForm("form");
-            ShowNewForm("form");
-            var ex = Assert.Throws<AmbiguousNameException>(() => finder.Find("form"));
-            Assert.That(ex.Message, Does.Contain("Found too many forms with the name 'form'"));
-        }
-
-        [Test]
-        public void FindTwoFormsWhenThereAreTwo()
-        {
-            Form one = ShowNewForm("form");
-            Form two = ShowNewForm("form");
-            List<Form> found = finder.FindAll("form");
-            Assert.AreEqual(2, found.Count);
-            Assert.IsTrue(found.Contains(one));
-            Assert.IsTrue(found.Contains(two));
-        }
+    [Test]
+    public void FindTwoFormsWhenThereAreTwo()
+    {
+        Form one = ShowNewForm("form");
+        Form two = ShowNewForm("form");
+        var found = finder.FindAll("form");
+        Assert.AreEqual(2, found.Count);
+        Assert.IsTrue(found.Contains(one));
+        Assert.IsTrue(found.Contains(two));
     }
 }

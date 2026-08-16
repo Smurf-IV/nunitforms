@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,88 +27,96 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using System;
+using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using CheckBoxTester = NUnit.Extensions.Forms.Testers.CheckBoxTester;
+using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class DatabindingTest : NUnitFormTest
 {
-    [TestFixture]
-    public class DatabindingTest : NUnitFormTest
+    public void falsehandler(string name, IntPtr hWnd, Form form)
     {
-        public void falsehandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("False", mb.Text);
-            mb.ClickOk();
-        }
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("False", mb.Text);
+        mb.ClickOk();
+    }
 
-        public void truehandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("True", mb.Text);
-            mb.ClickOk();
-        }
+    public void truehandler(string name, IntPtr hWnd, Form form)
+    {
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("True", mb.Text);
+        mb.ClickOk();
+    }
 
-        public void oldhandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("Old", mb.Text);
-            mb.ClickOk();
-        }
+    public void oldhandler(string name, IntPtr hWnd, Form form)
+    {
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("Old", mb.Text);
+        mb.ClickOk();
+    }
 
-        public void newhandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("New", mb.Text);
-            mb.ClickOk();
-        }
+    public void newhandler(string name, IntPtr hWnd, Form form)
+    {
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("New", mb.Text);
+        mb.ClickOk();
+    }
 
-        [Test]
-        public void CheckBoxDataSetBinding()
-        {
-            var f = new CheckBoxDataSetBindingTestForm();
-            f.Show();
-            ModalFormHandler = falsehandler;
-            new ButtonTester("btnView").Click();
+    [Test]
+    public void CheckBoxDataSetBinding()
+    {
+        using var f = new CheckBoxDataSetBindingTestForm();
+        f.Show();
+        ModalFormHandler = falsehandler;
+        new ButtonTester("btnView").Click();
 
-            new CheckBoxTester("myCheckBox").Check();
+        new CheckBoxTester("myCheckBox").Check();
 
-            ModalFormHandler = truehandler;
-            new ButtonTester("btnView").Click();
-            f.Close();
-        }
+        ModalFormHandler = truehandler;
+        new ButtonTester("btnView").Click();
+        f.Close();
+    }
 
-        [Test]
-        public void DataSetBindingWithGenericPropertySetter()
-        {
-            var f = new TextBoxDataSetBindingTestForm();
-            f.Show();
-            ModalFormHandler = oldhandler;
-            new ButtonTester("btnView").Click();
+    [Test]
+    public void DataSetBindingWithGenericPropertySetter()
+    {
+        using var f = new TextBoxDataSetBindingTestForm();
+        f.Show();
+        ModalFormHandler = oldhandler;
+        new ButtonTester("btnView").Click();
 
-            new TextBoxTester("myTextBox")["Text"] = "New";
+        new TextBoxTester("myTextBox")["Text"] = "New";
 
-            ModalFormHandler = newhandler;
-            new ButtonTester("btnView").Click();
-            f.Close();
-        }
+        ModalFormHandler = newhandler;
+        new ButtonTester("btnView").Click();
+        f.Close();
+    }
 
-        [Test]
-        public void TextBoxDataSetBinding()
-        {
-            var f = new TextBoxDataSetBindingTestForm();
-            f.Show();
-            ModalFormHandler = oldhandler;
+    [Test]
+    public void TextBoxDataSetBinding()
+    {
+        using var f = new TextBoxDataSetBindingTestForm();
+        f.Show();
+        ModalFormHandler = oldhandler;
 
-            new ButtonTester("btnView").Click();
+        new ButtonTester("btnView").Click();
 
-            new TextBoxTester("myTextBox").Enter("New");
-            ModalFormHandler = newhandler;
-            new ButtonTester("btnView").Click();
-            f.Close();
-        }
+        new TextBoxTester("myTextBox").Enter("New");
+        ModalFormHandler = newhandler;
+        new ButtonTester("btnView").Click();
+        f.Close();
     }
 }

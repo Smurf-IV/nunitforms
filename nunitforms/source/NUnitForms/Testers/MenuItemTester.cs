@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,101 +35,96 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Finders;
+
+
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for MenuItems.
+/// </summary>
+/// <remarks>
+/// It does not extend ControlTester because MenuItems are not Controls.  (sadly)</remarks>
+public class MenuItemTester
 {
-    /// <summary>
-    /// A ControlTester for MenuItems.
-    /// </summary>
-    /// <remarks>
-    /// It does not extend ControlTester because MenuItems are not Controls.  (sadly)</remarks>
-    public class MenuItemTester
+    private readonly Form form;
+    private readonly string formName;
+
+    protected string name;
+
+    public MenuItemTester(string name, Form form)
     {
-        private readonly Form form;
-        private readonly string formName;
+        this.form = form;
+        this.name = name;
+    }
 
-        protected string name;
+    public MenuItemTester(string name, string formName)
+    {
+        this.formName = formName;
+        this.name = name;
+    }
 
-        public MenuItemTester(string name, Form form)
+    public MenuItemTester(string name)
+    {
+        this.name = name;
+    }
+
+    protected MenuItem MenuItem
+    {
+        get
         {
-            this.form = form;
-            this.name = name;
-        }
-
-        public MenuItemTester(string name, string formName)
-        {
-            this.formName = formName;
-            this.name = name;
-        }
-
-        public MenuItemTester(string name)
-        {
-            this.name = name;
-        }
-
-        protected MenuItem MenuItem
-        {
-            get
+            if (form != null)
             {
-                if (form != null)
-                {
-                    //may have dynamically added controls.  I am not saving this.
-                    return new Finder<MenuItem>(name, form).Find();
-                }
-                else if (formName != null)
-                {
-                    return new Finder<MenuItem>(name, new FormFinder().Find(formName)).Find();
-                }
-                else
-                {
-                    return new Finder<MenuItem>(name).Find();
-                }
+                //may have dynamically added controls.  I am not saving this.
+                return new Finder<MenuItem>(name, form).Find();
             }
+
+            if (formName != null)
+            {
+                return new Finder<MenuItem>(name, new FormFinder().Find(formName)).Find();
+            }
+
+            return new Finder<MenuItem>(name).Find();
         }
+    }
 
-        /// <summary>
-        /// Gets the text of this MenuItem.
-        /// </summary>
-        public string Text
-        {
-            get { return MenuItem.Text; }
-        }
+    /// <summary>
+    /// Gets the text of this MenuItem.
+    /// </summary>
+    public string Text => MenuItem.Text;
 
-        /// <summary>
-        /// Allows you to access any properties of this MenuItem.
-        /// </summary>
-        public MenuItem Properties
-        {
-            get { return MenuItem; }
-        }
+    /// <summary>
+    /// Allows you to access any properties of this MenuItem.
+    /// </summary>
+    public MenuItem Properties => MenuItem;
 
-        #region EventFiring
+    #region EventFiring
 
-        protected void FireEvent(string eventName)
-        {
-            MethodInfo minfo =
-                MenuItem.GetType().GetMethod("On" + eventName,
-                                             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            ParameterInfo[] param = minfo.GetParameters();
-            Type parameterType = param[0].ParameterType;
+    protected void FireEvent(string eventName)
+    {
+        var minfo =
+            MenuItem.GetType().GetMethod("On" + eventName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        var param = minfo.GetParameters();
+        var parameterType = param[0].ParameterType;
             minfo.Invoke(MenuItem, new Object[] {Activator.CreateInstance(parameterType)});
-        }
+    }
 
-        #endregion
+    #endregion
 
-        /// <summary>
-        /// Clicks the MenuItem (activates it)
-        /// </summary>
-        public virtual void Click()
-        {
-            FireEvent("Click");
-        }
+    /// <summary>
+    /// Clicks the MenuItem (activates it)
+    /// </summary>
+    public virtual void Click()
+    {
+        FireEvent("Click");
+    }
 
-        /// <summary>
-        /// Pops up a menu.
-        /// </summary>
-        public virtual void Popup()
-        {
-            FireEvent("Popup");
-        }
+    /// <summary>
+    /// Pops up a menu.
+    /// </summary>
+    public virtual void Popup()
+    {
+        FireEvent("Popup");
     }
 }

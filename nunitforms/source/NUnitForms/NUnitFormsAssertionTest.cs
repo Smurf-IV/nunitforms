@@ -1,10 +1,11 @@
 using NUnit.Framework;
 
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -28,98 +29,97 @@ using NUnit.Framework;
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+/// <summary>
+/// One of three base classes for your NUnitForms tests.  This one can be
+/// used by people who want "built-in" Assertion functionality and prefer
+/// the older style "Assertion" syntax.
+/// </summary>
+[TestFixture]
+public class NUnitFormsAssertionTest : NUnitFormTest
 {
-    /// <summary>
-    /// One of three base classes for your NUnitForms tests.  This one can be
-    /// used by people who want "built-in" Assertion functionality and prefer
-    /// the older style "Assertion" syntax.
-    /// </summary>
-    [TestFixture]
-    public class NUnitFormsAssertionTest : NUnitFormTest
+    public void Assert(bool condition, string message)
     {
-        public void Assert(bool condition, string message)
-        {
-            Framework.Assert.IsTrue(condition, message);
-        }
+        Framework.Assert.IsTrue(condition, message);
+    }
 
-        public void Assert(bool condition)
-        {
-            Framework.Assert.IsTrue(condition);
-        }
+    public void Assert(bool condition)
+    {
+        Framework.Assert.IsTrue(condition);
+    }
 
-        public void AssertEquals(double expected, double actual, double delta)
-        {
-            Framework.Assert.AreEqual(expected, actual, delta);
-        }
+    public void AssertEquals(double expected, double actual, double delta)
+    {
+        Framework.Assert.AreEqual(expected, actual, delta);
+    }
 
-        public void AssertEquals(float expected, float actual, float delta)
-        {
-            Framework.Assert.AreEqual(expected, actual, delta);
-        }
+    public void AssertEquals(float expected, float actual, float delta)
+    {
+        Framework.Assert.AreEqual(expected, actual, delta);
+    }
 
-        public void AssertEquals(object expected, object actual)
-        {
-            Framework.Assert.AreEqual(expected, actual);
-        }
+    public void AssertEquals(object expected, object actual)
+    {
+        Framework.Assert.AreEqual(expected, actual);
+    }
 
-        public void AssertEquals(int expected, int actual)
-        {
-            Framework.Assert.AreEqual(expected, actual);
-        }
+    public void AssertEquals(int expected, int actual)
+    {
+        Framework.Assert.AreEqual(expected, actual);
+    }
 
-        public void AssertEquals(string message, double expected, double actual, double delta)
-        {
-            Framework.Assert.AreEqual(expected, actual, delta, message);
-        }
+    public void AssertEquals(string message, double expected, double actual, double delta)
+    {
+        Framework.Assert.AreEqual(expected, actual, delta, message);
+    }
 
-        public void AssertEquals(string message, float expected, float actual, float delta)
-        {
-            Framework.Assert.AreEqual(expected, actual, delta, message);
-        }
+    public void AssertEquals(string message, float expected, float actual, float delta)
+    {
+        Framework.Assert.AreEqual(expected, actual, delta, message);
+    }
 
-        public void AssertEquals(string message, object expected, object actual)
-        {
-            Framework.Assert.AreEqual(expected, actual, message);
-        }
+    public void AssertEquals(string message, object expected, object actual)
+    {
+        Framework.Assert.AreEqual(expected, actual, message);
+    }
 
-        public void AssertEquals(string message, int expected, int actual)
-        {
-            Framework.Assert.AreEqual(expected, actual, message);
-        }
+    public void AssertEquals(string message, int expected, int actual)
+    {
+        Framework.Assert.AreEqual(expected, actual, message);
+    }
 
-        public void AssertNotNull(object anObject)
-        {
-            Framework.Assert.IsNotNull(anObject);
-        }
+    public void AssertNotNull(object anObject)
+    {
+        Framework.Assert.IsNotNull(anObject);
+    }
 
-        public void AssertNotNull(string message, object anObject)
-        {
-            Framework.Assert.IsNotNull(anObject, message);
-        }
+    public void AssertNotNull(string message, object anObject)
+    {
+        Framework.Assert.IsNotNull(anObject, message);
+    }
 
-        public void AssertSame(object expected, object actual)
-        {
-            Framework.Assert.AreSame(expected, actual);
-        }
+    public void AssertSame(object expected, object actual)
+    {
+        Framework.Assert.AreSame(expected, actual);
+    }
 
-        public void AssertSame(string message, object expected, object actual)
-        {
-            Framework.Assert.AreSame(expected, actual, message);
-        }
+    public void AssertSame(string message, object expected, object actual)
+    {
+        Framework.Assert.AreSame(expected, actual, message);
+    }
 
-        public void Fail()
-        {
-            Framework.Assert.Fail();
-        }
+    public void Fail()
+    {
+        Framework.Assert.Fail();
+    }
 
-        public void Fail(string message)
-        {
-            Framework.Assert.Fail(message);
-        }
+    public void Fail(string message)
+    {
+        Framework.Assert.Fail(message);
     }
 }

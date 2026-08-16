@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,65 +27,69 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using CheckBoxTester = NUnit.Extensions.Forms.Testers.CheckBoxTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class CheckBoxTest : NUnitFormTest
 {
-    [TestFixture]
-    public class CheckBoxTest : NUnitFormTest
+    private CheckBoxTester checkBox;
+
+    private LabelTester label;
+
+    public override void Setup()
     {
-        private CheckBoxTester checkBox;
+        new CheckBoxTestForm().Show();
+        checkBox = new CheckBoxTester("myCheckBox");
+        label = new LabelTester("myLabel");
+    }
 
-        private LabelTester label;
+    [Test]
+    public void Check()
+    {
+        Assert.AreEqual("default", label.Text);
+        checkBox.Check();
+        Assert.IsTrue(checkBox.Checked);
+        Assert.AreEqual("on", label.Text);
+    }
 
-        public override void Setup()
-        {
-            new CheckBoxTestForm().Show();
-            checkBox = new CheckBoxTester("myCheckBox");
-            label = new LabelTester("myLabel");
-        }
+    [Test]
+    public void ToggleWithValue()
+    {
+        checkBox.Check(true);
+        Assert.IsTrue(checkBox.Checked);
+        checkBox.Check(false);
+        Assert.IsTrue(!checkBox.Checked);
+        checkBox.Check(true);
+        Assert.IsTrue(checkBox.Checked);
+    }
 
-        [Test]
-        public void Check()
-        {
-            Assert.AreEqual("default", label.Text);
-            checkBox.Check();
-            Assert.IsTrue(checkBox.Checked);
-            Assert.AreEqual("on", label.Text);
-        }
+    [Test]
+    public void UnCheck()
+    {
+        Assert.AreEqual("default", label.Text);
+        checkBox.UnCheck();
+        Assert.IsTrue(!checkBox.Checked);
+        Assert.AreEqual("default", label.Text);
+    }
 
-        [Test]
-        public void ToggleWithValue()
-        {
-            checkBox.Check(true);
-            Assert.IsTrue(checkBox.Checked);
-            checkBox.Check(false);
-            Assert.IsTrue(!checkBox.Checked);
-            checkBox.Check(true);
-            Assert.IsTrue(checkBox.Checked);
-        }
-
-        [Test]
-        public void UnCheck()
-        {
-            Assert.AreEqual("default", label.Text);
-            checkBox.UnCheck();
-            Assert.IsTrue(!checkBox.Checked);
-            Assert.AreEqual("default", label.Text);
-        }
-
-        [Test]
-        public void UnCheck2()
-        {
-            Assert.AreEqual("default", label.Text);
-            checkBox.Check();
-            checkBox.UnCheck();
-            Assert.IsTrue(!checkBox.Checked);
-            Assert.AreEqual("off", label.Text);
-        }
+    [Test]
+    public void UnCheck2()
+    {
+        Assert.AreEqual("default", label.Text);
+        checkBox.Check();
+        checkBox.UnCheck();
+        Assert.IsTrue(!checkBox.Checked);
+        Assert.AreEqual("off", label.Text);
     }
 }

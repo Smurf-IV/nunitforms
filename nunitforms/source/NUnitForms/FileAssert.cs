@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,41 +27,42 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.IO;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+///<summary>
+/// Assertions for files.
+///</summary>
+public static class FileAssert
 {
     ///<summary>
-    /// Assertions for files.
+    /// Compare two files for binary equality.
     ///</summary>
-    public static class FileAssert
+    ///<param name="filePathOne">The path to the first file to compare.</param>
+    ///<param name="filePathTwo">The path to the second file to compare.</param>
+    ///<returns>True if the given files have the same contents.</returns>
+    public static bool AreBinaryEqual(string filePathOne, string filePathTwo)
     {
-        ///<summary>
-        /// Compare two files for binary equality.
-        ///</summary>
-        ///<param name="filePathOne">The path to the first file to compare.</param>
-        ///<param name="filePathTwo">The path to the second file to compare.</param>
-        ///<returns>True if the given files have the same contents.</returns>
-        public static bool AreBinaryEqual(string filePathOne, string filePathTwo)
+        if (!File.Exists(filePathOne) || !File.Exists(filePathTwo))
         {
-            if (!File.Exists(filePathOne) || !File.Exists(filePathTwo))
-                return false;
+            return false;
+        }
 
-            using (BinaryReader fileOne = new BinaryReader(File.OpenRead(filePathOne)))
-            using (BinaryReader fileTwo = new BinaryReader(File.OpenRead(filePathTwo)))
+        using var fileOne = new BinaryReader(File.OpenRead(filePathOne));
+        using var fileTwo = new BinaryReader(File.OpenRead(filePathTwo));
+        while (fileOne.PeekChar() != -1 && fileTwo.PeekChar() != -1)
+        {
+            if (fileOne.ReadByte() != fileTwo.ReadByte())
             {
-                while (fileOne.PeekChar() != -1 && fileTwo.PeekChar() != -1)
-                {
-                    if (fileOne.ReadByte() != fileTwo.ReadByte())
-                        return false;
-                }
-
-                return true;
+                return false;
             }
         }
+
+        return true;
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,40 +27,39 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ToolStripItem tester for testing DropDownButtons.
+/// </summary>
+public partial class ToolStripDropDownButtonTester
 {
     /// <summary>
-    /// A ToolStripItem tester for testing DropDownButtons.
+    /// Clickes the DropDownItem with the given index.
     /// </summary>
-    public partial class ToolStripDropDownButtonTester
+    /// <param name="index"></param>
+    public void ClickDropDownItem(int index)
     {
-        /// <summary>
-        /// Clickes the DropDownItem with the given index.
-        /// </summary>
-        /// <param name="index"></param>
-        public void ClickDropDownItem(int index)
+        var found = false;
+        var button = Properties;
+
+        if (button.HasDropDownItems)
         {
-            bool found = false;
-            ToolStripDropDownButton button = Properties;
-
-            if (button.HasDropDownItems)
+            var items = button.DropDownItems;
+            if (items.Count > index)
             {
-                ToolStripItemCollection items = button.DropDownItems;
-                if (items.Count > index)
-                {
-                    ToolStripItem item = items[index];
-                    FireEvent("DropDownItemClicked", new ToolStripItemClickedEventArgs(item));
-                    found = true;
-                }
+                var item = items[index];
+                FireEvent("DropDownItemClicked", new ToolStripItemClickedEventArgs(item));
+                found = true;
             }
-
-            FormsAssert.IsTrue(found, "No drop down item with correct index.");
         }
+
+        FormsAssert.IsTrue(found, "No drop down item with correct index.");
     }
 }

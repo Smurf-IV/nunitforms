@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,74 +27,76 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+///<summary>
+/// Test Fixture for the <see cref="TextBoxRecorder"/>.
+///</summary>
+[TestFixture]
+[Category("Recorder")]
+public class TextBoxRecorderTest : NUnitFormTest
 {
-    ///<summary>
-    /// Test Fixture for the <see cref="TextBoxRecorder"/>.
-    ///</summary>
-    [TestFixture]
-    [Category("Recorder")]
-    public class TextBoxRecorderTest : NUnitFormTest
+    [Test]
+    public void ProgrammaticallyChangeTextIsNotRecorded()
     {
-        [Test]
-        public void ProgrammaticallyChangeTextIsNotRecorded()
-        {
-            Form form = new TextBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+        Form form = new TextBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            TextBoxTester textBox = new TextBoxTester("myTextBox", form);
-            textBox.Properties.Text = "abc";
+        var textBox = new TextBoxTester("myTextBox", form);
+        textBox.Properties.Text = "abc";
 
-            Assert.AreEqual(@"", writer.Test);
-        }
+        Assert.AreEqual(@"", writer.Test);
+    }
 
-        [Test]
-        public void ProgrammaticallyChangeTextIsNotRecordedTwoBoxes()
-        {
-            Form form = new TextBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+    [Test]
+    public void ProgrammaticallyChangeTextIsNotRecordedTwoBoxes()
+    {
+        Form form = new TextBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            TextBoxTester anotherBox = new TextBoxTester("anotherTextBox", form);
-            anotherBox.FireEvent("Enter");
+        var anotherBox = new TextBoxTester("anotherTextBox", form);
+        anotherBox.FireEvent("Enter");
 
-            TextBoxTester textBox = new TextBoxTester("myTextBox", form);
-            textBox.Properties.Text = "abc";
+        var textBox = new TextBoxTester("myTextBox", form);
+        textBox.Properties.Text = "abc";
 
-            anotherBox.FireEvent("Leave");
+        anotherBox.FireEvent("Leave");
 
-            Assert.AreEqual(@"", writer.Test);
-        }
+        Assert.AreEqual(@"", writer.Test);
+    }
 
-        ///<summary>
-        /// Tests text entry events.
-        ///</summary>
-        [Test]
-        public void TextBoxEnter()
-        {
-            Form form = new TextBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+    ///<summary>
+    /// Tests text entry events.
+    ///</summary>
+    [Test]
+    public void TextBoxEnter()
+    {
+        Form form = new TextBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            TextBoxTester textBox = new TextBoxTester("myTextBox", form);
-            //doing 2 of these tests the collapsing processor.
-            textBox.Enter("abc");
-            textBox.Enter("abcd");
+        var textBox = new TextBoxTester("myTextBox", form);
+        //doing 2 of these tests the collapsing processor.
+        textBox.Enter("abc");
+        textBox.Enter("abcd");
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -102,27 +105,27 @@ public void Test()
 	myTextBox.Enter(""abcd"");
 
 }",
-                writer.Test);
-        }
+            writer.Test);
+    }
 
-        ///<summary>
-        /// Tests multiline text entry events.
-        ///</summary>
-        [Test]
-        public void TextBoxEnterMultiline()
-        {
-            Form form = new TextBoxTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+    ///<summary>
+    /// Tests multiline text entry events.
+    ///</summary>
+    [Test]
+    public void TextBoxEnterMultiline()
+    {
+        Form form = new TextBoxTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            TextBoxTester textBox = new TextBoxTester("myTextBox", form);
-            textBox.Properties.Multiline = true;
+        var textBox = new TextBoxTester("myTextBox", form);
+        textBox.Properties.Multiline = true;
 
-            textBox.Enter("abc\r\nabcd\r\nabcde");
+        textBox.Enter("abc\r\nabcd\r\nabcde");
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -131,7 +134,6 @@ public void Test()
 	myTextBox.Enter(""abc\r\nabcd\r\nabcde"");
 
 }",
-                writer.Test);
-        }
+            writer.Test);
     }
 }

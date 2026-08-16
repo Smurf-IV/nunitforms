@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,56 +27,50 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Collections;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Testers;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+public class RichTextBoxRecorder : ControlRecorder
 {
-    public class RichTextBoxRecorder : ControlRecorder
+    private readonly Hashtable table = new Hashtable();
+
+    public RichTextBoxRecorder(Listener listener)
+        : base(listener)
     {
-        private Hashtable table = new Hashtable();
+    }
 
-        public RichTextBoxRecorder(Listener listener)
-            : base(listener)
-        {
-        }
+    public override Type RecorderType => typeof (RichTextBox);
 
-        public override Type RecorderType
-        {
-            get { return typeof (RichTextBox); }
-        }
+    public override Type TesterType => typeof (RichTextBoxTester);
 
-        public override Type TesterType
+    public void TextChanged(object sender, EventArgs e)
+    {
+        if (HasFocus(sender))
         {
-            get { return typeof (RichTextBoxTester); }
+            Listener.FireEvent(TesterType, sender, new EventAction("Enter", ((RichTextBox) sender).Text));
         }
+    }
 
-        public void TextChanged(object sender, EventArgs e)
-        {
-            if (HasFocus(sender))
-            {
-                Listener.FireEvent(TesterType, sender, new EventAction("Enter", ((RichTextBox) sender).Text));
-            }
-        }
+    private bool HasFocus(object sender)
+    {
+        return (true.Equals(table[sender]));
+    }
 
-        private bool HasFocus(object sender)
-        {
-            return (true.Equals(table[sender]));
-        }
+    public void Enter(object sender, EventArgs e)
+    {
+        table[sender] = true;
+    }
 
-        public void Enter(object sender, EventArgs e)
-        {
-            table[sender] = true;
-        }
-
-        public void Leave(object sender, EventArgs e)
-        {
-            table[sender] = false;
-        }
+    public void Leave(object sender, EventArgs e)
+    {
+        table[sender] = false;
     }
 }

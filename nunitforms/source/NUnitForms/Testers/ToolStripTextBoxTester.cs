@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,23 +27,22 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+public partial class ToolStripTextBoxTester
 {
-    public partial class ToolStripTextBoxTester
+    /// <summary>
+    /// This method allows you to enter text into the text box.
+    /// </summary>
+    /// <param name="text">The text to enter into the text box.</param>
+    public void Enter(string text)
     {
-        /// <summary>
-        /// This method allows you to enter text into the text box.
-        /// </summary>
-        /// <param name="text">The text to enter into the text box.</param>
-        public void Enter(string text)
-        {
-            FireEvent("Enter");
-            Properties.Text = text;
-            FireEvent("Leave");
-        }
+        FireEvent("Enter");
+        Properties.Text = text;
+        FireEvent("Leave");
     }
 }

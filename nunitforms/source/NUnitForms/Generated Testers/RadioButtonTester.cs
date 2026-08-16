@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,34 +27,42 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Generic_Testers;
+
+
+#pragma warning disable IDE0130
+namespace NUnit.Extensions.Forms.Testers;
+
+
+public partial class RadioButtonTester : ControlTester<RadioButton, RadioButtonTester>
 {
-    public partial class RadioButtonTester : ControlTester<RadioButton, RadioButtonTester>
+    public RadioButtonTester()
     {
-        public RadioButtonTester()
-        {
-        }
+    }
 
-        public RadioButtonTester(string name, Form form) : base(name, form)
-        {
-        }
+    public RadioButtonTester(string name, Form form)
+        : base(name, form)
+    {
+    }
 
-        public RadioButtonTester(string name, string formName) : base(name, formName)
-        {
-        }
+    public RadioButtonTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
 
-        public RadioButtonTester(string name) : base(name)
-        {
-        }
+    public RadioButtonTester(string name)
+        : base(name)
+    {
+    }
 
-        public RadioButtonTester(RadioButtonTester tester, int index) : base(tester, index)
-        {
-        }
+    public RadioButtonTester(RadioButtonTester tester, int index)
+        : base((ControlTester<RadioButton, RadioButtonTester>)tester, index)
+    {
     }
 }

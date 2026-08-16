@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,45 +27,41 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// A UserControl for testing.
+/// </summary>
+public partial class ButtonControl : UserControl
 {
     /// <summary>
-    /// A UserControl for testing.
+    /// Constructs a new <see cref="ButtonControl"/>.
     /// </summary>
-    public partial class ButtonControl : UserControl
+    public ButtonControl()
     {
-        /// <summary>
-        /// Constructs a new <see cref="ButtonControl"/>.
-        /// </summary>
-        public ButtonControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        /// <summary>
-        /// A helper method to retreive the button contained in this control.
-        /// This method wouldn't be needed if our tester used reflection.
-        /// </summary>
-        public Button InnerButton
-        {
-            get { return myButton; }
-        }
+    /// <summary>
+    /// A helper method to retreive the button contained in this control.
+    /// This method wouldn't be needed if our tester used reflection.
+    /// </summary>
+    public Button InnerButton => myButton;
 
-        public event EventHandler SuperClick;
+    public event EventHandler SuperClick;
 
-        private void myButton_Click(object sender, EventArgs e)
+    private void myButton_Click(object sender, EventArgs e)
+    {
+        if (SuperClick != null)
         {
-            if (SuperClick != null)
-            {
-                SuperClick(this, e);
-            }
+            SuperClick(this, e);
         }
     }
 }

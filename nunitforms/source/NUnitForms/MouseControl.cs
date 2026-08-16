@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,72 +35,73 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Generic_Testers;
+using NUnit.Extensions.Forms.Util;
+
+
+namespace NUnit.Extensions.Forms;
+
+internal class MouseControl
 {
-    internal class MouseControl
+    private readonly ReflectionTester tester;
+
+    internal MouseControl(ReflectionTester tester)
     {
-        private readonly ReflectionTester tester;
+        this.tester = tester;
+    }
 
-        internal MouseControl(ReflectionTester tester)
+    internal PointF Resolution
+    {
+        get
         {
-            this.tester = tester;
+            using var g = Control.CreateGraphics();
+            return new PointF(g.DpiX, g.DpiY);
         }
+    }
 
-        internal PointF Resolution
+    private Control Control
+    {
+        get
         {
-            get
+            var control = tester.TheObject as Control;
+            FormsAssert.IsTrue(control != null, "Mouse control requires control based tester.");
+            if (!control.IsHandleCreated)
             {
-                using (Graphics g = Control.CreateGraphics())
-                {
-                    return new PointF(g.DpiX, g.DpiY);
-                }
+                Application.DoEvents();
             }
+            return control;
         }
+    }
 
-        private Control Control
-        {
-            get
-            {
-                Control control = tester.TheObject as Control;
-                FormsAssert.IsTrue(control != null, "Mouse control requires control based tester.");
-                if (!control.IsHandleCreated)
-                {
-                    Application.DoEvents();
-                }
-                return control;
-            }
-        }
+    internal void Focus()
+    {
+        Control.FindForm().Activate();
+    }
 
-        internal void Focus()
-        {
-            Control.FindForm().Activate();
-        }
+    /// <summary>
+    ///   Translation between mouse position and screen position.
+    /// </summary>
+    /// <param name="p">
+    ///   A <see cref="PointF"/> mouse coordinate relative to
+    ///   the origin control and specified in PositionUnit.
+    /// </param>
+    /// <param name="scale">
+    /// The scale to convert by.
+    /// </param>
+    /// <returns>
+    ///   A <see cref="Win32.Point"/> mouse coordinate relative to
+    ///   the screen and specified in pixels.
+    /// </returns>
+    internal Win32.Point Convert(PointF p, PointF scale)
+    {
+        var pixel = new Point((int)Math.Round(p.X * scale.X), (int)Math.Round(p.Y * scale.Y));
+        var screen = Control.PointToScreen(pixel);
+        return new Win32.Point(screen.X, screen.Y);
+    }
 
-        /// <summary>
-        ///   Translation between mouse position and screen position.
-        /// </summary>
-        /// <param name="p">
-        ///   A <see cref="PointF"/> mouse coordinate relative to
-        ///   the origin control and specified in PositionUnit.
-        /// </param>
-        /// <param name="scale">
-        /// The scale to convert by.
-        /// </param>
-        /// <returns>
-        ///   A <see cref="Win32.Point"/> mouse coordinate relative to
-        ///   the screen and specified in pixels.
-        /// </returns>
-        internal Win32.Point Convert(PointF p, PointF scale)
-        {
-            Point pixel = new Point((int) Math.Round(p.X*scale.X), (int) Math.Round(p.Y*scale.Y));
-            Point screen = Control.PointToScreen(pixel);
-            return new Win32.Point(screen.X, screen.Y);
-        }
-
-        internal PointF Convert(Win32.Point screen, PointF scale)
-        {
-            Point client = Control.PointToClient(new Point(screen.x, screen.y));
-            return new PointF(client.X/scale.X, client.Y/scale.Y);
-        }
+    internal PointF Convert(Win32.Point screen, PointF scale)
+    {
+        var client = Control.PointToClient(new Point(screen.x, screen.y));
+        return new PointF(client.X / scale.X, client.Y / scale.Y);
     }
 }

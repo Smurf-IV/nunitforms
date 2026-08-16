@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,66 +27,65 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Generic_Testers;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing forms.
+/// 
+/// This class implements a Close() helper method to close a form that you find.
+/// </summary>
+/// <remarks>
+/// This class does not have all of the constructors because they don't make
+/// sense in this context.</remarks>
+public class FormTester : ControlTester<Form, FormTester>, IDisposable
 {
-    /// <summary>
-    /// A ControlTester for testing forms.
-    /// 
-    /// This class implements a Close() helper method to close a form that you find.
-    /// </summary>
-    /// <remarks>
-    /// This class does not have all of the constructors because they don't make
-    /// sense in this context.</remarks>
-    public class FormTester : ControlTester<Form, FormTester>, IDisposable
+    private bool explicitlyClosed;
+
+    public FormTester()
     {
-        private bool explicitlyClosed;
+    }
 
-        public FormTester()
+    public FormTester(string name) : base(name)
+    {
+    }
+
+    /// <summary>
+    /// Gets or sets the dialog result for the form.
+    /// </summary>
+    /// <returns>
+    /// A <c>System.Windows.Forms.DialogResult</c> that represents the result of the form when used as a dialog box.
+    /// </returns>
+    public DialogResult DialogResult => Properties.DialogResult;
+
+    #region IDisposable Members
+
+    /// <summary>
+    /// Disposes the associated Form.
+    /// </summary>
+    public void Dispose()
+    {
+        if (!explicitlyClosed)
         {
+            Close();
         }
+    }
 
-        public FormTester(string name) : base(name)
-        {
-        }
+    #endregion
 
-        /// <summary>
-        /// Gets or sets the dialog result for the form.
-        /// </summary>
-        /// <returns>
-        /// A <c>System.Windows.Forms.DialogResult</c> that represents the result of the form when used as a dialog box.
-        /// </returns>
-        public DialogResult DialogResult
-        {
-            get { return Properties.DialogResult; }
-        }
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// Disposes the associated Form.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!explicitlyClosed)
-                Close();
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Closes the associated Form.
-        /// </summary>
-        public void Close()
-        {
-            Properties.Close();
-            explicitlyClosed = true;
-        }
+    /// <summary>
+    /// Closes the associated Form.
+    /// </summary>
+    public void Close()
+    {
+        Properties.Close();
+        explicitlyClosed = true;
     }
 }

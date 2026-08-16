@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,91 +27,94 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ContextMenuTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ContextMenuTest : NUnitFormTest
+    private LabelTester label;
+
+    public override void Setup()
     {
-        private LabelTester label;
+        new ContextMenuTestForm().Show();
+        label = new LabelTester("myCounterLabel");
+    }
 
-        public override void Setup()
-        {
-            new ContextMenuTestForm().Show();
-            label = new LabelTester("myCounterLabel");
-        }
+    [Test]
+    public void AmbiguousNameBecauseInSubMenusButNotQualified()
+    {
+        var myMenuItem = new MenuItemTester("Not Ambiguous");
+        Assert.Throws<AmbiguousNameException>(myMenuItem.Click);
+    }
 
-        [Test]
-        public void AmbiguousNameBecauseInSubMenusButNotQualified()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("Not Ambiguous");
-            Assert.Throws<AmbiguousNameException>(() => myMenuItem.Click());
-        }
+    [Test]
+    public void AmbiguousNameBecauseInTwoMenus()
+    {
+        var myMenuItem = new MenuItemTester("Test 2.Not Ambiguous");
+        Assert.Throws<AmbiguousNameException>(myMenuItem.Click);
+    }
 
-        [Test]
-        public void AmbiguousNameBecauseInTwoMenus()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("Test 2.Not Ambiguous");
-            Assert.Throws<AmbiguousNameException>(() => myMenuItem.Click());
-        }
+    [Test]
+    public void AmbiguousNameBecauseWeUseTextNotNameForMenuItems()
+    {
+        var myMenuItem = new MenuItemTester("Ambiguous");
+        Assert.Throws<AmbiguousNameException>(myMenuItem.Click);
+    }
 
-        [Test]
-        public void AmbiguousNameBecauseWeUseTextNotNameForMenuItems()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("Ambiguous");
-            Assert.Throws<AmbiguousNameException>(() => myMenuItem.Click());
-        }
+    [Test]
+    public void ContextMenuClick()
+    {
+        var myMenuItem = new MenuItemTester("Click To Count");
+        myMenuItem.Click();
+        Assert.AreEqual("1", label.Text);
+    }
 
-        [Test]
-        public void ContextMenuClick()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("Click To Count");
-            myMenuItem.Click();
-            Assert.AreEqual("1", label.Text);
-        }
+    [Test]
+    public void DontNeedToSpecifyWhichForm()
+    {
+        var myMenuItem = new MenuItemTester("myCounterLabel.ContextMenu.Test 2.Not Ambiguous");
+        myMenuItem.Click();
+    }
 
-        [Test]
-        public void DontNeedToSpecifyWhichForm()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("myCounterLabel.ContextMenu.Test 2.Not Ambiguous");
-            myMenuItem.Click();
-        }
+    [Test]
+    public void GeneratedTest()
+    {
+        var ClickToCount = new MenuItemTester("Click To Count");
+        ClickToCount.Click();
+        Assert.AreEqual("1", label.Properties.Text);
+    }
 
-        [Test]
-        public void GeneratedTest()
-        {
-            MenuItemTester ClickToCount = new MenuItemTester("Click To Count");
-            ClickToCount.Click();
-            Assert.AreEqual("1", label.Properties.Text);
-        }
+    [Test]
+    public void NoSuchControlFinder()
+    {
+        var myMenuItem = new MenuItemTester("junkData");
+        Assert.Throws<NoSuchControlException>(myMenuItem.Click);
+    }
 
-        [Test]
-        public void NoSuchControlFinder()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("junkData");
-            Assert.Throws<NoSuchControlException>(() => myMenuItem.Click());
-        }
+    [Test]
+    public void NotAmbiguousNameBecauseInSubMenus()
+    {
+        var myMenuItem = new MenuItemTester("Test 1.Not Ambiguous");
+        myMenuItem.Click();
+    }
 
-        [Test]
-        public void NotAmbiguousNameBecauseInSubMenus()
-        {
-            MenuItemTester myMenuItem = new MenuItemTester("Test 1.Not Ambiguous");
-            myMenuItem.Click();
-        }
-
-        [Test]
-        public void NotAmbiguousNameBecauseInTwoMenusButQualified()
-        {
-            //source control property of the menu item is not actually set on the menu item in the tester
-            //so handlers that rely on this are currently broken.  I am not sure whether anyone will notice
-            //this.
-            MenuItemTester myMenuItem = new MenuItemTester("myCounterLabel.ContextMenu.Test 2.Not Ambiguous");
-            myMenuItem.Click();
-        }
+    [Test]
+    public void NotAmbiguousNameBecauseInTwoMenusButQualified()
+    {
+        //source control property of the menu item is not actually set on the menu item in the tester
+        //so handlers that rely on this are currently broken.  I am not sure whether anyone will notice
+        //this.
+        var myMenuItem = new MenuItemTester("myCounterLabel.ContextMenu.Test 2.Not Ambiguous");
+        myMenuItem.Click();
     }
 }

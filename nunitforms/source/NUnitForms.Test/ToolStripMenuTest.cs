@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,54 +27,63 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ToolStripMenuTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ToolStripMenuTest : NUnitFormTest
+    private Form? form;
+    private LabelTester? label1;
+
+    public override void Setup()
     {
-        private Form form = null;
-        private LabelTester label1 = null;
+        form = new TestForms.ToolStripMenuTestForm();
+        form.Show();
+        label1 = new LabelTester("label1", form);
+    }
 
-        public override void Setup()
-        {
-            form = new ToolStripMenuTestForm();
-            form.Show();
-            label1 = new LabelTester("label1", form);
-        }
+    [TearDown]
+    public override void TearDown()
+    {
+        form?.Dispose();
+        base.TearDown();
+    }
 
-        [Test]
-        public void InContainerMenu()
-        {
-            new ToolStripMenuItemTester("itemInContainerToolStripMenuItem").Click();
-            Assert.AreEqual("itemInContainerToolStripMenuItem clicked", label1.Text);
-        }
+    [Test]
+    public void InContainerMenu()
+    {
+        new ToolStripMenuItemTester("itemInContainerToolStripMenuItem").Click();
+        Assert.AreEqual("itemInContainerToolStripMenuItem clicked", label1.Text);
+    }
 
-        [Test]
-        public void InPanelMenu()
-        {
-            new ToolStripMenuItemTester("itemInPanelToolStripMenuItem").Click();
-            Assert.AreEqual("itemInPanelToolStripMenuItem clicked", label1.Text);
-        }
+    [Test]
+    public void InPanelMenu()
+    {
+        new ToolStripMenuItemTester("itemInPanelToolStripMenuItem").Click();
+        Assert.AreEqual("itemInPanelToolStripMenuItem clicked", label1.Text);
+    }
 
-        [Test]
-        public void MainMenuSubItem()
-        {
-            new ToolStripMenuItemTester("subItemToolStripMenuItem").Click();
-            Assert.AreEqual("subItemToolStripMenuItem clicked", label1.Text);
-        }
+    [Test]
+    public void MainMenuSubItem()
+    {
+        new ToolStripMenuItemTester("subItemToolStripMenuItem").Click();
+        Assert.AreEqual("subItemToolStripMenuItem clicked", label1.Text);
+    }
 
-        [Test]
-        public void PlainMenu()
-        {
-            new ToolStripMenuItemTester("itemToolStripMenuItem").Click();
-            Assert.AreEqual("itemToolStripMenuItem clicked", label1.Text);
-        }
+    [Test]
+    public void PlainMenu()
+    {
+        new ToolStripMenuItemTester("itemToolStripMenuItem").Click();
+        Assert.AreEqual("itemToolStripMenuItem clicked", label1.Text);
     }
 }

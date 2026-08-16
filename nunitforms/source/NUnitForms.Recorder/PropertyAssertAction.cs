@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,43 +27,33 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using System;
+namespace NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.Recorder
+public class PropertyAssertAction : Action
 {
-    public class PropertyAssertAction : Action
+    private readonly string name;
+
+    private readonly object val;
+
+    public PropertyAssertAction(string name, object val)
     {
-        private string name;
+        this.name = name;
+        this.val = val;
+    }
 
-        private object val;
-
-        public PropertyAssertAction(string name, object val)
+    public override string ToString()
+    {
+        string expected = val switch
         {
-            this.name = name;
-            this.val = val;
-        }
+            bool => val.ToString().ToLower(),
+            string => "\"" + val + "\"",
+            _ => val.ToString()
+        };
 
-        public override string ToString()
-        {
-            string expected;
-            if (val is bool)
-            {
-                expected = val.ToString().ToLower();
-            }
-            else if (val is String)
-            {
-                expected = "\"" + val + "\"";
-            }
-            else
-            {
-                expected = val.ToString();
-            }
-
-            return string.Format("Assert.AreEqual({0}, {1}.Properties.{2});", expected, Control, name);
-        }
+        return $"Assert.AreEqual({expected}, {Control}.Properties.{name});";
     }
 }

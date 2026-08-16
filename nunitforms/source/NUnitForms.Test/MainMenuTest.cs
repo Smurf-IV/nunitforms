@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,96 +27,98 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
-using System.Reflection;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class MainMenuTest : NUnitFormTest
 {
-    [TestFixture]
-    public class MainMenuTest : NUnitFormTest
+    private readonly LabelTester label = new LabelTester("label");
+
+    public override void Setup()
     {
-        private LabelTester label = new LabelTester("label");
+        new MainMenuTestForm().Show();
+    }
 
-        public override void Setup()
-        {
-            new MainMenuTestForm().Show();
-        }
+    private void ClickAndTest(string name)
+    {
+        new MenuItemTester(name).Click();
+        Assert.AreEqual("clicked", label.Text);
+    }
 
-        private void ClickAndTest(string name)
-        {
-            new MenuItemTester(name).Click();
-            Assert.AreEqual("clicked", label.Text);
-        }
+    [Test]
+    public void CantUseAmpsInName()
+    {
+        Assert.Throws<NoSuchControlException>(() => ClickAndTest("Main.With &Alt Key"));
+    }
 
-        [Test]
-        public void CantUseAmpsInName()
-        {
-            Assert.Throws<NoSuchControlException>(() => ClickAndTest("Main.With &Alt Key"));
-        }
+    [Test]
+    public void CantUseDotInName()
+    {
+        Assert.Throws<NoSuchControlException>(() => ClickAndTest("Main.With Dots..."));
+    }
 
-        [Test]
-        public void CantUseDotInName()
-        {
-            Assert.Throws<NoSuchControlException>(() => ClickAndTest("Main.With Dots..."));
-        }
+    [Test]
+    public void FormQualifiedMenuItem()
+    {
+        ClickAndTest("MainMenuTestForm.MainMenu.Main.Item");
+    }
 
-        [Test]
-        public void FormQualifiedMenuItem()
-        {
-            ClickAndTest("MainMenuTestForm.MainMenu.Main.Item");
-        }
+    [Test]
+    public void FullyQualifiedMenuItem()
+    {
+        ClickAndTest("MainMenu.Main.Item");
+    }
 
-        [Test]
-        public void FullyQualifiedMenuItem()
-        {
-            ClickAndTest("MainMenu.Main.Item");
-        }
+    [Test]
+    public void ItemWithAltKey()
+    {
+        ClickAndTest("Main.With Alt Key");
+    }
 
-        [Test]
-        public void ItemWithAltKey()
-        {
-            ClickAndTest("Main.With Alt Key");
-        }
+    [Test]
+    public void ItemWithDot()
+    {
+        ClickAndTest("Main.With Dots");
+    }
 
-        [Test]
-        public void ItemWithDot()
-        {
-            ClickAndTest("Main.With Dots");
-        }
+    [Test]
+    public void MenuPopup()
+    {
+        new MenuItemTester("Main").Popup();
+        Assert.AreEqual("shown", label.Text);
+    }
 
-        [Test]
-        public void MenuPopup()
-        {
-            new MenuItemTester("Main").Popup();
-            Assert.AreEqual("shown", label.Text);
-        }
+    [Test]
+    public void PartiallyQualifiedSubMenuItem()
+    {
+        ClickAndTest("Sub Menu.Sub Menu Item");
+    }
 
-        [Test]
-        public void PartiallyQualifiedSubMenuItem()
-        {
-            ClickAndTest("Sub Menu.Sub Menu Item");
-        }
+    [Test]
+    public void PlainMenu()
+    {
+        ClickAndTest("Item");
+    }
 
-        [Test]
-        public void PlainMenu()
-        {
-            ClickAndTest("Item");
-        }
+    [Test]
+    public void QualifiedMenu()
+    {
+        ClickAndTest("Main.Item");
+    }
 
-        [Test]
-        public void QualifiedMenu()
-        {
-            ClickAndTest("Main.Item");
-        }
-
-        [Test]
-        public void SubMenuItem()
-        {
-            ClickAndTest("Sub Menu Item");
-        }
+    [Test]
+    public void SubMenuItem()
+    {
+        ClickAndTest("Sub Menu Item");
     }
 }

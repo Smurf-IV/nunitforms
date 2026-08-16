@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,69 +27,67 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Collections.Generic;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+///<summary>
+/// The default abstract base class for all collapsing processors.
+///</summary>
+public abstract class CollapsingProcessor : ICollapsingProcessor
 {
-    ///<summary>
-    /// The default abstract base class for all collapsing processors.
-    ///</summary>
-    public abstract class CollapsingProcessor : ICollapsingProcessor
+    #region ICollapsingProcessor Members
+
+    /// <summary>
+    /// Process the given actions, possibly collapsing adjacent ones.
+    /// </summary>
+    /// <param name="actions">The list of actions to process.</param>
+    /// <returns>The collapsed list of actions.</returns>
+    public ICollection<Action> Process(ICollection<Action> actions)
     {
-        #region ICollapsingProcessor Members
+        List<Action> list = new List<Action>();
 
-        /// <summary>
-        /// Process the given actions, possibly collapsing adjacent ones.
-        /// </summary>
-        /// <param name="actions">The list of actions to process.</param>
-        /// <returns>The collapsed list of actions.</returns>
-        public ICollection<Action> Process(ICollection<Action> actions)
+        Action? lastAdded = null;
+
+        foreach (Action action in actions)
         {
-            List<Action> list = new List<Action>();
-
-            Action lastAdded = null;
-
-            foreach (Action action in actions)
+            if (Collapse(lastAdded, action))
             {
-                if (Collapse(lastAdded, action))
-                {
-                    list.RemoveAt(list.Count - 1);
-                }
-
-                lastAdded = action;
-                list.Add(lastAdded);
+                list.RemoveAt(list.Count - 1);
             }
 
-            return list;
+            lastAdded = action;
+            list.Add(lastAdded);
         }
 
-        /// <summary>
-        /// Returns true if the given actions can be collapsed.
-        /// </summary>
-        /// <param name="action1">The earlier event to test.</param>
-        /// <param name="action2">The latter event to test.</param>
-        /// <returns>True if these events can be collapsed; else false.</returns>
-        public abstract bool CanCollapse(EventAction action1, EventAction action2);
+        return list;
+    }
 
-        #endregion
+    /// <summary>
+    /// Returns true if the given actions can be collapsed.
+    /// </summary>
+    /// <param name="action1">The earlier event to test.</param>
+    /// <param name="action2">The latter event to test.</param>
+    /// <returns>True if these events can be collapsed; else false.</returns>
+    public abstract bool CanCollapse(EventAction action1, EventAction action2);
 
-        private bool Collapse(object action1, object action2)
+    #endregion
+
+    private bool Collapse(object action1, object action2)
+    {
+        EventAction second = action2 as EventAction;
+        if (action1 is not EventAction first)
         {
-            EventAction first = action1 as EventAction;
-            EventAction second = action2 as EventAction;
-            if (first == null)
-            {
-                return false;
-            }
-            if (second == null)
-            {
-                return false;
-            }
-            return CanCollapse(first, second);
+            return false;
         }
+        if (second == null)
+        {
+            return false;
+        }
+        return CanCollapse(first, second);
     }
 }

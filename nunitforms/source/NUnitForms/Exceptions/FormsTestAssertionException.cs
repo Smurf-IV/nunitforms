@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,32 +27,31 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 
-namespace NUnit.Extensions.Forms
-{
-    /// <summary>
-    /// Defines a base class for exceptions generated when testing forms.
-    /// </summary>
-    public class FormsTestAssertionException : Exception
-    {
-        ///<summary>
-        /// Constructs a new <see cref="FormsTestAssertionException"/> with the given message.
-        ///</summary>
-        public FormsTestAssertionException(string message) : base(message)
-        {
-        }
+namespace NUnit.Extensions.Forms.Exceptions;
 
-        ///<summary>
-        /// Constructs a new <see cref="FormsTestAssertionException"/> with the given message
-        /// and inner exception.
-        ///</summary>
-        public FormsTestAssertionException(string message, Exception ex) : base(message, ex)
-        {
-        }
+/// <summary>
+/// Defines a base class for exceptions generated when testing forms.
+/// </summary>
+public class FormsTestAssertionException : Exception
+{
+    ///<summary>
+    /// Constructs a new <see cref="FormsTestAssertionException"/> with the given message.
+    ///</summary>
+    public FormsTestAssertionException(string message) : base(message)
+    {
+    }
+
+    ///<summary>
+    /// Constructs a new <see cref="FormsTestAssertionException"/> with the given message
+    /// and inner exception.
+    ///</summary>
+    public FormsTestAssertionException(string message, Exception ex) : base(message, ex)
+    {
     }
 }

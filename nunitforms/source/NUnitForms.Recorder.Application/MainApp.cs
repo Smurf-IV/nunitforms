@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,21 +27,20 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
-using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder.Application;
+
+public class MainApp
 {
-    public class MainApp
+    [STAThread]
+    public static void Main(string[] args)
     {
-        [STAThread]
-        public static void Main(string[] args)
-        {
-            Application.Run(new AppForm());
-        }
+        using var mainForm = new AppForm();
+        System.Windows.Forms.Application.Run(mainForm);
     }
 }

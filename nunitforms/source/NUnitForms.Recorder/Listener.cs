@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -36,272 +37,267 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+using NUnit.Extensions.Forms.Finders;
+
+
+namespace NUnitForms.Recorder;
+
+public delegate void EventHappened(Type testerType, object control, Action action);
+
+///<summary>
+/// A <see cref="Listener"/> is used by a <see cref="Recorder"/>
+/// to manage events happening on a target control.
+///</summary>
+public class Listener
 {
-    public delegate void EventHappened(Type testerType, object control, Action action);
+    private string actionInProcess;
+    private object controlInProcess;
+    private readonly List<Form> formsIAmListeningTo = [];
+    private bool inProcess;
+    private readonly SupportedEventsRegistry registry;
+    private Type testerTypeInProcess;
 
     ///<summary>
-    /// A <see cref="Listener"/> is used by a <see cref="Recorder"/>
-    /// to manage events happening on a target control.
+    /// Constructs a new <see cref="Listener"/>.
     ///</summary>
-    public class Listener
+    public Listener()
     {
-        private string actionInProcess;
-        private object controlInProcess;
-        private List<Form> formsIAmListeningTo = new List<Form>();
-        private bool inProcess = false;
-        private SupportedEventsRegistry registry;
-        private Type testerTypeInProcess;
+        registry = new SupportedEventsRegistry(this);
+    }
 
-        ///<summary>
-        /// Constructs a new <see cref="Listener"/>.
-        ///</summary>
-        public Listener()
+    public event EventHappened Event;
+
+    public void ListenTo(Control control)
+    {
+        if (control is Form form)
         {
-            registry = new SupportedEventsRegistry(this);
+            formsIAmListeningTo.Add(form);
         }
 
-        public event EventHappened Event;
+        // Todo: This is problably not the correct way of solving the 
+        // problem but it solves the problem with ToolStripComboBox,
+        // ToolStripTextBox and ToolStripProgressBar
+        // We here test if the item parent is a Toolbar,context menu or menu. If so and is 
+        // not a ToolStripItem we do no add an eventlistener.
+        /*
+  if (!(control is ToolStripItem) && (control.Parent != null) && (control.Parent.GetType() == typeof(ToolStrip) ||
+    control.Parent.GetType() == typeof(MenuStrip) || control.Parent.GetType() == typeof(ContextMenuStrip)))
+  {
+    return;
+  }
+  */
 
-        public void ListenTo(Control control)
+        if (!string.IsNullOrEmpty(control.Name))
         {
-            if (control is Form)
-            {
-                formsIAmListeningTo.Add((Form) control);
-            }
-
-            // Todo: This is problably not the correct way of solving the 
-            // problem but it solves the problem with ToolStripComboBox,
-            // ToolStripTextBox and ToolStripProgressBar
-            // We here test if the item parent is a Toolbar,context menu or menu. If so and is 
-            // not a ToolStripItem we do no add an eventlistener.
-            /*
-      if (!(control is ToolStripItem) && (control.Parent != null) && (control.Parent.GetType() == typeof(ToolStrip) ||
-        control.Parent.GetType() == typeof(MenuStrip) || control.Parent.GetType() == typeof(ContextMenuStrip)))
-      {
-        return;
-      }
-      */
-
-            if (!string.IsNullOrEmpty(control.Name))
-            {
-                AddEventListeners(control);
-            }
-            ListenTo(control.ContextMenu);
-
-            if (control is ToolStrip)
-            {
-                ToolStrip toolstrip = (ToolStrip) control;
-                if (control.ContextMenuStrip != null)
-                {
-                    ListenTo(control.ContextMenuStrip);
-                }
-
-                foreach (ToolStripItem item in toolstrip.Items)
-                {
-                    if (item is ToolStripControlHost)
-                    {
-                        ToolStripControlHost host = (ToolStripControlHost) item;
-                        ListenTo(host.Control);
-                    }
-
-                    AddEventListeners(item);
-
-                    if (item is ToolStripDropDownItem)
-                    {
-                        ToolStripDropDownItem dropdown = (ToolStripDropDownItem) item;
-                        ListenTo(dropdown.DropDownItems);
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(control.Name))
-            {
-                AddPropertyAssertListeners(control);
-            }
-            control.ControlAdded += ControlAdded;
-
-
-            foreach (Control c in control.Controls)
-            {
-                ListenTo(c);
-            }
+            AddEventListeners(control);
         }
+        ListenTo(control.ContextMenu);
 
-        private void ListenTo(ToolStripItemCollection collection)
+        if (control is ToolStrip toolstrip)
         {
-            if (collection != null)
+            if (toolstrip.ContextMenuStrip != null)
             {
-                foreach (ToolStripItem item in collection)
+                ListenTo(toolstrip.ContextMenuStrip);
+            }
+
+            foreach (ToolStripItem item in toolstrip.Items)
+            {
+                if (item is ToolStripControlHost host)
                 {
-                    AddEventListeners(item);
-                    if (item is ToolStripControlHost)
-                    {
-                        ToolStripControlHost host = (ToolStripControlHost) item;
-                        ListenTo(host.Control);
-                    }
-                    if (item is ToolStripDropDownItem)
-                    {
-                        ToolStripDropDownItem dropdown = (ToolStripDropDownItem) item;
-                        ListenTo(dropdown.DropDownItems);
-                    }
+                    ListenTo(host.Control);
+                }
+
+                AddEventListeners(item);
+
+                if (item is ToolStripDropDownItem dropdown)
+                {
+                    ListenTo(dropdown.DropDownItems);
                 }
             }
         }
 
-        private void ListenTo(Menu menu)
+        if (!string.IsNullOrEmpty(control.Name))
         {
-            if (menu == null)
-            {
-                return;
-            }
-            AddEventListeners(menu);
-            foreach (MenuItem item in menu.MenuItems)
-            {
-                ListenTo(item);
-            }
+            AddPropertyAssertListeners(control);
         }
+        control.ControlAdded += ControlAdded;
 
-        private void AddPropertyAssertListeners(Control control)
+
+        foreach (Control c in control.Controls)
         {
-            PropertyInfo[] properties = control.GetType().GetProperties();
-            foreach (PropertyInfo propertyInfo in properties)
-            {
-                AddAssertMenuItem(propertyInfo, control);
-            }
+            ListenTo(c);
         }
+    }
 
-        private void AddAssertMenuItem(PropertyInfo propertyInfo, Control control)
+    private void ListenTo(ToolStripItemCollection? collection)
+    {
+        if (collection != null)
         {
-            if (propertyInfo.PropertyType.IsPrimitive || propertyInfo.PropertyType.Equals(typeof (string)))
+            foreach (ToolStripItem item in collection)
             {
-                string propertyName = propertyInfo.Name;
-                EventHandler recorder = registry.PropertyAssertHandler(control.GetType());
-                if (recorder != null)
+                AddEventListeners(item);
+                if (item is ToolStripControlHost host)
                 {
-                    AddAssertMenuItem(control, propertyName, recorder);
+                    ListenTo(host.Control);
+                }
+                if (item is ToolStripDropDownItem dropdown)
+                {
+                    ListenTo(dropdown.DropDownItems);
                 }
             }
         }
+    }
 
-        private void AddEventListeners(object control)
+    private void ListenTo(Menu? menu)
+    {
+        if (menu == null)
         {
-            EventInfo[] events = control.GetType().GetEvents();
+            return;
+        }
+        AddEventListeners(menu);
+        foreach (MenuItem item in menu.MenuItems)
+        {
+            ListenTo(item);
+        }
+    }
 
-            foreach (EventInfo eventInfo in events)
+    private void AddPropertyAssertListeners(Control control)
+    {
+        PropertyInfo[] properties = control.GetType().GetProperties();
+        foreach (PropertyInfo propertyInfo in properties)
+        {
+            AddAssertMenuItem(propertyInfo, control);
+        }
+    }
+
+    private void AddAssertMenuItem(PropertyInfo propertyInfo, Control control)
+    {
+        if (propertyInfo.PropertyType.IsPrimitive || propertyInfo.PropertyType.Equals(typeof(string)))
+        {
+            string propertyName = propertyInfo.Name;
+            EventHandler recorder = registry.PropertyAssertHandler(control.GetType());
+            if (recorder != null)
             {
-                string eventName = eventInfo.Name;
-                MulticastDelegate recorder = registry.EventHandler(control.GetType(), eventName);
-                if (recorder != null)
-                {
-                    eventInfo.AddEventHandler(control, recorder);
-                    AddEventHandlerAtStartOfChain(eventInfo, control, recorder);
-                }
+                AddAssertMenuItem(control, propertyName, recorder);
             }
         }
+    }
 
-        private void AddEventHandlerAtStartOfChain(EventInfo eventInfo, object control, MulticastDelegate recorder)
+    private void AddEventListeners(object control)
+    {
+        EventInfo[] events = control.GetType().GetEvents();
+
+        foreach (EventInfo eventInfo in events)
         {
-            //this will not work for all events as they are not implemented consistently
-            //TODO: there will be more special cases here eventually.
-            PropertyInfo eventsProp =
-                control.GetType().GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
-            EventHandlerList handlers = (EventHandlerList) eventsProp.GetValue(control, null);
-
-            Recorder rec = (Recorder) recorder.Target;
-            FieldInfo eventKey = rec.EventKey(eventInfo.Name);
-
-            if (eventKey == null)
+            string eventName = eventInfo.Name;
+            MulticastDelegate recorder = registry.EventHandler(control.GetType(), eventName);
+            if (recorder != null)
             {
-                return;
-            } //actually this should probably allow the exception
-            //most of the time.. this could hide a problem!
-            //TODO: investigate.
-
-            object key = eventKey.GetValue(control);
-
-            handlers[key] = Delegate.Combine(recorder, handlers[key]);
-        }
-
-        private void AddAssertMenuItem(Control control, string name, EventHandler handler)
-        {
-            ContextMenu menu = control.ContextMenu;
-            if (menu == null)
-            {
-                menu = new ContextMenu();
-                control.ContextMenu = menu;
+                eventInfo.AddEventHandler(control, recorder);
+                AddEventHandlerAtStartOfChain(eventInfo, control, recorder);
             }
-            menu.MenuItems.Add(new MenuItem(name, handler));
         }
+    }
 
-        public void FireEvent(Type testerType, object control, string name, params object[] args)
+    private void AddEventHandlerAtStartOfChain(EventInfo eventInfo, object control, MulticastDelegate recorder)
+    {
+        //this will not work for all events as they are not implemented consistently
+        //TODO: there will be more special cases here eventually.
+        PropertyInfo eventsProp =
+            control.GetType().GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
+        EventHandlerList handlers = (EventHandlerList)eventsProp.GetValue(control, null);
+
+        Recorder rec = (Recorder)recorder.Target;
+        FieldInfo? eventKey = rec.EventKey(eventInfo.Name);
+
+        if (eventKey == null)
         {
-            if (!InProcess(testerType, control, name))
-            {
-                OnEvent(testerType, control, new EventAction(name, args));
-            }
-            CheckForNewForms();
-        }
+            return;
+        } //actually this should probably allow the exception
+        //most of the time.. this could hide a problem!
+        //TODO: investigate.
 
-        public void FireEvent(Type testerType, object control, EventAction action)
+        object key = eventKey.GetValue(control);
+
+        handlers[key] = Delegate.Combine(recorder, handlers[key]);
+    }
+
+    private void AddAssertMenuItem(Control control, string name, EventHandler handler)
+    {
+        ContextMenu menu = control.ContextMenu;
+        if (menu == null)
         {
-            if (!InProcess(testerType, control, action.MethodName))
-            {
-                OnEvent(testerType, control, action);
-            }
-            CheckForNewForms();
+            menu = new ContextMenu();
+            control.ContextMenu = menu;
         }
+        menu.MenuItems.Add(new MenuItem(name, handler));
+    }
 
-        public void FireEvent(Type testerType, object control, PropertyAssertAction action)
+    public void FireEvent(Type testerType, object control, string name, params object[] args)
+    {
+        if (!InProcess(testerType, control, name))
+        {
+            OnEvent(testerType, control, new EventAction(name, args));
+        }
+        CheckForNewForms();
+    }
+
+    public void FireEvent(Type testerType, object control, EventAction action)
+    {
+        if (!InProcess(testerType, control, action.MethodName))
         {
             OnEvent(testerType, control, action);
-            CheckForNewForms();
+        }
+        CheckForNewForms();
+    }
+
+    public void FireEvent(Type testerType, object control, PropertyAssertAction action)
+    {
+        OnEvent(testerType, control, action);
+        CheckForNewForms();
+    }
+
+    private bool InProcess(Type testerType, object control, string action)
+    {
+        if (inProcess)
+        {
+            if ((testerType == testerTypeInProcess) && (control == controlInProcess) && (action == actionInProcess))
+            {
+                inProcess = false;
+            }
+            return true;
         }
 
-        private bool InProcess(Type testerType, object control, string action)
+        inProcess = true;
+        testerTypeInProcess = testerType;
+        controlInProcess = control;
+        actionInProcess = action;
+        return false;
+    }
+
+    protected void OnEvent(Type testerType, object control, Action action)
+    {
+        if (Event != null)
         {
-            if (inProcess)
+            Event(testerType, control, action);
+        }
+    }
+
+    private void ControlAdded(object sender, ControlEventArgs e)
+    {
+        ListenTo(e.Control);
+    }
+
+    private void CheckForNewForms()
+    {
+        List<Form> forms = new FormFinder().FindAll();
+        foreach (Form form in forms)
+        {
+            if (!(form is AppForm))
             {
-                if ((testerType == testerTypeInProcess) && (control == controlInProcess) && (action == actionInProcess))
+                if (!formsIAmListeningTo.Contains(form))
                 {
-                    inProcess = false;
-                }
-                return true;
-            }
-            else
-            {
-                inProcess = true;
-                testerTypeInProcess = testerType;
-                controlInProcess = control;
-                actionInProcess = action;
-                return false;
-            }
-        }
-
-        protected void OnEvent(Type testerType, object control, Action action)
-        {
-            if (Event != null)
-            {
-                Event(testerType, control, action);
-            }
-        }
-
-        private void ControlAdded(object sender, ControlEventArgs e)
-        {
-            ListenTo(e.Control);
-        }
-
-        private void CheckForNewForms()
-        {
-            List<Form> forms = new FormFinder().FindAll();
-            foreach (Form form in forms)
-            {
-                if (!(form is AppForm))
-                {
-                    if (!formsIAmListeningTo.Contains(form))
-                    {
-                        ListenTo(form);
-                    }
+                    ListenTo(form);
                 }
             }
         }

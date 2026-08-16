@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,44 +27,42 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+public class CompositeAction : EventAction
 {
-    public class CompositeAction : EventAction
+    private readonly List<Action> actions = [];
+
+    public CompositeAction(string name) : base(name)
     {
-        private List<Action> actions = new List<Action>();
+    }
 
-        public CompositeAction(string name) : base(name)
-        {
-        }
+    public void Add(Action action)
+    {
+        actions.Add(action);
+    }
 
-        public void Add(Action action)
-        {
-            actions.Add(action);
-        }
+    public void Add(string name, params object[] args)
+    {
+        actions.Add(new EventAction(name, args));
+    }
 
-        public void Add(string name, params object[] args)
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (Action action in actions)
         {
-            actions.Add(new EventAction(name, args));
+            action.Definition = Definition;
+            sb.Append(action);
+            sb.Append("\r\n\t");
         }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (Action action in actions)
-            {
-                action.Definition = Definition;
-                sb.Append(action.ToString());
-                sb.Append("\r\n\t");
-            }
-            return sb.ToString().Trim();
-        }
+        return sb.ToString().Trim();
     }
 }

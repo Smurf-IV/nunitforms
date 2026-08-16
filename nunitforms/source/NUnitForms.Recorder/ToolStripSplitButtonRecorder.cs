@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,44 +27,38 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Testers;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+///<summary>
+/// A recorder for <see cref="ToolStripSplitButton"/> controls.
+///</summary>
+public class ToolStripSplitButtonRecorder : ToolStripRecorder
 {
     ///<summary>
-    /// A recorder for <see cref="ToolStripSplitButton"/> controls.
+    /// Constructs a new <see cref="ToolStripSplitButtonRecorder"/>.
     ///</summary>
-    public class ToolStripSplitButtonRecorder : ToolStripRecorder
+    public ToolStripSplitButtonRecorder(Listener listener)
+        : base(listener)
     {
-        ///<summary>
-        /// Constructs a new <see cref="ToolStripSplitButtonRecorder"/>.
-        ///</summary>
-        public ToolStripSplitButtonRecorder(Listener listener)
-            : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (ToolStripSplitButton); }
-        }
+    public override Type RecorderType => typeof (ToolStripSplitButton);
 
-        public override Type TesterType
-        {
-            get { return typeof (ToolStripSplitButtonTester); }
-        }
+    public override Type TesterType => typeof (ToolStripSplitButtonTester);
 
-        ///<summary>
-        /// Raises the Click event for this control.
-        ///</summary>
-        public void Click(object sender, EventArgs args)
-        {
-            Listener.FireEvent(TesterType, sender, "Click");
-        }
+    ///<summary>
+    /// Raises the Click event for this control.
+    ///</summary>
+    public void Click(object sender, EventArgs args)
+    {
+        Listener.FireEvent(TesterType, sender, "Click");
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,74 +27,79 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
-
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ListViewTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ListViewTest : NUnitFormTest
+    private ListViewTestForm? listViewForm;
+
+    private ListViewTester? listViewDetails;
+
+    public override void Setup()
     {
-        private ListViewTestForm listViewForm = null;
+        base.Setup();
+        listViewForm = new ListViewTestForm();
+        listViewDetails = new ListViewTester("listViewDetails", listViewForm);
+    }
 
-        private ListViewTester listViewDetails = null;
+    [TearDown]
+    public override void TearDown()
+    {
+        listViewForm?.Dispose();
+        base.TearDown();
+    }
 
-        public override void Setup()
-        {
-            base.Setup();
-            listViewForm = new ListViewTestForm();
-            listViewDetails = new ListViewTester("listViewDetails", listViewForm);
-        }
+    private ListViewItem[] ColorList()
+    {
+        listViewForm.Show();
+        return
+        [
+            new ListViewItem("Red"), new ListViewItem("Orange"), new ListViewItem("Yellow"),
+                new ListViewItem("Green"), new ListViewItem("Blue"), new ListViewItem("Indigo"),
+                new ListViewItem("Violet")
+        ];
+    }
 
-        private ListViewItem[] ColorList()
-        {
-            listViewForm.Show();
-            return
-                new ListViewItem[]
-                    {
-                        new ListViewItem("Red"), new ListViewItem("Orange"), new ListViewItem("Yellow"),
-                        new ListViewItem("Green"), new ListViewItem("Blue"), new ListViewItem("Indigo"),
-                        new ListViewItem("Violet")
-                    };
-        }
+    [Test]
+    public void AllowSingleSelectonly()
+    {
+        listViewDetails.Properties.MultiSelect = false;
+        listViewDetails.Items.AddRange(ColorList());
+        listViewForm.Show();
 
-        [Test]
-        public void AllowSingleSelectonly()
-        {
-            listViewDetails.Properties.MultiSelect = false;
-            listViewDetails.Items.AddRange(ColorList());
-            listViewForm.Show();
+        string[] selectedColors = ["Red"];
+        listViewDetails.SelectItems(selectedColors);
+        Assert.IsTrue(listViewDetails.SelectedItemsMatch(selectedColors));
 
-            string[] selectedColors = new string[] {"Red"};
-            listViewDetails.SelectItems(selectedColors);
-            Assert.IsTrue(listViewDetails.SelectedItemsMatch(selectedColors));
+        selectedColors = ["Red", "Violet"];
+        listViewDetails.SelectItems(selectedColors);
+        Assert.IsFalse(listViewDetails.SelectedItemsMatch(selectedColors));
+    }
 
-            selectedColors = new string[] {"Red", "Violet"};
-            listViewDetails.SelectItems(selectedColors);
-            Assert.IsFalse(listViewDetails.SelectedItemsMatch(selectedColors));
-        }
+    [Test]
+    public void ColorSelectionTest()
+    {
+        listViewForm.Show();
+        listViewDetails.Items.AddRange(ColorList());
+        string[] selectedColors = ["Red", "Violet"];
+        listViewDetails.SelectItems(selectedColors);
+        Assert.IsTrue(listViewDetails.SelectedItemsMatch(selectedColors));
+    }
 
-        [Test]
-        public void ColorSelectionTest()
-        {
-            listViewForm.Show();
-            listViewDetails.Items.AddRange(ColorList());
-            string[] selectedColors = new string[] {"Red", "Violet"};
-            listViewDetails.SelectItems(selectedColors);
-            Assert.IsTrue(listViewDetails.SelectedItemsMatch(selectedColors));
-        }
-
-        [Test]
-        public void ShowListViewForm()
-        {
-            listViewForm.Show();
-            Assert.IsTrue(listViewDetails.Properties.Visible);
-        }
+    [Test]
+    public void ShowListViewForm()
+    {
+        listViewForm.Show();
+        Assert.IsTrue(listViewDetails.Properties.Visible);
     }
 }

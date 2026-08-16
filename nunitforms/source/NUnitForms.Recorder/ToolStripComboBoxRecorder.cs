@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,42 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Testers;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+public class ToolStripComboBoxRecorder : ToolStripRecorder
 {
-    public class ToolStripComboBoxRecorder : ToolStripRecorder
+    public ToolStripComboBoxRecorder(Listener listener)
+        : base(listener)
     {
-        public ToolStripComboBoxRecorder(Listener listener)
-            : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (ToolStripComboBox); }
-        }
+    public override Type RecorderType => typeof (ToolStripComboBox);
 
-        public override Type TesterType
-        {
-            get { return typeof (ToolStripComboBoxTester); }
-        }
+    public override Type TesterType => typeof (ToolStripComboBoxTester);
 
-        public void TextChanged(object sender, EventArgs e)
-        {
-            Listener.FireEvent(TesterType, sender, "Enter", ((ToolStripComboBox) sender).Text);
-        }
+    public void TextChanged(object sender, EventArgs e)
+    {
+        Listener.FireEvent(TesterType, sender, "Enter", ((ToolStripComboBox) sender).Text);
+    }
 
-        public void SelectedIndexChanged(object sender, EventArgs e)
-        {
-            EventAction action = new EventAction("Select", ((ToolStripComboBox) sender).SelectedIndex);
-            action.Comment = ((ToolStripComboBox) sender).Text;
-            Listener.FireEvent(TesterType, sender, action);
-        }
+    public void SelectedIndexChanged(object sender, EventArgs e)
+    {
+        EventAction action = new EventAction("Select", ((ToolStripComboBox) sender).SelectedIndex);
+        action.Comment = ((ToolStripComboBox) sender).Text;
+        Listener.FireEvent(TesterType, sender, action);
     }
 }

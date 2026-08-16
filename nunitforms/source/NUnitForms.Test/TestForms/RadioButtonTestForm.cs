@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,187 +36,187 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for RadioButtonTestForm.
+/// </summary>
+public class RadioButtonTestForm : Form
 {
     /// <summary>
-    /// Summary description for RadioButtonTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class RadioButtonTestForm : Form
+    private readonly Container? components = null;
+
+    private GroupBox grpColors;
+
+    private Label lblSelectedColor;
+
+    private RadioButton rbBlue;
+    private RadioButton rbGreen;
+
+    private RadioButton rbIndigo;
+    private RadioButton rbOrange;
+    private RadioButton rbRed;
+
+    private RadioButton rbViolet;
+    private RadioButton rbYellow;
+
+    public RadioButtonTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private GroupBox grpColors;
-
-        private Label lblSelectedColor;
-
-        private RadioButton rbBlue;
-        private RadioButton rbGreen;
-
-        private RadioButton rbIndigo;
-        private RadioButton rbOrange;
-        private RadioButton rbRed;
-
-        private RadioButton rbViolet;
-        private RadioButton rbYellow;
-
-        public RadioButtonTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void rb_CheckedChanged(object sender, EventArgs e)
-        {
-            RadioButton rb = (RadioButton) sender;
-            lblSelectedColor.Text = (string) rb.Tag;
-        }
-
-        private void RadioButtonTestForm_Load(object sender, EventArgs e)
-        {
-            rbRed.Tag = "Red";
-            rbOrange.Tag = "Orange";
-            rbGreen.Tag = "Green";
-            rbYellow.Tag = "Yellow";
-            rbBlue.Tag = "Blue";
-            rbIndigo.Tag = "Indigo";
-            rbViolet.Tag = "Violet";
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.grpColors = new GroupBox();
-            this.rbViolet = new RadioButton();
-            this.rbIndigo = new RadioButton();
-            this.rbBlue = new RadioButton();
-            this.rbYellow = new RadioButton();
-            this.rbGreen = new RadioButton();
-            this.rbOrange = new RadioButton();
-            this.rbRed = new RadioButton();
-            this.lblSelectedColor = new Label();
-            this.grpColors.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // grpColors
-            // 
-            this.grpColors.Controls.Add(this.rbViolet);
-            this.grpColors.Controls.Add(this.rbIndigo);
-            this.grpColors.Controls.Add(this.rbBlue);
-            this.grpColors.Controls.Add(this.rbYellow);
-            this.grpColors.Controls.Add(this.rbGreen);
-            this.grpColors.Controls.Add(this.rbOrange);
-            this.grpColors.Controls.Add(this.rbRed);
-            this.grpColors.Location = new Point(8, 16);
-            this.grpColors.Name = "grpColors";
-            this.grpColors.Size = new Size(272, 248);
-            this.grpColors.TabIndex = 0;
-            this.grpColors.TabStop = false;
-            this.grpColors.Text = "Colors";
-            // 
-            // rbViolet
-            // 
-            this.rbViolet.Location = new Point(8, 208);
-            this.rbViolet.Name = "rbViolet";
-            this.rbViolet.TabIndex = 6;
-            this.rbViolet.Text = "Violet";
-            this.rbViolet.Click += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // rbIndigo
-            // 
-            this.rbIndigo.Location = new Point(8, 176);
-            this.rbIndigo.Name = "rbIndigo";
-            this.rbIndigo.TabIndex = 5;
-            this.rbIndigo.Text = "Indigo";
-            this.rbIndigo.Click += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // rbBlue
-            // 
-            this.rbBlue.Location = new Point(8, 144);
-            this.rbBlue.Name = "rbBlue";
-            this.rbBlue.TabIndex = 4;
-            this.rbBlue.Text = "Blue";
-            this.rbBlue.Click += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // rbYellow
-            // 
-            this.rbYellow.Location = new Point(8, 112);
-            this.rbYellow.Name = "rbYellow";
-            this.rbYellow.TabIndex = 3;
-            this.rbYellow.Text = "Yellow";
-            this.rbYellow.Click += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // rbGreen
-            // 
-            this.rbGreen.Location = new Point(8, 80);
-            this.rbGreen.Name = "rbGreen";
-            this.rbGreen.TabIndex = 2;
-            this.rbGreen.Text = "Green";
-            this.rbGreen.Click += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // rbOrange
-            // 
-            this.rbOrange.Location = new Point(8, 48);
-            this.rbOrange.Name = "rbOrange";
-            this.rbOrange.TabIndex = 1;
-            this.rbOrange.Text = "Orange";
-            this.rbOrange.Click += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // rbRed
-            // 
-            this.rbRed.Location = new Point(8, 16);
-            this.rbRed.Name = "rbRed";
-            this.rbRed.TabIndex = 0;
-            this.rbRed.Text = "Red";
-            this.rbRed.CheckedChanged += new EventHandler(this.rb_CheckedChanged);
-            // 
-            // lblSelectedColor
-            // 
-            this.lblSelectedColor.Location = new Point(8, 288);
-            this.lblSelectedColor.Name = "lblSelectedColor";
-            this.lblSelectedColor.TabIndex = 1;
-            // 
-            // RadioButtonTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(6, 15);
-            this.ClientSize = new Size(292, 336);
-            this.Controls.Add(this.lblSelectedColor);
-            this.Controls.Add(this.grpColors);
-            this.Name = "RadioButtonTestForm";
-            this.Text = "RadioButtonTestForm";
-            this.Load += new EventHandler(this.RadioButtonTestForm_Load);
-            this.grpColors.ResumeLayout(false);
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void rb_CheckedChanged(object sender, EventArgs e)
+    {
+        var rb = (RadioButton)sender;
+        lblSelectedColor.Text = (string)rb.Tag;
+    }
+
+    private void RadioButtonTestForm_Load(object sender, EventArgs e)
+    {
+        rbRed.Tag = "Red";
+        rbOrange.Tag = "Orange";
+        rbGreen.Tag = "Green";
+        rbYellow.Tag = "Yellow";
+        rbBlue.Tag = "Blue";
+        rbIndigo.Tag = "Indigo";
+        rbViolet.Tag = "Violet";
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        grpColors = new GroupBox();
+        rbViolet = new RadioButton();
+        rbIndigo = new RadioButton();
+        rbBlue = new RadioButton();
+        rbYellow = new RadioButton();
+        rbGreen = new RadioButton();
+        rbOrange = new RadioButton();
+        rbRed = new RadioButton();
+        lblSelectedColor = new Label();
+        grpColors.SuspendLayout();
+        SuspendLayout();
+        // 
+        // grpColors
+        // 
+        grpColors.Controls.Add(rbViolet);
+        grpColors.Controls.Add(rbIndigo);
+        grpColors.Controls.Add(rbBlue);
+        grpColors.Controls.Add(rbYellow);
+        grpColors.Controls.Add(rbGreen);
+        grpColors.Controls.Add(rbOrange);
+        grpColors.Controls.Add(rbRed);
+        grpColors.Location = new Point(8, 16);
+        grpColors.Name = "grpColors";
+        grpColors.Size = new Size(272, 248);
+        grpColors.TabIndex = 0;
+        grpColors.TabStop = false;
+        grpColors.Text = "Colors";
+        // 
+        // rbViolet
+        // 
+        rbViolet.Location = new Point(8, 208);
+        rbViolet.Name = "rbViolet";
+        rbViolet.TabIndex = 6;
+        rbViolet.Text = "Violet";
+        rbViolet.Click += new EventHandler(rb_CheckedChanged);
+        // 
+        // rbIndigo
+        // 
+        rbIndigo.Location = new Point(8, 176);
+        rbIndigo.Name = "rbIndigo";
+        rbIndigo.TabIndex = 5;
+        rbIndigo.Text = "Indigo";
+        rbIndigo.Click += new EventHandler(rb_CheckedChanged);
+        // 
+        // rbBlue
+        // 
+        rbBlue.Location = new Point(8, 144);
+        rbBlue.Name = "rbBlue";
+        rbBlue.TabIndex = 4;
+        rbBlue.Text = "Blue";
+        rbBlue.Click += new EventHandler(rb_CheckedChanged);
+        // 
+        // rbYellow
+        // 
+        rbYellow.Location = new Point(8, 112);
+        rbYellow.Name = "rbYellow";
+        rbYellow.TabIndex = 3;
+        rbYellow.Text = "Yellow";
+        rbYellow.Click += new EventHandler(rb_CheckedChanged);
+        // 
+        // rbGreen
+        // 
+        rbGreen.Location = new Point(8, 80);
+        rbGreen.Name = "rbGreen";
+        rbGreen.TabIndex = 2;
+        rbGreen.Text = "Green";
+        rbGreen.Click += new EventHandler(rb_CheckedChanged);
+        // 
+        // rbOrange
+        // 
+        rbOrange.Location = new Point(8, 48);
+        rbOrange.Name = "rbOrange";
+        rbOrange.TabIndex = 1;
+        rbOrange.Text = "Orange";
+        rbOrange.Click += new EventHandler(rb_CheckedChanged);
+        // 
+        // rbRed
+        // 
+        rbRed.Location = new Point(8, 16);
+        rbRed.Name = "rbRed";
+        rbRed.TabIndex = 0;
+        rbRed.Text = "Red";
+        rbRed.CheckedChanged += new EventHandler(rb_CheckedChanged);
+        // 
+        // lblSelectedColor
+        // 
+        lblSelectedColor.Location = new Point(8, 288);
+        lblSelectedColor.Name = "lblSelectedColor";
+        lblSelectedColor.TabIndex = 1;
+        // 
+        // RadioButtonTestForm
+        // 
+        AutoScaleDimensions = new SizeF(6, 15);
+        ClientSize = new Size(292, 336);
+        Controls.Add(lblSelectedColor);
+        Controls.Add(grpColors);
+        Name = "RadioButtonTestForm";
+        Text = "RadioButtonTestForm";
+        Load += new EventHandler(RadioButtonTestForm_Load);
+        grpColors.ResumeLayout(false);
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

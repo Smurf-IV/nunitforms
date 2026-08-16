@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,92 +36,91 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for CheckBoxTestForm.
+/// </summary>
+public class CheckBoxTestForm : Form
 {
     /// <summary>
-    /// Summary description for CheckBoxTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class CheckBoxTestForm : Form
+    private readonly Container? components = null;
+
+    private CheckBox myCheckBox;
+
+    private Label myLabel;
+
+    public CheckBoxTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private CheckBox myCheckBox;
-
-        private Label myLabel;
-
-        public CheckBoxTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void myCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            myLabel.Text = myCheckBox.Checked ? "on" : "off";
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myCheckBox = new CheckBox();
-            this.myLabel = new Label();
-            this.SuspendLayout();
-            // 
-            // myCheckBox
-            // 
-            this.myCheckBox.Location = new Point(72, 80);
-            this.myCheckBox.Name = "myCheckBox";
-            this.myCheckBox.TabIndex = 0;
-            this.myCheckBox.Text = "Check Box";
-            this.myCheckBox.CheckedChanged += new EventHandler(this.myCheckBox_CheckedChanged);
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(96, 136);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "default";
-            // 
-            // CheckBoxTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(292, 273);
-            this.Controls.Add(this.myLabel);
-            this.Controls.Add(this.myCheckBox);
-            this.Name = "CheckBoxTestForm";
-            this.Text = "CheckBoxTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void myCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        myLabel.Text = myCheckBox.Checked ? "on" : "off";
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myCheckBox = new CheckBox();
+        myLabel = new Label();
+        SuspendLayout();
+        // 
+        // myCheckBox
+        // 
+        myCheckBox.Location = new Point(72, 80);
+        myCheckBox.Name = "myCheckBox";
+        myCheckBox.TabIndex = 0;
+        myCheckBox.Text = "Check Box";
+        myCheckBox.CheckedChanged += new EventHandler(myCheckBox_CheckedChanged);
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(96, 136);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "default";
+        // 
+        // CheckBoxTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(292, 273);
+        Controls.Add(myLabel);
+        Controls.Add(myCheckBox);
+        Name = "CheckBoxTestForm";
+        Text = "CheckBoxTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

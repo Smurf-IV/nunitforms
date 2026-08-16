@@ -2,39 +2,39 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class SaveFileDialogTestForm : Form
 {
-    public partial class SaveFileDialogTestForm : Form
+    private string defaultFilename = string.Empty;
+
+    public SaveFileDialogTestForm()
     {
-        private string defaultFilename = String.Empty;
+        InitializeComponent();
+    }
 
-        public SaveFileDialogTestForm()
+    public void SetDefaultTestFileName(string filename)
+    {
+        defaultFilename = filename;
+    }
+
+    private void btSave_Click(object sender, EventArgs e)
+    {
+        var save_dlg = new SaveFileDialog();
+        if (defaultFilename != string.Empty)
         {
-            InitializeComponent();
+            save_dlg.InitialDirectory = Path.GetDirectoryName(defaultFilename);
+            save_dlg.FileName = Path.GetFileName(defaultFilename);
         }
 
-        public void SetDefaultTestFileName(string filename)
+        if (save_dlg.ShowDialog() == DialogResult.OK)
         {
-            defaultFilename = filename;
+            lblFileName.Text = save_dlg.FileName;
         }
-
-        private void btSave_Click(object sender, EventArgs e)
+        else
         {
-            SaveFileDialog save_dlg = new SaveFileDialog();
-            if (defaultFilename != String.Empty)
-            {
-                save_dlg.InitialDirectory = Path.GetDirectoryName(defaultFilename);
-                save_dlg.FileName = Path.GetFileName(defaultFilename);
-            }
-
-            if (save_dlg.ShowDialog() == DialogResult.OK)
-            {
-                lblFileName.Text = save_dlg.FileName;
-            }
-            else
-            {
-                lblFileName.Text = "cancel pressed";
-            }
+            lblFileName.Text = "cancel pressed";
         }
     }
 }

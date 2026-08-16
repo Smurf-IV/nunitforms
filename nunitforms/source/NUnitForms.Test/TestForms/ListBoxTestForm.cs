@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -36,117 +37,116 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for ButtonTestForm.
+/// </summary>
+public class ListBoxTestForm : Form
 {
     /// <summary>
-    /// Summary description for ButtonTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class ListBoxTestForm : Form
+    private readonly Container? components = null;
+
+    private Label myLabel;
+
+    private ListBox myListBox;
+
+    private ListBox mySingleSelectBox;
+
+    public ListBoxTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private Label myLabel;
-
-        private ListBox myListBox;
-
-        private ListBox mySingleSelectBox;
-
-        public ListBoxTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void myButton_Click(object sender, EventArgs e)
-        {
-            int i = int.Parse(myLabel.Text) + 1;
-            myLabel.Text = i.ToString();
-        }
-
-        private void selectedValueChanged(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (object selectedItem in ((ListBox) sender).SelectedItems)
-            {
-                sb.Append(selectedItem);
-            }
-            myLabel.Text = sb.ToString();
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myLabel = new Label();
-            this.myListBox = new ListBox();
-            this.mySingleSelectBox = new ListBox();
-            this.SuspendLayout();
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(176, 16);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "0";
-            // 
-            // myListBox
-            // 
-            this.myListBox.Items.AddRange(new object[] {"Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"});
-            this.myListBox.Location = new Point(16, 16);
-            this.myListBox.Name = "myListBox";
-            this.myListBox.SelectionMode = SelectionMode.MultiExtended;
-            this.myListBox.Size = new Size(120, 95);
-            this.myListBox.TabIndex = 2;
-            this.myListBox.SelectedValueChanged += new EventHandler(this.selectedValueChanged);
-            // 
-            // mySingleSelectBox
-            // 
-            this.mySingleSelectBox.Items.AddRange(new object[] {"Can", "Only", "Select", "One", "At", "A", "Time"});
-            this.mySingleSelectBox.Location = new Point(24, 160);
-            this.mySingleSelectBox.Name = "mySingleSelectBox";
-            this.mySingleSelectBox.Size = new Size(120, 186);
-            this.mySingleSelectBox.TabIndex = 3;
-            // 
-            // ListBoxTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(384, 389);
-            this.Controls.Add(this.mySingleSelectBox);
-            this.Controls.Add(this.myListBox);
-            this.Controls.Add(this.myLabel);
-            this.Name = "ListBoxTestForm";
-            this.Text = "ButtonTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void myButton_Click(object sender, EventArgs e)
+    {
+        int i = int.Parse(myLabel.Text) + 1;
+        myLabel.Text = i.ToString();
+    }
+
+    private void selectedValueChanged(object sender, EventArgs e)
+    {
+        var sb = new StringBuilder();
+        foreach (object selectedItem in ((ListBox) sender).SelectedItems)
+        {
+            sb.Append(selectedItem);
+        }
+        myLabel.Text = sb.ToString();
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myLabel = new Label();
+        myListBox = new ListBox();
+        mySingleSelectBox = new ListBox();
+        SuspendLayout();
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(176, 16);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "0";
+        // 
+        // myListBox
+        // 
+        myListBox.Items.AddRange(new object[] {"Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"});
+        myListBox.Location = new Point(16, 16);
+        myListBox.Name = "myListBox";
+        myListBox.SelectionMode = SelectionMode.MultiExtended;
+        myListBox.Size = new Size(120, 95);
+        myListBox.TabIndex = 2;
+        myListBox.SelectedValueChanged += new EventHandler(selectedValueChanged);
+        // 
+        // mySingleSelectBox
+        // 
+        mySingleSelectBox.Items.AddRange(new object[] {"Can", "Only", "Select", "One", "At", "A", "Time"});
+        mySingleSelectBox.Location = new Point(24, 160);
+        mySingleSelectBox.Name = "mySingleSelectBox";
+        mySingleSelectBox.Size = new Size(120, 186);
+        mySingleSelectBox.TabIndex = 3;
+        // 
+        // ListBoxTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(384, 389);
+        Controls.Add(mySingleSelectBox);
+        Controls.Add(myListBox);
+        Controls.Add(myLabel);
+        Name = "ListBoxTestForm";
+        Text = "ButtonTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

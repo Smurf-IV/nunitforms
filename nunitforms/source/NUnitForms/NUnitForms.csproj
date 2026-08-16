@@ -1,44 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
-		<OutputType>Library</OutputType>
-		<RootNamespace>NUnit.Extensions.Forms</RootNamespace>
-		<LangVersion>latest</LangVersion>
-		<DelaySign>false</DelaySign>
-		<IsWebBootstrapper>false</IsWebBootstrapper>
-		<PublishUrl>publish\</PublishUrl>
-		<Install>true</Install>
-		<InstallFrom>Disk</InstallFrom>
-		<UpdateEnabled>false</UpdateEnabled>
-		<UpdateMode>Foreground</UpdateMode>
-		<UpdateInterval>7</UpdateInterval>
-		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-		<UpdatePeriodically>false</UpdatePeriodically>
-		<UpdateRequired>false</UpdateRequired>
-		<MapFileExtensions>true</MapFileExtensions>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-		<UseApplicationTrust>false</UseApplicationTrust>
-		<BootstrapperEnabled>true</BootstrapperEnabled>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<CodeAnalysisRules></CodeAnalysisRules>
-		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-		<DocumentationFile>NUnitForms.xml</DocumentationFile>
-		<RunCodeAnalysis>false</RunCodeAnalysis>
-		<NoWarn>1591</NoWarn>
-		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<DocumentationFile>NUnitForms.xml</DocumentationFile>
-		<RunCodeAnalysis>false</RunCodeAnalysis>
-		<NoWarn>1591</NoWarn>
-		<CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+		<UseWindowsForms>true</UseWindowsForms>
+		<IsPublishable>True</IsPublishable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<RootNamespace>NUnit.Extensions.Forms</RootNamespace>
+
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<IsTrimmable>True</IsTrimmable>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<WarningLevel>8</WarningLevel>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>preview</LangVersion>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+
+		<!-- .NET 8+ Performance Optimizations -->
+		<TieredCompilation>true</TieredCompilation>
+		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops>
+		<TieredPGO>true</TieredPGO>
+		<!-- NEW in .NET 9: Dynamic PGO gets better -->
+		<TieredCompilationDynamicPgo>true</TieredCompilationDynamicPgo>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<Title>NUnitForms</Title>
+		<PackageId>NUnitForms</PackageId>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>NUnitForms Copyright ©  2003-2007, Luke T. Maxon : Then 2026-2026 © Smurf-IV</Copyright>
+		<PackageLicenseExpression>BSD3</PackageLicenseExpression>
+		<VersionPrefix>3.$([System.DateTime]::UtcNow.ToString(yyMM)).$([System.DateTime]::UtcNow.ToString(dd))</VersionPrefix>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="NUnit" Version="4.6.1" />
 	</ItemGroup>

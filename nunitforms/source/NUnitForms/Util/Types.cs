@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,32 +36,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NUnit.Extensions.Forms
-{
-    /// <summary>
-    /// Additional methods for working with Types and other Reflection objects.
-    /// </summary>
-    public static class Types
-    {
-        ///<summary>
-        /// Returns true if the given type has any declared public properties.
-        ///</summary>
-        public static bool HasPublicProperties(Type type)
-        {
-            PropertyInfo info =
-                type.GetProperty("Properties",
-                                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            return info != null;
-        }
+namespace NUnit.Extensions.Forms.Util;
 
-        ///<summary>
-        /// Retrives a list of names of events that the given type publishes.
-        ///</summary>
-        ///<param name="type"></param>
-        ///<returns></returns>
-        public static ICollection<string> GetEventNames(Type type)
-        {
-            return type.GetEvents().Select(info => info.Name).ToList();
-        }
+/// <summary>
+/// Additional methods for working with Types and other Reflection objects.
+/// </summary>
+public static class Types
+{
+    ///<summary>
+    /// Returns true if the given type has any declared public properties.
+    ///</summary>
+    public static bool HasPublicProperties(Type type)
+    {
+        var info =
+            type.GetProperty("Properties",
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        return info != null;
+    }
+
+    ///<summary>
+    /// Retrives a list of names of events that the given type publishes.
+    ///</summary>
+    ///<param name="type"></param>
+    ///<returns></returns>
+    public static ICollection<string> GetEventNames(Type type)
+    {
+        return [.. type.GetEvents().Select(info => info.Name)];
     }
 }

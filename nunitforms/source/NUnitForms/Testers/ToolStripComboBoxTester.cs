@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,52 +27,53 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Exceptions;
+
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A Component tester for testing ToolStripComboBoxes.
+/// </summary>
+public partial class ToolStripComboBoxTester
 {
-    /// <summary>
-    /// A Component tester for testing ToolStripComboBoxes.
-    /// </summary>
-    public partial class ToolStripComboBoxTester
+    public void Select(int index)
     {
-        public void Select(int index)
-        {
-            Properties.SelectedIndex = index;
-        }
+        Properties.SelectedIndex = index;
+    }
 
-        /// <summary>
-        /// Sets the text property of the ToolStripComboBox to the specified value.
-        /// </summary>
-        /// <remarks>
-        /// TODO: Also calls EndCurrentEdit() so that databinding will happen.
-        /// </remarks>
-        /// <param name="text">The specified value for the text property.</param>
-        public void Enter(string text)
-        {
-            Properties.Text = text;
-            // EndCurrentEdit("Text");
-        }
+    /// <summary>
+    /// Sets the text property of the ToolStripComboBox to the specified value.
+    /// </summary>
+    /// <remarks>
+    /// TODO: Also calls EndCurrentEdit() so that databinding will happen.
+    /// </remarks>
+    /// <param name="text">The specified value for the text property.</param>
+    public void Enter(string text)
+    {
+        Properties.Text = text;
+        // EndCurrentEdit("Text");
+    }
 
-        /// <summary>
-        /// Selects an entry in the ToolStripComboBox according to its string value.
-        /// </summary>
-        /// <remarks>
-        /// Sets the Selected Index property on the underlying control after calling
-        /// FindStringExact
-        /// </remarks>
-        /// <param name="text">The string value of the entry to select.</param>
-        public void Select(string text)
+    /// <summary>
+    /// Selects an entry in the ToolStripComboBox according to its string value.
+    /// </summary>
+    /// <remarks>
+    /// Sets the Selected Index property on the underlying control after calling
+    /// FindStringExact
+    /// </remarks>
+    /// <param name="text">The string value of the entry to select.</param>
+    public void Select(string text)
+    {
+        int index;
+        if ((index = Properties.FindStringExact(text)) == -1)
         {
-            int index;
-            if ((index = Properties.FindStringExact(text)) == -1)
-            {
-                throw new FormsTestAssertionException("Could not find text '" + text + "' in ToolStripComboBox '" + name +
-                                                      "'");
-            }
-            Select(index);
+            throw new FormsTestAssertionException("Could not find text '" + text + "' in ToolStripComboBox '" + name +
+                                                  "'");
         }
+        Select(index);
     }
 }

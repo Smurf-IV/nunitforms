@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,29 +35,29 @@ using System;
 using System.Data;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class RichTextBoxDataSetBindingTestForm : Form
 {
-    public partial class RichTextBoxDataSetBindingTestForm : Form
+    public RichTextBoxDataSetBindingTestForm()
     {
-        public RichTextBoxDataSetBindingTestForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void btnView_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(myDataSet.Tables[0].Rows[0].ItemArray[0].ToString(), myRichTextBox.Text);
-        }
+    private void btnView_Click(object sender, EventArgs e)
+    {
+        MessageBox.Show((string)myDataSet.Tables[0].Rows[0].ItemArray[0].ToString(), myRichTextBox.Text);
+    }
 
-        private void RichTextBoxtDataSetBindingTestForm_Load(object sender, EventArgs e)
-        {
-            myDataSet.Tables.Add("TableName");
-            myDataSet.Tables[0].Columns.Add("ColumnName");
-            DataRow row = myDataSet.Tables[0].NewRow();
-            myDataSet.Tables[0].Rows.Add(row);
-            myDataSet.Tables[0].Rows[0]["ColumnName"] = "Old";
+    private void RichTextBoxtDataSetBindingTestForm_Load(object sender, EventArgs e)
+    {
+        myDataSet.Tables.Add("TableName");
+        myDataSet.Tables[0].Columns.Add("ColumnName");
+        DataRow row = myDataSet.Tables[0].NewRow();
+        myDataSet.Tables[0].Rows.Add(row);
+        myDataSet.Tables[0].Rows[0]["ColumnName"] = "Old";
 
-            myRichTextBox.DataBindings.Add(new Binding("Text", myDataSet, "TableName.ColumnName"));
-        }
+        myRichTextBox.DataBindings.Add(new Binding("Text", myDataSet, "TableName.ColumnName"));
     }
 }

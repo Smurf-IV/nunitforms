@@ -1,198 +1,204 @@
-//#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
-////********************************************************************************************************************
-//'
-//' Copyright (c) 2003-2007, Luke T. Maxon
-//' All rights reserved.
-//' 
-//' Redistribution and use in source and binary forms, with or without modification, are permitted provided
-//' that the following conditions are met:
-//' 
-//' * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-//' 	following disclaimer.
-//' 
-//' * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
-//' 	the following disclaimer in the documentation and/or other materials provided with the distribution.
-//' 
-//' * Neither the name of the author nor the names of its contributors may be used to endorse or 
-//' 	promote products derived from this software without specific prior written permission.
-//' 
-//' THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-//' WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-//' PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-//' ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//' LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-//' INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-//' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-//' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//'
-//'*******************************************************************************************************************/
+/********************************************************************************************************************
+'
+' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
+' All rights reserved.
+' 
+' Redistribution and use in source and binary forms, with or without modification, are permitted provided
+' that the following conditions are met:
+' 
+' * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+' 	following disclaimer.
+' 
+' * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+' 	the following disclaimer in the documentation and/or other materials provided with the distribution.
+' 
+' * Neither the name of the author nor the names of its contributors may be used to endorse or 
+' 	promote products derived from this software without specific prior written permission.
+' 
+' THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+' WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+' PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+' ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+' LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+' INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+'
+' ******************************************************************************************************************/
 
-//#endregion
+#endregion
 
-//using System;
-//using NMock2;
-//using NUnit.Extensions.Forms.Win32Interop;
-//using NUnit.Framework;
-//using NUnit.Extensions.Forms.SendKey;
+using System;
+using System.Windows.Forms;
+using NMock;
+using NUnit.Extensions.Forms.SendKey;
+using NUnit.Extensions.Forms.Win32Interop;
+using NUnit.Framework;
 
-//namespace NUnit.Extensions.Forms.UnitTests
-//{
-//	[TestFixture]
-//	public class SendKeysTests : MockingTestFixture
-//	{
-//        private AlternateSendKeys keyboardSendKeys;
-//		private ISendKeyboardInput keyboardInput;
-//		private ISendKeysParserFactory parserFactory;
-//		private ISendKeysParser parser;
-//	    private IntPtr window;
+namespace NUnit.Extensions.Forms.TestApplications;
 
-//	    protected override void SetUp()
-//		{
-//			keyboardInput = NewMock<ISendKeyboardInput>();
-//			parserFactory = NewMock<ISendKeysParserFactory>();
-//			parser = NewMock<ISendKeysParser>();
+[TestFixture]
+public class SendKeysTests : MockingTestFixture
+{
+    private AlternateSendKeys keyboardSendKeys;
+    private ISendKeyboardInput keyboardInput;
+    private ISendKeysParserFactory parserFactory;
+    private ISendKeysParser parser;
+    private IntPtr window;
 
-//	        window = new IntPtr(0x12345);
-//            keyboardSendKeys = new AlternateSendKeys(keyboardInput, parserFactory, window);
-//		}
+    protected override void SetUp()
+    {
+        keyboardInput = NewMock<ISendKeyboardInput>();
+        parserFactory = NewMock<ISendKeysParserFactory>();
+        parser = NewMock<ISendKeysParser>();
 
-//		protected override void TearDown()
-//		{
-//			keyboardSendKeys.Dispose();
-//		}
+        window = new IntPtr(0x12345);
+        keyboardSendKeys = new AlternateSendKeys(keyboardInput, parserFactory, window);
+    }
 
-//		[Test]
-//		public void SendWait_SingleCharLowerCase()
-//		{
-//			StubFormatter("b", "b", "", VirtualKeyCodes.None);
+    protected override void TearDown()
+    {
+        keyboardSendKeys.Dispose();
+    }
 
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.B);
+    [Test]
+    public void SendWait_SingleCharLowerCase()
+    {
+        StubFormatter("b", "b", "", Keys.None);
 
-//			keyboardSendKeys.SendWait("b");
-//		}
+        ExpectKeyDownAndRelease(Keys.B);
 
-//		[Test]
-//		public void SendWait_SingleCharUpperCase()
-//		{
-//			StubFormatter("B", "B", "", VirtualKeyCodes.None);
+        keyboardSendKeys.SendWait("b");
+    }
 
-//			ExpectKeyDown(VirtualKeyCodes.SHIFT);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.B);
-//			ExpectKeyUp(VirtualKeyCodes.SHIFT);
+    [Test]
+    public void SendWait_SingleCharUpperCase()
+    {
+        StubFormatter("B", "B", "", Keys.None);
 
-//			keyboardSendKeys.SendWait("B");
-//		}
+        ExpectKeyDown(Keys.ShiftKey);
+        ExpectKeyDownAndRelease(Keys.B);
+        ExpectKeyUp(Keys.ShiftKey);
 
-//		[Test]
-//		public void SendWait_ShiftFormatted()
-//		{
-//			StubFormatter("+(ab)", "ab", "+", VirtualKeyCodes.None);
+        keyboardSendKeys.SendWait("B");
+    }
 
-//			ExpectKeyDown(VirtualKeyCodes.SHIFT);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.A);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.B);
-//			ExpectKeyUp(VirtualKeyCodes.SHIFT);
+    [Test]
+    public void SendWait_ShiftFormatted()
+    {
+        StubFormatter("+(ab)", "ab", "+", Keys.None);
 
-//			keyboardSendKeys.SendWait("+(ab)");
-//		}
+        ExpectKeyDown(Keys.ShiftKey);
+        ExpectKeyDownAndRelease(Keys.A);
+        ExpectKeyDownAndRelease(Keys.B);
+        ExpectKeyUp(Keys.ShiftKey);
 
-//		[Test]
-//		public void SendWait_ControlFormatted()
-//		{
-//			StubFormatter("^(ab)", "ab", "^", VirtualKeyCodes.None);
+        keyboardSendKeys.SendWait("+(ab)");
+    }
 
-//			ExpectKeyDown(VirtualKeyCodes.CONTROL);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.A);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.B);
-//			ExpectKeyUp(VirtualKeyCodes.CONTROL);
+    [Test]
+    public void SendWait_ControlFormatted()
+    {
+        StubFormatter("^(ab)", "ab", "^", Keys.None);
 
-//			keyboardSendKeys.SendWait("^(ab)");
-//		}
+        ExpectKeyDown(Keys.ControlKey);
+        ExpectKeyDownAndRelease(Keys.A);
+        ExpectKeyDownAndRelease(Keys.B);
+        ExpectKeyUp(Keys.ControlKey);
 
-//		[Test]
-//		public void SendWait_AltFormatted()
-//		{
-//			StubFormatter("%(ab)", "ab", "%", VirtualKeyCodes.None);
+        keyboardSendKeys.SendWait("^(ab)");
+    }
 
-//			ExpectKeyDown(VirtualKeyCodes.MENU);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.A);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.B);
-//			ExpectKeyUp(VirtualKeyCodes.MENU);
+    [Test]
+    public void SendWait_AltFormatted()
+    {
+        StubFormatter("%(ab)", "ab", "%", Keys.None);
 
-//			keyboardSendKeys.SendWait("%(ab)");
-//		}
+        ExpectKeyDown(Keys.Menu);
+        ExpectKeyDownAndRelease(Keys.A);
+        ExpectKeyDownAndRelease(Keys.B);
+        ExpectKeyUp(Keys.Menu);
 
-//		[Test]
-//		public void SendWait_AltShiftControlFormatted()
-//		{
-//			StubFormatter("%+^(ab)", "ab", "%+^", VirtualKeyCodes.None);
+        keyboardSendKeys.SendWait("%(ab)");
+    }
 
-//			ExpectKeyDown(VirtualKeyCodes.MENU);
-//			ExpectKeyDown(VirtualKeyCodes.CONTROL);
-//			ExpectKeyDown(VirtualKeyCodes.SHIFT);
+    [Test]
+    public void SendWait_AltShiftControlFormatted()
+    {
+        StubFormatter("%+^(ab)", "ab", "%+^", Keys.None);
 
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.A);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.B);
+        ExpectKeyDown(Keys.Menu);
+        ExpectKeyDown(Keys.ControlKey);
+        ExpectKeyDown(Keys.ShiftKey);
 
-//			ExpectKeyUp(VirtualKeyCodes.SHIFT);
-//			ExpectKeyUp(VirtualKeyCodes.CONTROL);
-//			ExpectKeyUp(VirtualKeyCodes.MENU);
+        ExpectKeyDownAndRelease(Keys.A);
+        ExpectKeyDownAndRelease(Keys.B);
 
-//			keyboardSendKeys.SendWait("%+^(ab)");
-//		}
+        ExpectKeyUp(Keys.ShiftKey);
+        ExpectKeyUp(Keys.ControlKey);
+        ExpectKeyUp(Keys.Menu);
 
-//		[Test]
-//		[Ignore("This test is keyboard layout dependent.")]
-//		public void SendWait_SimpleText()
-//		{
-//			StubFormatter("aA {{}1.", "aA {1.", "", VirtualKeyCodes.None);
+        keyboardSendKeys.SendWait("%+^(ab)");
+    }
 
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.A);
+    [Test]
+    [Ignore("This test is keyboard layout dependent.")]
+    public void SendWait_SimpleText()
+    {
+        StubFormatter("aA {{}1.", "aA {1.", "", Keys.None);
 
-//			ExpectKeyDown(VirtualKeyCodes.SHIFT);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.A);
-//			ExpectKeyUp(VirtualKeyCodes.SHIFT);
+        ExpectKeyDownAndRelease(Keys.A);
 
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.SPACE);
+        ExpectKeyDown(Keys.ShiftKey);
+        ExpectKeyDownAndRelease(Keys.A);
+        ExpectKeyUp(Keys.ShiftKey);
 
-//			// This will be keyboard layout dependent
-//			ExpectKeyDown(VirtualKeyCodes.SHIFT);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.OEM_4);	// '[' key shifted to give '{'
-//			ExpectKeyUp(VirtualKeyCodes.SHIFT);
+        ExpectKeyDownAndRelease(Keys.Space);
 
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.DIGIT_1);
-//			ExpectKeyDownAndRelease(VirtualKeyCodes.OEM_PERIOD);
+        // This will be keyboard layout dependent
+        ExpectKeyDown(Keys.ShiftKey);
+        ExpectKeyDownAndRelease(Keys.Oem4); // '[' key shifted to give '{'
+        ExpectKeyUp(Keys.ShiftKey);
 
-//			keyboardSendKeys.SendWait("aA {{}1.");
-//		}
+        ExpectKeyDownAndRelease(Keys.NumPad1);
+        ExpectKeyDownAndRelease(Keys.OemPeriod);
 
-//		private void ExpectKeyDown(VirtualKeyCodes keyCode)
-//		{
-//			Expect.Once.On(keyboardInput).Method("SendInput").With(window, keyCode, SendInputFlags.KeyDown);
-//		}
+        keyboardSendKeys.SendWait("aA {{}1.");
+    }
 
-//		private void ExpectKeyUp(VirtualKeyCodes keyCode)
-//		{
-//			Expect.Once.On(keyboardInput).Method("SendInput").With(window, keyCode, SendInputFlags.KeyUp);
-//		}
+    private void ExpectKeyDown(Keys keyCode)
+    {
+        Expect.On(keyboardInput).One
+            .Method(m => m.SendInput(window, keyCode, SendInputFlags.KeyDown)).WithAnyArguments().Will(Return.Value(null));
+    }
 
-//		private void ExpectKeyDownAndRelease(VirtualKeyCodes keyCode)
-//		{
-//            Expect.Once.On(keyboardInput).Method("SendInput").With(window, keyCode, SendInputFlags.KeyDown);
-//            Expect.Once.On(keyboardInput).Method("SendInput").With(window, keyCode, SendInputFlags.KeyUp);
-//		}
+    private void ExpectKeyUp(Keys keyCode)
+    {
+        Expect.On(keyboardInput).One
+            .Method(m => m.SendInput(window, keyCode, SendInputFlags.KeyUp)).WithAnyArguments().Will(Return.Value(null));
+    }
 
-//		private void StubFormatter(string rawText, string body, string modifiers, VirtualKeyCodes escapedKeys)
-//		{
-//			Stub.On(parserFactory).Method("Create").With(rawText).Will(Return.Value(parser));
+    private void ExpectKeyDownAndRelease(Keys keyCode)
+    {
+        Expect.On(keyboardInput).One
+            .Method(m => m.SendInput(window, keyCode, SendInputFlags.KeyDown)).WithAnyArguments().Will(Return.Value(null));
+        Expect.On(keyboardInput).One
+            .Method(m => m.SendInput(window, keyCode, SendInputFlags.KeyUp)).WithAnyArguments().Will(Return.Value(null));
+    }
 
-//			ISendKeysParserGroup group = NewMock<ISendKeysParserGroup>();
-//			Stub.On(group).GetProperty("ModifierCharacters").Will(Return.Value(modifiers));
-//			Stub.On(group).GetProperty("EscapedKey").Will(Return.Value(escapedKeys));
-//			Stub.On(group).GetProperty("Body").Will(Return.Value(body));
+    private void StubFormatter(string rawText, string body, string modifiers, Keys escapedKeys)
+    {
+        Expect.On(parserFactory).Any
+            .Method(m => m.Create(null!)).WithAnyArguments().Will(Return.Value(parser));
 
-//			Stub.On(parser).GetProperty("Groups").Will(Return.Value(new ISendKeysParserGroup[] { group }));
-//		}
-//	}
-//}
+        var group = NewMock<ISendKeysParserGroup>();
+        Expect.On(group).Any.GetProperty(m => m.ModifierCharacters).Will(Return.Value(modifiers));
+        Expect.On(group).Any.GetProperty(m => m.EscapedKey).Will(Return.Value(escapedKeys));
+        Expect.On(group).Any.GetProperty(m => m.Body).Will(Return.Value(body));
+
+        Expect.On(parser).Any.GetProperty(m => m.Groups).Will(Return.Value(new[] { group }));
+    }
+}

@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,60 +27,60 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class ToolStripButtonTestForm : Form
 {
-    public partial class ToolStripButtonTestForm : Form
+    public ToolStripButtonTestForm()
     {
-        public ToolStripButtonTestForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void toolStripButtonOnMain_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonOnMain clicked";
-        }
+    private void toolStripButtonOnMain_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonOnMain clicked";
+    }
 
-        private void toolStripButtonInPanel_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonInPanel clicked";
-        }
+    private void toolStripButtonInPanel_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonInPanel clicked";
+    }
 
-        private void toolStripButtonTopInContainer_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonTopInContainer clicked";
-        }
+    private void toolStripButtonTopInContainer_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonTopInContainer clicked";
+    }
 
-        private void toolStripButtonLeftInContainer_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonLeftInContainer clicked";
-        }
+    private void toolStripButtonLeftInContainer_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonLeftInContainer clicked";
+    }
 
-        private void toolStripButtonCenterInContainer_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonCenterInContainer clicked";
-        }
+    private void toolStripButtonCenterInContainer_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonCenterInContainer clicked";
+    }
 
-        private void toolStripButtonRightInContainer_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonRightInContainer clicked";
-        }
+    private void toolStripButtonRightInContainer_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonRightInContainer clicked";
+    }
 
-        private void toolStripButtonBottomInContainer_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripButtonBottomInContainer clicked";
-        }
+    private void toolStripButtonBottomInContainer_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripButtonBottomInContainer clicked";
+    }
 
-        private void toolStripDropDownButtonOnStatusStrip_Click(object sender, EventArgs e)
-        {
-            label1.Text = "toolStripDropDownButtonOnStatusStrip clicked";
-        }
+    private void toolStripDropDownButtonOnStatusStrip_Click(object sender, EventArgs e)
+    {
+        label1.Text = "toolStripDropDownButtonOnStatusStrip clicked";
     }
 }

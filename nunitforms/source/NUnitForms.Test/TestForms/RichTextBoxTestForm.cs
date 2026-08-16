@@ -1,12 +1,12 @@
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class RichTextBoxTestForm : Form
 {
-    public partial class RichTextBoxTestForm : Form
+    public RichTextBoxTestForm()
     {
-        public RichTextBoxTestForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

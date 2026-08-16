@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,41 +27,45 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using TreeViewTester = NUnit.Extensions.Forms.Testers.TreeViewTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class TreeViewTest : NUnitFormTest
 {
-    [TestFixture]
-    public class TreeViewTest : NUnitFormTest
+    private TreeViewTester tree;
+
+    private LabelTester label;
+
+    public override void Setup()
     {
-        private TreeViewTester tree;
+        new TreeViewTestForm().Show();
+        tree = new TreeViewTester("myTree");
+        label = new LabelTester("myLabel");
+    }
 
-        private LabelTester label;
+    [Test]
+    public void AfterSelectNode()
+    {
+        Assert.AreEqual("Node0", label.Text);
+        tree.SelectNode(1);
+        Assert.AreEqual("Node3", label.Text);
+    }
 
-        public override void Setup()
-        {
-            new TreeViewTestForm().Show();
-            tree = new TreeViewTester("myTree");
-            label = new LabelTester("myLabel");
-        }
-
-        [Test]
-        public void AfterSelectNode()
-        {
-            Assert.AreEqual("Node0", label.Text);
-            tree.SelectNode(1);
-            Assert.AreEqual("Node3", label.Text);
-        }
-
-        [Test]
-        public void AfterSelectNodeSubNodes()
-        {
-            tree.SelectNode(1, 0, 1, 1);
-            Assert.AreEqual("Node8", label.Text);
-        }
+    [Test]
+    public void AfterSelectNodeSubNodes()
+    {
+        tree.SelectNode(1, 0, 1, 1);
+        Assert.AreEqual("Node8", label.Text);
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,105 +27,107 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
-using System;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class DynamicControlsTest : NUnitFormTest
 {
-    [TestFixture]
-    public class DynamicControlsTest : NUnitFormTest
+    public override void Setup()
     {
-        public override void Setup()
+        new DynamicControlsTestForm().Show();
+    }
+
+    [Test]
+    public void DynamicButtonClick()
+    {
+        var addButton = new ButtonTester("addButton");
+        addButton.Click();
+        var dynamicButton = new ButtonTester("button0");
+        dynamicButton.Click();
+        Assert.AreEqual("1", dynamicButton.Text);
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameCount()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        Assert.AreEqual(3, duplicate.Count);
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameEnumerator()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        foreach (ButtonTester button in duplicate)
         {
-            new DynamicControlsTestForm().Show();
+            button.Click();
         }
 
-        [Test]
-        public void DynamicButtonClick()
+        foreach (ButtonTester button in duplicate)
         {
-            ButtonTester addButton = new ButtonTester("addButton");
-            addButton.Click();
-            ButtonTester dynamicButton = new ButtonTester("button0");
-            dynamicButton.Click();
-            Assert.AreEqual("1", dynamicButton.Text);
+            Assert.AreEqual("1", button.Text);
         }
+    }
 
-        [Test]
-        public void DynamicControlsWithDuplicateNameCount()
-        {
-            ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
-            ButtonTester duplicate = new ButtonTester("duplicate");
+    [Test]
+    public void DynamicControlsWithDuplicateNameIsAmbiguous()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
 
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
 
-            Assert.AreEqual(3, duplicate.Count);
-        }
+        Assert.Throws<AmbiguousNameException>(duplicate.Click);
+    }
 
-        [Test]
-        public void DynamicControlsWithDuplicateNameEnumerator()
-        {
-            ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
-            ButtonTester duplicate = new ButtonTester("duplicate");
+    [Test]
+    public void DynamicControlsWithDuplicateNameNotFound()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
 
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
 
-            foreach (ButtonTester button in duplicate)
-            {
-                button.Click();
-            }
+        duplicate[0].Click();
+        duplicate[1].Click();
+        var ex = Assert.Throws<NoSuchControlException>(() => duplicate[2].Click());
+        Assert.That(ex.Message, Does.Contain("duplicate[2]"));
+    }
 
-            foreach (ButtonTester button in duplicate)
-            {
-                Assert.AreEqual("1", button.Text);
-            }
-        }
+    [Test]
+    public void DynamicControlsWithDuplicateNameWorksByIndex()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
 
-        [Test]
-        public void DynamicControlsWithDuplicateNameIsAmbiguous()
-        {
-            ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
-            ButtonTester duplicate = new ButtonTester("duplicate");
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
 
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
-
-            Assert.Throws<AmbiguousNameException>(() => duplicate.Click());
-        }
-
-        [Test]
-        public void DynamicControlsWithDuplicateNameNotFound()
-        {
-            ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
-            ButtonTester duplicate = new ButtonTester("duplicate");
-
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
-
-            duplicate[0].Click();
-            duplicate[1].Click();
-            var ex = Assert.Throws<NoSuchControlException>(() => duplicate[2].Click());
-            Assert.That(ex.Message, Does.Contain("duplicate[2]"));
-        }
-
-        [Test]
-        public void DynamicControlsWithDuplicateNameWorksByIndex()
-        {
-            ButtonTester addDuplicateButton = new ButtonTester("btnAddDuplicate");
-            ButtonTester duplicate = new ButtonTester("duplicate");
-
-            addDuplicateButton.Click();
-            addDuplicateButton.Click();
-
-            duplicate[0].Click();
-            duplicate[1].Click();
-        }
+        duplicate[0].Click();
+        duplicate[1].Click();
     }
 }

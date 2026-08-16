@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,36 +27,35 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+/// <summary>
+/// This interface allows a Form to signal that it should not be disposed between tests.
+/// </summary>
+public interface IKeepAlive
 {
     /// <summary>
-    /// This interface allows a Form to signal that it should not be disposed between tests.
+    /// Gets a value which determines if this object should be kept alive between tests.
     /// </summary>
-    public interface IKeepAlive
-    {
-        /// <summary>
-        /// Gets a value which determines if this object should be kept alive between tests.
-        /// </summary>
-        bool KeepAlive { get; }
-    }
+    bool KeepAlive { get; }
+}
 
-    /// <summary>
-    /// Static helper class for <see cref="IKeepAlive"/> management.
-    /// </summary>
-    public static class KeepAlive
+/// <summary>
+/// Static helper class for <see cref="IKeepAlive"/> management.
+/// </summary>
+public static class KeepAlive
+{
+    ///<summary>
+    /// Tests if the given object should be kept alive.
+    ///</summary>
+    ///<param name="obj">The object to test.</param>
+    ///<returns>True if obj should be kept alive.</returns>
+    public static bool ShouldKeepAlive(object obj)
     {
-        ///<summary>
-        /// Tests if the given object should be kept alive.
-        ///</summary>
-        ///<param name="obj">The object to test.</param>
-        ///<returns>True if obj should be kept alive.</returns>
-        public static bool ShouldKeepAlive(object obj)
-        {
-            return obj is IKeepAlive && (obj as IKeepAlive).KeepAlive;
-        }
+        return obj is IKeepAlive { KeepAlive: true };
     }
 }

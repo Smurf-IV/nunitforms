@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,58 +27,57 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ToolStripItem tester for testing ToolStripSplitButtons.
+/// </summary>
+public partial class ToolStripSplitButtonTester
 {
     /// <summary>
-    /// A ToolStripItem tester for testing ToolStripSplitButtons.
+    /// Clicks the DropDownItem with the given index.
     /// </summary>
-    public partial class ToolStripSplitButtonTester
+    /// <param name="index"></param>
+    public void ClickDropDownItem(int index)
     {
-        /// <summary>
-        /// Clicks the DropDownItem with the given index.
-        /// </summary>
-        /// <param name="index"></param>
-        public void ClickDropDownItem(int index)
-        {
-            bool found = false;
-            ToolStripSplitButton button = Properties;
+        var found = false;
+        var button = Properties;
 
-            if (button.HasDropDownItems)
+        if (button.HasDropDownItems)
+        {
+            var items = button.DropDownItems;
+            if (items.Count > index)
             {
-                ToolStripItemCollection items = button.DropDownItems;
-                if (items.Count > index)
-                {
-                    ToolStripItem item = items[index];
-                    FireEvent("DropDownItemClicked", new ToolStripItemClickedEventArgs(item));
-                    found = true;
-                }
+                var item = items[index];
+                FireEvent("DropDownItemClicked", new ToolStripItemClickedEventArgs(item));
+                found = true;
             }
-            FormsAssert.IsTrue(found, "No drop down item found at that index.");
         }
+        FormsAssert.IsTrue(found, "No drop down item found at that index.");
+    }
 
 
-        /// <summary>
-        /// Simulates that the "user" clicks on the button part of the
-        /// ToolStripSplitButton.
-        /// </summary>
-        public virtual void ButtonClick()
-        {
-            FireEvent("ButtonClick");
-        }
+    /// <summary>
+    /// Simulates that the "user" clicks on the button part of the
+    /// ToolStripSplitButton.
+    /// </summary>
+    public virtual void ButtonClick()
+    {
+        FireEvent("ButtonClick");
+    }
 
-        /// <summary>
-        /// Simulates that the "user" double clicks on the button part of the
-        /// ToolStripSplitButton.
-        /// </summary>
-        public virtual void ButtonDoubleClick()
-        {
-            FireEvent("ButtonDoubleClick");
-        }
+    /// <summary>
+    /// Simulates that the "user" double clicks on the button part of the
+    /// ToolStripSplitButton.
+    /// </summary>
+    public virtual void ButtonDoubleClick()
+    {
+        FireEvent("ButtonDoubleClick");
     }
 }

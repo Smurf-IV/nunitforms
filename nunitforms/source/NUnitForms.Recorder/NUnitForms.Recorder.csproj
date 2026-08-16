@@ -2,27 +2,39 @@
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<OutputType>Library</OutputType>
-		<IsWebBootstrapper>false</IsWebBootstrapper>
-		<PublishUrl>publish\</PublishUrl>
-		<Install>true</Install>
-		<InstallFrom>Disk</InstallFrom>
-		<UpdateEnabled>false</UpdateEnabled>
-		<UpdateMode>Foreground</UpdateMode>
-		<UpdateInterval>7</UpdateInterval>
-		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-		<UpdatePeriodically>false</UpdatePeriodically>
-		<UpdateRequired>false</UpdateRequired>
-		<MapFileExtensions>true</MapFileExtensions>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-		<UseApplicationTrust>false</UseApplicationTrust>
-		<BootstrapperEnabled>true</BootstrapperEnabled>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<DocumentationFile>NUnitForms.Recorder.XML</DocumentationFile>
+
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<IsTrimmable>True</IsTrimmable>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<WarningLevel>8</WarningLevel>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>preview</LangVersion>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+
+		<!-- .NET 8+ Performance Optimizations -->
+		<TieredCompilation>true</TieredCompilation>
+		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops>
+		<TieredPGO>true</TieredPGO>
+		<!-- NEW in .NET 9: Dynamic PGO gets better -->
+		<TieredCompilationDynamicPgo>true</TieredCompilationDynamicPgo>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<Title>NUnitForms.Recorder</Title>
+		<PackageId>NUnitForms.Recorder</PackageId>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>NUnitForms.Recorder Copyright ©  2003-2007, Luke T. Maxon : Then 2026-2026 © Smurf-IV</Copyright>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\NUnitForms\NUnitForms.csproj" />
 	</ItemGroup>

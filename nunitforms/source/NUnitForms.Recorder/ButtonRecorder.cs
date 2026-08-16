@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,34 +27,31 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+using NUnit.Extensions.Forms.Testers;
+
+
+namespace NUnitForms.Recorder;
+
+public class ButtonRecorder : ControlRecorder
 {
-    public class ButtonRecorder : ControlRecorder
+    public ButtonRecorder(Listener listener)
+        : base(listener)
     {
-        public ButtonRecorder(Listener listener) : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (Button); }
-        }
+    public override Type RecorderType => typeof(Button);
 
-        public override Type TesterType
-        {
-            get { return typeof (ButtonTester); }
-        }
+    public override Type TesterType => typeof(ButtonTester);
 
-        public void Click(object sender, EventArgs args)
-        {
-            Listener.FireEvent(TesterType, sender, "Click");
-        }
+    public void Click(object sender, EventArgs args)
+    {
+        Listener.FireEvent(TesterType, sender, "Click");
     }
 }

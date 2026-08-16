@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,25 +27,25 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
-{
-    public partial class ToolStripComboBoxTestForm : Form
-    {
-        public ToolStripComboBoxTestForm()
-        {
-            InitializeComponent();
-        }
 
-        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            label1.Text = toolStripComboBox1.Text + " clicked";
-        }
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class ToolStripComboBoxTestForm : Form
+{
+    public ToolStripComboBoxTestForm()
+    {
+        InitializeComponent();
+    }
+
+    private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        label1.Text = toolStripComboBox1.Text + " clicked";
     }
 }

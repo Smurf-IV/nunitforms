@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,94 +35,93 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for ButtonTestForm.
+/// </summary>
+public class LinkLabelTestForm : Form
 {
     /// <summary>
-    /// Summary description for ButtonTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class LinkLabelTestForm : Form
+    private readonly Container? components = null;
+
+    private Label myLabel;
+
+    private LinkLabel myLinkLabel;
+
+    public LinkLabelTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private Label myLabel;
-
-        private LinkLabel myLinkLabel;
-
-        public LinkLabelTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void myLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            int i = int.Parse(myLabel.Text) + 1;
-            myLabel.Text = i.ToString();
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myLabel = new Label();
-            this.myLinkLabel = new LinkLabel();
-            this.SuspendLayout();
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(136, 16);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "0";
-            // 
-            // myLinkLabel
-            // 
-            this.myLinkLabel.Location = new Point(16, 8);
-            this.myLinkLabel.Name = "myLinkLabel";
-            this.myLinkLabel.TabIndex = 2;
-            this.myLinkLabel.TabStop = true;
-            this.myLinkLabel.Text = "Count";
-            this.myLinkLabel.LinkClicked += new LinkLabelLinkClickedEventHandler(this.myLinkLabel_LinkClicked);
-            // 
-            // ButtonTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(280, 61);
-            this.Controls.Add(this.myLinkLabel);
-            this.Controls.Add(this.myLabel);
-            this.Name = "ButtonTestForm";
-            this.Text = "ButtonTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void myLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        int i = int.Parse(myLabel.Text) + 1;
+        myLabel.Text = i.ToString();
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myLabel = new Label();
+        myLinkLabel = new LinkLabel();
+        SuspendLayout();
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(136, 16);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "0";
+        // 
+        // myLinkLabel
+        // 
+        myLinkLabel.Location = new Point(16, 8);
+        myLinkLabel.Name = "myLinkLabel";
+        myLinkLabel.TabIndex = 2;
+        myLinkLabel.TabStop = true;
+        myLinkLabel.Text = "Count";
+        myLinkLabel.LinkClicked += new LinkLabelLinkClickedEventHandler(myLinkLabel_LinkClicked);
+        // 
+        // ButtonTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(280, 61);
+        Controls.Add(myLinkLabel);
+        Controls.Add(myLabel);
+        Name = "ButtonTestForm";
+        Text = "ButtonTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

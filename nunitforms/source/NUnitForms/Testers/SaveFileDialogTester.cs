@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,50 +27,49 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// This class is used to test the built-in OpenFileDialog. This class is not meant to be
+/// used directly. Instead you should use the ExpectOpenFileDialog and CancelOpenFileDialog functions
+/// in the NUnitFormTest
+/// class.
+/// </summary>
+public class SaveFileDialogTester : FileDialogTester
 {
     /// <summary>
-    /// This class is used to test the built-in OpenFileDialog. This class is not meant to be
-    /// used directly. Instead you should use the ExpectOpenFileDialog and CancelOpenFileDialog functions
-    /// in the NUnitFormTest
-    /// class.
+    /// Constructs a new SaveFileDialogTester working on the dialog box having the given handle.
     /// </summary>
-    public class SaveFileDialogTester : FileDialogTester
+    public SaveFileDialogTester(IntPtr hWnd)
+        : base(hWnd)
     {
-        /// <summary>
-        /// Constructs a new SaveFileDialogTester working on the dialog box having the given handle.
-        /// </summary>
-        public SaveFileDialogTester(IntPtr hWnd)
-            : base(hWnd)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Unreliable, kept for compatibility. The title is not actually used.
-        /// </summary>
-        [Obsolete]
-        public SaveFileDialogTester(string title)
-            : base(title)
-        {
-        }
+    /// <summary>
+    /// Unreliable, kept for compatibility. The title is not actually used.
+    /// </summary>
+    [Obsolete]
+    public SaveFileDialogTester(string title)
+        : base(title)
+    {
+    }
 
-        /// <summary>
-        /// Inputs the give file name into the dialog box, and clicks the save button.
-        /// </summary>
-        public void SaveFile(string file)
-        {
-            SetFileName(file);
-        }
+    /// <summary>
+    /// Inputs the give file name into the dialog box, and clicks the save button.
+    /// </summary>
+    public void SaveFile(string file)
+    {
+        SetFileName(file);
+    }
 
-        public void SaveFile()
-        {
-            ClickOpenSaveButton();
-        }
+    public void SaveFile()
+    {
+        ClickOpenSaveButton();
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,32 +27,31 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Util;
+
+///<summary>
+/// Additional methods for working with strings.
+///</summary>
+public static class Strings
 {
-    ///<summary>
-    /// Additional methods for working with strings.
-    ///</summary>
-    public static class Strings
+    /// <summary>
+    /// Removes all spaces from a string.
+    /// </summary>
+    /// <param name="name">
+    /// Remove all spaces from this string.
+    /// </param>
+    /// <returns>
+    /// <list type="bullet">
+    /// <item><paramref name="name"/> without spaces.</item>
+    /// <item>if <paramref name="name"/> is not effective, returns an empty string</item>
+    /// </list>
+    /// </returns>
+    public static string SafeRemoveSpaces(string? name)
     {
-        /// <summary>
-        /// Removes all spaces from a string.
-        /// </summary>
-        /// <param name="name">
-        /// Remove all spaces from this string.
-        /// </param>
-        /// <returns>
-        /// <list type="bullet">
-        /// <item><paramref name="name"/> without spaces.</item>
-        /// <item>if <paramref name="name"/> is not effective, returns an empty string</item>
-        /// </list>
-        /// </returns>
-        public static string SafeRemoveSpaces(string name)
-        {
-            return (name ?? "").Replace(" ", "");
-        }
+        return (name ?? "").Replace(" ", "");
     }
 }

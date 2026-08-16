@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,93 +36,92 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for ButtonTestForm.
+/// </summary>
+public class ButtonTestForm : Form
 {
     /// <summary>
-    /// Summary description for ButtonTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class ButtonTestForm : Form
+    private readonly Container? components = null;
+
+    private Button myButton;
+
+    private Label myLabel;
+
+    public ButtonTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private Button myButton;
-
-        private Label myLabel;
-
-        public ButtonTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void myButton_Click(object sender, EventArgs e)
-        {
-            int i = int.Parse(myLabel.Text) + 1;
-            myLabel.Text = i.ToString();
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myButton = new Button();
-            this.myLabel = new Label();
-            this.SuspendLayout();
-            // 
-            // myButton
-            // 
-            this.myButton.Location = new Point(16, 16);
-            this.myButton.Name = "myButton";
-            this.myButton.TabIndex = 0;
-            this.myButton.Text = "button1";
-            this.myButton.Click += new EventHandler(this.myButton_Click);
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(112, 16);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "0";
-            // 
-            // ButtonTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(280, 61);
-            this.Controls.Add(this.myLabel);
-            this.Controls.Add(this.myButton);
-            this.Name = "ButtonTestForm";
-            this.Text = "ButtonTestForm";
-            this.ResumeLayout(true);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void myButton_Click(object sender, EventArgs e)
+    {
+        int i = int.Parse(myLabel.Text) + 1;
+        myLabel.Text = i.ToString();
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myButton = new Button();
+        myLabel = new Label();
+        SuspendLayout();
+        // 
+        // myButton
+        // 
+        myButton.Location = new Point(16, 16);
+        myButton.Name = "myButton";
+        myButton.TabIndex = 0;
+        myButton.Text = "button1";
+        myButton.Click += new EventHandler(myButton_Click);
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(112, 16);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "0";
+        // 
+        // ButtonTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(280, 61);
+        Controls.Add(myLabel);
+        Controls.Add(myButton);
+        Name = "ButtonTestForm";
+        Text = "ButtonTestForm";
+        ResumeLayout(true);
+    }
+
+    #endregion
 }

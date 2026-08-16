@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,40 +27,39 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing TreeViews.
+/// </summary>
+/// <remarks>
+/// There is a convenience method for selecting a node in the tree.</remarks>
+public partial class TreeViewTester
 {
     /// <summary>
-    /// A ControlTester for testing TreeViews.
+    /// Selects a node in the tree.
     /// </summary>
-    /// <remarks>
-    /// There is a convenience method for selecting a node in the tree.</remarks>
-    public partial class TreeViewTester
+    /// <param name="indices">an array of the indexes of the node to select</param>
+    public void SelectNode(params int[] indices)
     {
-        /// <summary>
-        /// Selects a node in the tree.
-        /// </summary>
-        /// <param name="indices">an array of the indexes of the node to select</param>
-        public void SelectNode(params int[] indices)
+        TreeNode? currentNode = null;
+        foreach (var index in indices)
         {
-            TreeNode currentNode = null;
-            foreach (int index in indices)
+            if (currentNode == null)
             {
-                if (currentNode == null)
-                {
-                    currentNode = Properties.Nodes[index];
-                }
-                else
-                {
-                    currentNode = currentNode.Nodes[index];
-                }
+                currentNode = Properties.Nodes[index];
             }
-            Properties.SelectedNode = currentNode;
+            else
+            {
+                currentNode = currentNode.Nodes[index];
+            }
         }
+        Properties.SelectedNode = currentNode;
     }
 }

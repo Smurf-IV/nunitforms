@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,40 +27,38 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+/// <summary>
+/// This action allows to compare a capture of a <see cref="System.Windows.Forms.Control"/> with a stored capture.
+/// </summary>
+public class CompareControlCaptureAction : Action
 {
+    private readonly string name;
+
+    private object val;
+
     /// <summary>
-    /// This action allows to compare a capture of a <see cref="System.Windows.Forms.Control"/> with a stored capture.
+    /// Initialize this action.
     /// </summary>
-    public class CompareControlCaptureAction : Action
+    /// <param name="name">
+    /// The file which contains the capture of a control.
+    /// </param>
+    /// <param name="val">
+    /// </param>
+    public CompareControlCaptureAction(string name, object val)
     {
-        private string name;
+        this.name = name;
+        this.val = val;
+    }
 
-        private object val;
-
-        /// <summary>
-        /// Initialize this action.
-        /// </summary>
-        /// <param name="name">
-        /// The file which contains the capture of a control.
-        /// </param>
-        /// <param name="val">
-        /// </param>
-        public CompareControlCaptureAction(string name, object val)
-        {
-            this.name = name;
-            this.val = val;
-        }
-
-        public override string ToString()
-        {
-            return
-                string.Format("CompareCapture({0},{1});", "Please replace with a reference of your form",
-                              "@\"" + name + "\"");
-        }
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return $"CompareCapture({"Please replace with a reference of your form"},{"@\"" + name + "\""});";
     }
 }

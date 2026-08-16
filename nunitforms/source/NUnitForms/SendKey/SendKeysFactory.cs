@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,28 +27,28 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
+
 using System;
 using NUnit.Extensions.Forms.Win32Interop;
 
-namespace NUnit.Extensions.Forms.SendKey
+namespace NUnit.Extensions.Forms.SendKey;
+
+public class SendKeysFactory: ISendKeysFactory
 {
-    public class SendKeysFactory: ISendKeysFactory
+    private readonly ISendKeysParserFactory parserFactory;
+    private readonly ISendKeyboardInput keyboardInput;
+
+    public SendKeysFactory(ISendKeysParserFactory parserFactory, ISendKeyboardInput keyboardInput)
     {
-        private readonly ISendKeysParserFactory parserFactory;
-        private readonly ISendKeyboardInput keyboardInput;
+        this.parserFactory = parserFactory;
+        this.keyboardInput = keyboardInput;
+    }
 
-        public SendKeysFactory(ISendKeysParserFactory parserFactory, ISendKeyboardInput keyboardInput)
-        {
-            this.parserFactory = parserFactory;
-            this.keyboardInput = keyboardInput;
-        }
-
-        public ISendKeys Create(IntPtr window)
-        {
-            return new AlternateSendKeys(keyboardInput, parserFactory, window);
-        }
+    public ISendKeys Create(IntPtr window)
+    {
+        return new AlternateSendKeys(keyboardInput, parserFactory, window);
     }
 }

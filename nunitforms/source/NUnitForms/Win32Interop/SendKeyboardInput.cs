@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,41 +27,38 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Util;
 
+namespace NUnit.Extensions.Forms.Win32Interop;
 
-namespace NUnit.Extensions.Forms.Win32Interop
+public class SendKeyboardInput : ISendKeyboardInput
 {
-	public class SendKeyboardInput : ISendKeyboardInput
-	{
-		private Win32.KEYBDINPUT keyboardInput = new Win32.KEYBDINPUT();
+    private Win32.KBINPUT keyboardInput;
 
-		public SendKeyboardInput()
-		{
-			keyboardInput.type = Win32.INPUT_KEYBOARD;
-			keyboardInput.dwExtraInfo = Win32.GetMessageExtraInfo();
-			keyboardInput.time = 0;
-			keyboardInput.wScan = 0;
-		}
+    public SendKeyboardInput()
+    {
+        keyboardInput.ki.dwExtraInfo = Win32.GetMessageExtraInfo();
+    }
 
-		public void SendInput(IntPtr window, VirtualKeyCodes keyCodes, SendInputFlags flags)
-		{
-			keyboardInput.dwFlags = (int)flags;
-			keyboardInput.wVk = (short)keyCodes;
+    public void SendInput(IntPtr window, Keys keys, SendInputFlags flags)
+    {
+        var keyValue = (byte)keys;
+        Win32.KeyBdEvent(keyValue, 0, (int)flags, UIntPtr.Zero);
 
-			if (Win32.SendKeyboardInput(1, ref keyboardInput, Marshal.SizeOf(keyboardInput)) == 0)
-			{
-				throw new Win32Exception();
-			}
+        //keyboardInput.ki.dwFlags = (uint)flags;
+        //keyboardInput.ki.wVk = (UInt16)keyCodes;
 
-			Application.DoEvents();
-		}
-	}
+        //if (Win32.SendKeyboardInput(1, ref keyboardInput, Marshal.SizeOf(keyboardInput)) == 0)
+        //{
+        //    throw new Win32Exception();
+        //}
+
+        Application.DoEvents();
+    }
 }

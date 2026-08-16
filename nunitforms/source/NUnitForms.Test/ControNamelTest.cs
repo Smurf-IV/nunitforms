@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,52 +27,55 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.TestApplications.CustomTesters;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ControlNameTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ControlNameTest : NUnitFormTest
+    public override void Setup()
     {
-        public override void Setup()
-        {
-            new AmbiguousNameForm().Show();
-        }
+        new TestForms.AmbiguousNameForm().Show();
+    }
 
-        [Test]
-        public void AmbiguousName()
-        {
-            ButtonTester button = new ButtonTester("myButton");
-            Assert.Throws<AmbiguousNameException>(() => button.Click());
-        }
+    [Test]
+    public void AmbiguousName()
+    {
+        var button = new ButtonTester("myButton");
+        Assert.Throws<AmbiguousNameException>(button.Click);
+    }
 
-        [Test]
-        public void FindNestedControl()
-        {
-            LabelTester label = new LabelTester("mySecondLabel");
-            ButtonTester button = new ButtonTester("myControl2.myButton");
-            button.Click();
-            Assert.AreEqual("1", label.Text);
-        }
+    [Test]
+    public void FindNestedControl()
+    {
+        var label = new LabelTester("mySecondLabel");
+        var button = new ButtonTester("myControl2.myButton");
+        button.Click();
+        Assert.AreEqual("1", label.Text);
+    }
 
-        [Test]
-        public void NoSuchName()
-        {
-            ButtonTester button = new ButtonTester("junkData");
-            Assert.Throws<NoSuchControlException>(() => button.Click());
-        }
+    [Test]
+    public void NoSuchName()
+    {
+        var button = new ButtonTester("junkData");
+        Assert.Throws<NoSuchControlException>(button.Click);
+    }
 
-        [Test]
-        public void UseAUserControlCustomTester()
-        {
-            LabelTester label = new LabelTester("mySecondLabel");
-            ButtonControlTester buttonControl = new ButtonControlTester("myControl2");
-            buttonControl.SuperClick();
-            Assert.AreEqual("1", label.Text);
-        }
+    [Test]
+    public void UseAUserControlCustomTester()
+    {
+        var label = new LabelTester("mySecondLabel");
+        var buttonControl = new ButtonControlTester("myControl2");
+        buttonControl.SuperClick();
+        Assert.AreEqual("1", label.Text);
     }
 }

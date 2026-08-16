@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,61 +27,57 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
+namespace NUnit.Extensions.Forms.Win32Interop;
 
-namespace NUnit.Extensions.Forms.Win32Interop
+internal class VirtualKeyScan
 {
-	internal class VirtualKeyScan
-	{
-		private readonly short scanCode;
+    private readonly short scanCode;
 
-		public VirtualKeyScan(char character)
-		{
-			scanCode = VkKeyScan(character);
-		}
+    public VirtualKeyScan(char character)
+    {
+        scanCode = VkKeyScan(character);
+    }
 
-		public VirtualKeyCodes KeyCodesCode
-		{
-			get { return (VirtualKeyCodes)(scanCode & 0x00ff); }
-		}
+    public Keys KeyCodesCode => (Keys)(scanCode & 0x00ff);
 
-		public VirtualKeyCodes[] GetShiftKeys()
-		{
-			VirtualKeyScanShiftCodes shiftCodes = (VirtualKeyScanShiftCodes)(scanCode & 0xff00);
+    public Keys[] GetShiftKeys()
+    {
+        var shiftCodes = (VirtualKeyScanShiftCodes)(scanCode & 0xff00);
 
-			List<VirtualKeyCodes> shiftKeys = new List<VirtualKeyCodes>();
-			if ((shiftCodes & VirtualKeyScanShiftCodes.Alt) != 0)
-			{
-				shiftKeys.Add(VirtualKeyCodes.MENU);
-			}
-			if ((shiftCodes & VirtualKeyScanShiftCodes.Control) != 0)
-			{
-				shiftKeys.Add(VirtualKeyCodes.CONTROL);
-			}
-			if ((shiftCodes & VirtualKeyScanShiftCodes.Shift) != 0)
-			{
-				shiftKeys.Add(VirtualKeyCodes.SHIFT);
-			}
+        List<Keys> shiftKeys = [];
+        if ((shiftCodes & VirtualKeyScanShiftCodes.Alt) != 0)
+        {
+            shiftKeys.Add(Keys.Alt);
+        }
+        if ((shiftCodes & VirtualKeyScanShiftCodes.Control) != 0)
+        {
+            shiftKeys.Add(Keys.Control);
+        }
+        if ((shiftCodes & VirtualKeyScanShiftCodes.Shift) != 0)
+        {
+            shiftKeys.Add(Keys.Shift);
+        }
 
-			return shiftKeys.ToArray();
-		}
+        return [.. shiftKeys];
+    }
 
-		[Flags]
-		private enum VirtualKeyScanShiftCodes
-		{
-			Shift = 0x0100, // Either SHIFT key is pressed.
-			Control = 0x0200, // Either CTRL key is pressed.
-			Alt = 0x0400, // Either ALT key is pressed.
-		}
+    [Flags]
+    private enum VirtualKeyScanShiftCodes
+    {
+        Shift = 0x0100, // Either SHIFT key is pressed.
+        Control = 0x0200, // Either CTRL key is pressed.
+        Alt = 0x0400, // Either ALT key is pressed.
+    }
 
-		[DllImport("user32.dll")]
-		private static extern short VkKeyScan(char ch);
-	}
+    [DllImport("user32.dll")]
+    private static extern short VkKeyScan(char ch);
 }

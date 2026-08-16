@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,149 +27,142 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NUnit.Extensions.Forms.Win32Interop;
+using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.SendKey
+namespace NUnit.Extensions.Forms.SendKey;
+
+public class SendKeysParser : ISendKeysParser
 {
-	public class SendKeysParser : ISendKeysParser
-	{
-		private readonly List<SendKeysParserGroup> groups = new List<SendKeysParserGroup>();
+    private readonly List<SendKeysParserGroup> groups = [];
 
-		private readonly List<string> groupModifiers = new List<string>();
-		private readonly List<VirtualKeyCodes> escapedKeyCodes = new List<VirtualKeyCodes>();
-		private readonly List<string> bodyTexts = new List<string>();
+    private readonly List<string> groupModifiers = [];
+    private readonly List<Keys> escapedKeyCodes = [];
+    private readonly List<string> bodyTexts = [];
 
-		private const string groupsPattern = @"(?<group> ([\(\{+^%~\[] .+? [\)\}]) | ([^\(\{+^%~\[\)\}]+) | ([+^%~].) )";
-		private const string modifiersPattern = @"^(?<modifier> [+^%~] + )? (?<escapedKey>\{ [^\}]+? \})? ([\(\{\[]? (?<body> .*? )? [\)\}\]]?) $";
-		private readonly Dictionary<string, VirtualKeyCodes> keyValueMap = new Dictionary<string, VirtualKeyCodes>();
+    private const string groupsPattern = @"(?<group> ([\(\{+^%~\[] .+? [\)\}]) | ([^\(\{+^%~\[\)\}]+) | ([+^%~].) )";
+    private const string modifiersPattern = @"^(?<modifier> [+^%~] + )? (?<escapedKey>\{ [^\}]+? \})? ([\(\{\[]? (?<body> .*? )? [\)\}\]]?) $";
+    private readonly Dictionary<string, Keys> keyValueMap = new Dictionary<string, Keys>();
 
-		public SendKeysParser(string sendKeysFormattedText)
-		{
-			InitialiseKeyValueMap();
+    public SendKeysParser(string sendKeysFormattedText)
+    {
+        InitialiseKeyValueMap();
 
-			Regex regex = new Regex(groupsPattern, RegexOptions.IgnorePatternWhitespace);
-			MatchCollection matches = regex.Matches(sendKeysFormattedText);
-		    var groupsList = matches.Cast<Match>().Select(match => match.Value).ToArray();
+        var regex = new Regex(groupsPattern, RegexOptions.IgnorePatternWhitespace);
+        var matches = regex.Matches(sendKeysFormattedText);
+        var groupsList = matches.Cast<Match>().Select(match => match.Value).ToArray();
 
-		    foreach (string group in groupsList)
-			{
-				ParseGroupElements(group);
-			}
-		}
+        foreach (var group in groupsList)
+        {
+            ParseGroupElements(group);
+        }
+    }
 
-		private void InitialiseKeyValueMap()
-		{
-			keyValueMap.Add("{BACKSPACE}", VirtualKeyCodes.BACK);
-			keyValueMap.Add("{BS}", VirtualKeyCodes.BACK);
-			keyValueMap.Add("{BKSP}", VirtualKeyCodes.BACK);
+    private void InitialiseKeyValueMap()
+    {
+        keyValueMap.Add("{BACKSPACE}", Keys.Back);
+        keyValueMap.Add("{BS}", Keys.Back);
+        keyValueMap.Add("{BKSP}", Keys.Back);
 
-			keyValueMap.Add("{DELETE}", VirtualKeyCodes.DELETE);
-			keyValueMap.Add("{DEL}", VirtualKeyCodes.DELETE);
-			keyValueMap.Add("{DOWN}", VirtualKeyCodes.DOWN);
-			keyValueMap.Add("{END}", VirtualKeyCodes.END);
-			keyValueMap.Add("{ENTER}", VirtualKeyCodes.RETURN);
-			keyValueMap.Add("{ESC}", VirtualKeyCodes.ESCAPE);
-			keyValueMap.Add("{HELP}", VirtualKeyCodes.HELP);
-			keyValueMap.Add("{HOME}", VirtualKeyCodes.HOME);
-			keyValueMap.Add("{INSERT}", VirtualKeyCodes.INSERT);
-			keyValueMap.Add("{INS}", VirtualKeyCodes.INSERT);
+        keyValueMap.Add("{DELETE}", Keys.Delete);
+        keyValueMap.Add("{DEL}", Keys.Delete);
+        keyValueMap.Add("{DOWN}", Keys.Down);
+        keyValueMap.Add("{END}", Keys.End);
+        keyValueMap.Add("{ENTER}", Keys.Enter);
+        keyValueMap.Add("{ESC}", Keys.Escape);
+        keyValueMap.Add("{HELP}", Keys.Help);
+        keyValueMap.Add("{HOME}", Keys.Home);
+        keyValueMap.Add("{INSERT}", Keys.Insert);
+        keyValueMap.Add("{INS}", Keys.Insert);
+        keyValueMap.Add("{NUMLOCK}", Keys.NumLock);
 
-			keyValueMap.Add("{F1}", VirtualKeyCodes.F1);
-			keyValueMap.Add("{F2}", VirtualKeyCodes.F2);
-			keyValueMap.Add("{F3}", VirtualKeyCodes.F3);
-			keyValueMap.Add("{F4}", VirtualKeyCodes.F4);
-			keyValueMap.Add("{F5}", VirtualKeyCodes.F5);
-			keyValueMap.Add("{F6}", VirtualKeyCodes.F6);
-			keyValueMap.Add("{F7}", VirtualKeyCodes.F7);
-			keyValueMap.Add("{F8}", VirtualKeyCodes.F8);
-			keyValueMap.Add("{F9}", VirtualKeyCodes.F9);
-			keyValueMap.Add("{F10}", VirtualKeyCodes.F10);
-			keyValueMap.Add("{F11}", VirtualKeyCodes.F11);
-			keyValueMap.Add("{F12}", VirtualKeyCodes.F12);
-			keyValueMap.Add("{F13}", VirtualKeyCodes.F13);
-			keyValueMap.Add("{F14}", VirtualKeyCodes.F14);
-			keyValueMap.Add("{F15}", VirtualKeyCodes.F15);
-			keyValueMap.Add("{F16}", VirtualKeyCodes.F16);
-		}
+        keyValueMap.Add("{F1}", Keys.F1);
+        keyValueMap.Add("{F2}", Keys.F2);
+        keyValueMap.Add("{F3}", Keys.F3);
+        keyValueMap.Add("{F4}", Keys.F4);
+        keyValueMap.Add("{F5}", Keys.F5);
+        keyValueMap.Add("{F6}", Keys.F6);
+        keyValueMap.Add("{F7}", Keys.F7);
+        keyValueMap.Add("{F8}", Keys.F8);
+        keyValueMap.Add("{F9}", Keys.F9);
+        keyValueMap.Add("{F10}", Keys.F10);
+        keyValueMap.Add("{F11}", Keys.F11);
+        keyValueMap.Add("{F12}", Keys.F12);
+        keyValueMap.Add("{F13}", Keys.F13);
+        keyValueMap.Add("{F14}", Keys.F14);
+        keyValueMap.Add("{F15}", Keys.F15);
+        keyValueMap.Add("{F16}", Keys.F16);
 
-		private void ParseGroupElements(string group)
-		{
-			Regex regex = new Regex(modifiersPattern, RegexOptions.IgnorePatternWhitespace);
+        keyValueMap.Add("{LEFT}", Keys.Left);
+        keyValueMap.Add("{RIGHT}", Keys.Right);
+        keyValueMap.Add("{CAPSLOCK}", Keys.Capital);
+        keyValueMap.Add("{CAPS}", Keys.Capital);
+        keyValueMap.Add("{SPACE}", Keys.Space);
+        keyValueMap.Add("{TAB}", Keys.Tab);
+        keyValueMap.Add("{UP}", Keys.Up);
+    }
 
-			string modifierCharacters = string.Empty;
-			VirtualKeyCodes keyCode = VirtualKeyCodes.None; 
-			string bodyText = string.Empty;
+    private void ParseGroupElements(string group)
+    {
+        var regex = new Regex(modifiersPattern, RegexOptions.IgnorePatternWhitespace);
 
-			MatchCollection match = regex.Matches(group);
-			if (match.Count == 1)
-			{
-				Group modiferGroup = match[0].Groups["modifier"];
-				if (modiferGroup.Success)
-				{
-					modifierCharacters = modiferGroup.Value;
-				}
+        var modifierCharacters = string.Empty;
+        var keyCode = Keys.None; 
+        var bodyText = string.Empty;
 
-				Group escapedKeyGroup = match[0].Groups["escapedKey"];
-				if (escapedKeyGroup.Success)
-				{
-					if (keyValueMap.TryGetValue(escapedKeyGroup.Value, out keyCode) == false)
-					{
-						keyCode = VirtualKeyCodes.None;
-						if (escapedKeyGroup.Value.Length == 3)
-						{
-							// escaped character
-							bodyText = escapedKeyGroup.Value.Substring(1,1);
-						}
-					}
-				}
+        var match = regex.Matches(group);
+        if (match.Count == 1)
+        {
+            var modiferGroup = match[0].Groups["modifier"];
+            if (modiferGroup.Success)
+            {
+                modifierCharacters = modiferGroup.Value;
+            }
 
-				if (bodyText == string.Empty)
-				{
-					Group bodyGroup = match[0].Groups["body"];
-					if (bodyGroup.Success)
-					{
-						bodyText = bodyGroup.Value;
-					}
-				}
-			}
+            var escapedKeyGroup = match[0].Groups["escapedKey"];
+            if (escapedKeyGroup.Success)
+            {
+                if (!keyValueMap.TryGetValue(escapedKeyGroup.Value, out keyCode))
+                {
+                    keyCode = Keys.None;
+                    if (escapedKeyGroup.Value.Length == 3)
+                    {
+                        // escaped character
+                        bodyText = escapedKeyGroup.Value.Substring(1,1);
+                    }
+                }
+            }
 
-			groupModifiers.Add(modifierCharacters);
-			escapedKeyCodes.Add(keyCode);
-			bodyTexts.Add(bodyText);
+            if (bodyText == string.Empty)
+            {
+                var bodyGroup = match[0].Groups["body"];
+                if (bodyGroup.Success)
+                {
+                    bodyText = bodyGroup.Value;
+                }
+            }
+        }
 
-			groups.Add(new SendKeysParserGroup(modifierCharacters, bodyText, keyCode));
-		}
+        groupModifiers.Add(modifierCharacters);
+        escapedKeyCodes.Add(keyCode);
+        bodyTexts.Add(bodyText);
 
-		public int GroupCount
-		{
-			get { return bodyTexts.Count; }
-		}
+        groups.Add(new SendKeysParserGroup(modifierCharacters, bodyText, keyCode));
+    }
 
-		public string[] Modifiers
-		{
-			get { return groupModifiers.ToArray(); }
-		}
+    public int GroupCount => bodyTexts.Count;
 
-		public VirtualKeyCodes[] EscapedKeys
-		{
-			get { return escapedKeyCodes.ToArray();  }
-		}
+    public string[] Modifiers => [.. groupModifiers];
 
-		public string[] Text
-		{
-			get { return bodyTexts.ToArray(); }
-		}
+    public Keys[] EscapedKeys => [.. escapedKeyCodes];
 
-		public ISendKeysParserGroup[] Groups
-		{
-			get { return groups.ToArray(); }
-		}
-	}
+    public string[] Text => [.. bodyTexts];
+
+    public ISendKeysParserGroup[] Groups => [.. groups];
 }

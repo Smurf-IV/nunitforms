@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,71 +27,73 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
-
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using ToolBarTester = NUnit.Extensions.Forms.Testers.ToolBarTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ToolbarTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ToolbarTest : NUnitFormTest
+    private LabelTester labelToolbarSelection;
+    private ToolBarTester toolbarTest;
+
+
+    public override void Setup()
     {
-        private LabelTester labelToolbarSelection;
-        private ToolBarTester toolbarTest;
+        new ToolbarTestForm().Show();
+        labelToolbarSelection = new LabelTester("labelToolbarSelection");
+        toolbarTest = new ToolBarTester("toolBarTest");
+    }
 
+    [Test]
+    public void ClickToolbarButton()
+    {
+        ToolBarButtonTester button = toolbarTest.GetButton("Open");
+        button.Click();
+        Assert.AreEqual("Open", labelToolbarSelection.Text);
 
-        public override void Setup()
-        {
-            new ToolbarTestForm().Show();
-            labelToolbarSelection = new LabelTester("labelToolbarSelection");
-            toolbarTest = new ToolBarTester("toolBarTest");
-        }
+        button = toolbarTest.GetButton("Previous");
+        button.Click();
+        Assert.AreEqual("Previous", labelToolbarSelection.Text);
+    }
 
-        [Test]
-        public void ClickToolbarButton()
-        {
-            ToolBarButtonTester button = toolbarTest.GetButton("Open");
-            button.Click();
-            Assert.AreEqual("Open", labelToolbarSelection.Text);
+    [Test]
+    public void DropDownButtonTest()
+    {
+        ToolBarButtonTester button = toolbarTest.GetButton("Color");
+        button.ClickDropDownMenuItem("Red");
+        Assert.AreEqual("Red", labelToolbarSelection.Text);
 
-            button = toolbarTest.GetButton("Previous");
-            button.Click();
-            Assert.AreEqual("Previous", labelToolbarSelection.Text);
-        }
+        button = toolbarTest.GetButton("Color");
+        button.ClickDropDownMenuItem("Violet");
+        Assert.AreEqual("Violet", labelToolbarSelection.Text);
+    }
 
-        [Test]
-        public void DropDownButtonTest()
-        {
-            ToolBarButtonTester button = toolbarTest.GetButton("Color");
-            button.ClickDropDownMenuItem("Red");
-            Assert.AreEqual("Red", labelToolbarSelection.Text);
+    [Test]
+    public void GetToolbar()
+    {
+        Assert.IsTrue(toolbarTest.Properties.Visible);
+    }
 
-            button = toolbarTest.GetButton("Color");
-            button.ClickDropDownMenuItem("Violet");
-            Assert.AreEqual("Violet", labelToolbarSelection.Text);
-        }
+    [Test]
+    public void ToggleButtonTest()
+    {
+        ToolBarButtonTester button = toolbarTest.GetButton(7);
+        button.Push();
+        Assert.IsTrue(button.Pushed);
 
-        [Test]
-        public void GetToolbar()
-        {
-            Assert.IsTrue(toolbarTest.Properties.Visible);
-        }
-
-        [Test]
-        public void ToggleButtonTest()
-        {
-            ToolBarButtonTester button = toolbarTest.GetButton(7);
-            button.Push();
-            Assert.IsTrue(button.Pushed);
-
-            button.PartialPush();
-            Assert.IsTrue(button.PartialPushed);
-            button.PartialPush();
-            Assert.IsFalse(button.PartialPushed);
-        }
+        button.PartialPush();
+        Assert.IsTrue(button.PartialPushed);
+        button.PartialPush();
+        Assert.IsFalse(button.PartialPushed);
     }
 }

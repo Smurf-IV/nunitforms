@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Levi Khatskevitch) :2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,84 +27,81 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
-
-//* Contributed by Levi Khatskevitch */
 
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+/// <summary>
+/// Simulates Windows Service envinronment by running the entire test
+/// fixture in a service WindowStation. If these tests pass we can show
+/// modal forms from test cases running inside the Cruise Control .NET
+/// Windows Service as well.
+/// </summary>
+/// <remarks>
+/// While running these tests NUnit GUI won't repaint itself (e.i. update
+/// the progress bar and etc.). This is a normal side effect of temporary
+/// assigning a service (hidden) WindowStation to the process.
+/// </remarks>
+[TestFixture]
+[Framework.Category("UsesServiceWindowStation")]
+public class ModalFormsInServiceTest : ModalFormsTest
 {
-    /// <summary>
-    /// Simulates Windows Service envinronment by running the entire test
-    /// fixture in a service WindowStation. If these tests pass we can show
-    /// modal forms from test cases running inside the Cruise Control .NET
-    /// Windows Service as well.
-    /// </summary>
-    /// <remarks>
-    /// While running these tests NUnit GUI won't repaint itself (e.i. update
-    /// the progress bar and etc.). This is a normal side effect of temporary
-    /// assigning a service (hidden) WindowStation to the process.
-    /// </remarks>
-    [TestFixture]
-    [Framework.Category("UsesServiceWindowStation")]
-    public class ModalFormsInServiceTest : ModalFormsTest
+    private const int GENERIC_ALL = 0x10000000;
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetProcessWindowStation();
+
+    [DllImport("user32.dll")]
+    private static extern bool SetProcessWindowStation(IntPtr handle);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern IntPtr CreateWindowStation(string name, int flags, int access, IntPtr security);
+
+    [DllImport("user32.dll")]
+    private static extern bool CloseWindowStation(IntPtr handle);
+
+    private IntPtr originalWinStation;
+
+    private IntPtr serviceWinStation;
+
+    [OneTimeSetUp, Ignore("does not work when run from a service")]
+    public void PreInit()
     {
-        private const int GENERIC_ALL = 0x10000000;
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetProcessWindowStation();
-
-        [DllImport("user32.dll")]
-        private static extern bool SetProcessWindowStation(IntPtr handle);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateWindowStation(string name, int flags, int access, IntPtr security);
-
-        [DllImport("user32.dll")]
-        private static extern bool CloseWindowStation(IntPtr handle);
-
-        private IntPtr originalWinStation;
-
-        private IntPtr serviceWinStation;
-
-        [OneTimeSetUp, Ignore("does not work when run from a service")]
-        public void PreInit()
+        originalWinStation = GetProcessWindowStation();
+        if (originalWinStation == IntPtr.Zero)
         {
-            originalWinStation = GetProcessWindowStation();
-            if (originalWinStation == IntPtr.Zero)
-            {
-                throw new Win32Exception();
-            }
-
-            serviceWinStation = CreateWindowStation(null, 0, GENERIC_ALL, IntPtr.Zero);
-            if (serviceWinStation == IntPtr.Zero)
-            {
-                throw new Win32Exception();
-            }
-
-            if (!SetProcessWindowStation(serviceWinStation))
-            {
-                throw new Win32Exception();
-            }
+            throw new Win32Exception();
         }
 
-        [OneTimeTearDown, Ignore("does not work when run from a service")]
-        public void PostVerify()
+        serviceWinStation = CreateWindowStation(null, 0, GENERIC_ALL, IntPtr.Zero);
+        if (serviceWinStation == IntPtr.Zero)
         {
-            if (originalWinStation == IntPtr.Zero)
-            {
-                return;
-            }
-            SetProcessWindowStation(originalWinStation);
-
-            CloseWindowStation(originalWinStation);
-            CloseWindowStation(serviceWinStation);
+            throw new Win32Exception();
         }
+
+        if (!SetProcessWindowStation(serviceWinStation))
+        {
+            throw new Win32Exception();
+        }
+    }
+
+    [OneTimeTearDown, Ignore("does not work when run from a service")]
+    public void PostVerify()
+    {
+        if (originalWinStation == IntPtr.Zero)
+        {
+            return;
+        }
+        SetProcessWindowStation(originalWinStation);
+
+        CloseWindowStation(originalWinStation);
+        CloseWindowStation(serviceWinStation);
     }
 }

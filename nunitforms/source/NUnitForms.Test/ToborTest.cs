@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,32 +27,32 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.Test.TestForms;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.Test
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ToborTest
 {
-    [TestFixture]
-    public class ToborTest
+    [Test]
+    public void Test1()
     {
-        [Test]
-        public void Test1()
-        {
-            ToborTestForm f = new ToborTestForm();
-            f.Show();
+        var f = new ToborTestForm();
+        f.Show();
 
-            FormTester formTester = new FormTester(f.Name);
+        using var formTester = new FormTester(f.Name);
 
-            Tobor t = new Tobor(formTester);
+        var t = new Tobor(formTester);
 
-            t.Type("textBoxA", "3");
-            t.Type("textBoxB", "4");
-            t.Click("buttonCalc");
-            t.VerifyText("labelResult", "7");
-        }
+        t.Type("textBoxA", "3");
+        t.Type("textBoxB", "4");
+        t.Click("buttonCalc");
+        t.VerifyText("labelResult", "7");
     }
 }

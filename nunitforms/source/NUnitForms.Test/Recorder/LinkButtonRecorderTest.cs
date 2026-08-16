@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,33 +27,35 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class LinkButtonRecorderTest : NUnitFormTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class LinkButtonRecorderTest : NUnitFormTest
+    [Test]
+    public void Click()
     {
-        [Test]
-        public void Click()
-        {
-            LinkLabelTestForm form = new LinkLabelTestForm();
-            form.Show();
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+        var form = new LinkLabelTestForm();
+        form.Show();
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            LinkLabelTester count = new LinkLabelTester("myLinkLabel", form);
+        var count = new LinkLabelTester("myLinkLabel", form);
 
-            count.Click();
+        count.Click();
 
-            Assert.AreEqual(
-                @"[Test]
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -61,7 +64,6 @@ public void Test()
 	myLinkLabel.Click();
 
 }",
-                writer.Test);
-        }
+            writer.Test);
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,33 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.Recorder.Test
+using NUnitForms.Recorder;
+
+
+namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+
+[TestFixture]
+[Category("Recorder")]
+public class NameResolverTest : NUnitFormTest
 {
-    [TestFixture]
-    [Category("Recorder")]
-    public class NameResolverTest : NUnitFormTest
+    [Test]
+    public void AmbiguousButton()
     {
-        [Test]
-        public void AmbiguousButton()
-        {
-            AmbiguousNameForm form = new AmbiguousNameForm();
-            form.Show();
-            Censor.Add("NunitFormsTestApplicationsCustomTesters");
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual("", writer.Test);
+        var form = new TestForms.AmbiguousNameForm();
+        form.Show();
+        Censor.Add("NunitFormsTestApplicationsCustomTesters");
+        var writer = new TestWriter(form);
+        Assert.AreEqual("", writer.Test);
 
-            ButtonTester button = new ButtonTester("myControl2.myButton", form);
+        var button = new ButtonTester("myControl2.myButton", form);
 
-            button.Click();
-            Assert.AreEqual(
-                @"[Test]
+        button.Click();
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -61,25 +65,25 @@ public void Test()
 	myControl2_myButton.Click();
 
 }",
-                writer.Test);
+            writer.Test);
 
-            Censor.Remove("NunitFormsTestApplicationsCustomTesters");
-        }
-        
-        [Test]
-        public void UnderscoreButton()
-        {
-            UnderscoreNameForm form = new UnderscoreNameForm();
-            form.Show();
-            
-            TestWriter writer = new TestWriter(form);
-            Assert.AreEqual(string.Empty, writer.Test);
-            
-            ButtonTester button = new ButtonTester("_button", form);
-            
-            button.Click();
-            Assert.AreEqual(
-                @"[Test]
+        Censor.Remove("NunitFormsTestApplicationsCustomTesters");
+    }
+
+    [Test]
+    public void UnderscoreButton()
+    {
+        var form = new TestForms.UnderscoreNameForm();
+        form.Show();
+
+        var writer = new TestWriter(form);
+        Assert.AreEqual(string.Empty, writer.Test);
+
+        var button = new ButtonTester("_button", form);
+
+        button.Click();
+        Assert.AreEqual(
+            @"[Test]
 public void Test()
 {
 
@@ -88,7 +92,6 @@ public void Test()
 	_button.Click();
 
 }",
-                writer.Test);
-        }
+            writer.Test);
     }
 }

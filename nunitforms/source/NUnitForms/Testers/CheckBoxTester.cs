@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,53 +27,49 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing CheckBoxes.
+/// </summary>
+public partial class CheckBoxTester
 {
     /// <summary>
-    /// A ControlTester for testing CheckBoxes.
+    /// Retrieves the Checked property of the CheckBox
     /// </summary>
-    public partial class CheckBoxTester
+    public bool Checked => Properties.Checked;
+
+    /// <summary>
+    /// Sets the shouldCheck property to the specified value.
+    /// </summary>
+    public void Check(bool shouldCheck)
     {
-        /// <summary>
-        /// Retrieves the Checked property of the CheckBox
-        /// </summary>
-        public bool Checked
-        {
-            get { return Properties.Checked; }
-        }
+        EditChecked(shouldCheck);
+    }
 
-        /// <summary>
-        /// Sets the shouldCheck property to the specified value.
-        /// </summary>
-        public void Check(bool shouldCheck)
-        {
-            EditChecked(shouldCheck);
-        }
+    /// <summary>
+    /// Sets the Checked property of the CheckBox to true
+    /// </summary>
+    public void Check()
+    {
+        EditChecked(true);
+    }
 
-        /// <summary>
-        /// Sets the Checked property of the CheckBox to true
-        /// </summary>
-        public void Check()
-        {
-            EditChecked(true);
-        }
+    /// <summary>
+    /// Sets the Checked property of the CheckBox to false
+    /// </summary>
+    public void UnCheck()
+    {
+        EditChecked(false);
+    }
 
-        /// <summary>
-        /// Sets the Checked property of the CheckBox to false
-        /// </summary>
-        public void UnCheck()
-        {
-            EditChecked(false);
-        }
-
-        private void EditChecked(bool shouldCheck)
-        {
-            Properties.Checked = shouldCheck;
-            EndCurrentEdit("Checked");
-        }
+    private void EditChecked(bool shouldCheck)
+    {
+        Properties.Checked = shouldCheck;
+        EndCurrentEdit("Checked");
     }
 }

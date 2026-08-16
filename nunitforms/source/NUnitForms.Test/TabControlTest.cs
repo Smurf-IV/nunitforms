@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,52 +27,57 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using TabControlTester = NUnit.Extensions.Forms.Testers.TabControlTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class TabControlTest : NUnitFormTest
 {
-    [TestFixture]
-    public class TabControlTest : NUnitFormTest
+    private TabControlTester myTabs;
+
+    private ButtonTester button;
+
+    public override void Setup()
     {
-        private TabControlTester myTabs;
+        new TabControlTestForm().Show();
+        myTabs = new TabControlTester("myTabs");
+        button = new ButtonTester("button2");
+    }
 
-        private ButtonTester button;
+    [Test]
+    public void ClickNonVisibleButton()
+    {
+        myTabs.SelectTab(0);
+        Assert.Throws<ControlNotVisibleException>(() => button.Click());
+    }
 
-        public override void Setup()
-        {
-            new TabControlTestForm().Show();
-            myTabs = new TabControlTester("myTabs");
-            button = new ButtonTester("button2");
-        }
+    [Test]
+    public void ClickVisibleButton()
+    {
+        var label = new LabelTester("label2");
+        myTabs.SelectTab(1);
+        Assert.AreEqual("0", label.Text);
+        button.Click();
+        Assert.AreEqual("1", label.Text);
+    }
 
-        [Test]
-        public void ClickNonVisibleButton()
-        {
-            myTabs.SelectTab(0);
-            Assert.Throws<ControlNotVisibleException>(() => button.Click());
-        }
-
-        [Test]
-        public void ClickVisibleButton()
-        {
-            LabelTester label = new LabelTester("label2");
-            myTabs.SelectTab(1);
-            Assert.AreEqual("0", label.Text);
-            button.Click();
-            Assert.AreEqual("1", label.Text);
-        }
-
-        [Test]
-        public void TabControl()
-        {
-            myTabs.SelectTab(1);
-            Assert.AreEqual(1, myTabs.Properties.SelectedIndex);
-            myTabs.SelectTab(0);
-            Assert.AreEqual(0, myTabs.Properties.SelectedIndex);
-        }
+    [Test]
+    public void TabControl()
+    {
+        myTabs.SelectTab(1);
+        Assert.AreEqual(1, myTabs.Properties.SelectedIndex);
+        myTabs.SelectTab(0);
+        Assert.AreEqual(0, myTabs.Properties.SelectedIndex);
     }
 }

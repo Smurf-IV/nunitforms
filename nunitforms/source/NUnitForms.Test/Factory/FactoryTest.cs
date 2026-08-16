@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,54 +27,53 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Recorder;
 using NUnit.Framework;
+using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.Factory;
+
+[TestFixture]
+public class FactoryTest
 {
-    [TestFixture]
-    public class FactoryTest
+    [Test]
+    public void New()
     {
-        [Test]
-        public void New()
+        Form form = new FormFactory().New(typeof(Form));
+        Assert.IsNotNull(form);
+        Assert.AreEqual(typeof(Form), form.GetType());
+    }
+
+    [Test]
+    public void NewException()
+    {
+        var ex = Assert.Throws<Exception>(() => { new FormFactory().New(typeof(string)); });
+        Assert.That(ex.Message, Does.Contain("Your type is not a form!  -->System.String"));
+    }
+
+    [Test]
+    public void MultiConstructor()
+    {
+        Form form = new FormFactory().New(typeof(MultiConstructorForm));
+        Assert.IsNotNull(form);
+        Assert.AreEqual(typeof(MultiConstructorForm), form.GetType());
+    }
+
+    private class MultiConstructorForm : Form
+    {
+        private MultiConstructorForm()
         {
-            Form form = new FormFactory().New(typeof (Form));
-            Assert.IsNotNull(form);
-            Assert.AreEqual(typeof (Form), form.GetType());
+            // nothing to do.
         }
 
-        [Test]
-        public void NewException()
+        public MultiConstructorForm(string message)
         {
-            var ex = Assert.Throws<Exception>(() => { new FormFactory().New(typeof(string)); });
-            Assert.That(ex.Message, Does.Contain("Your type is not a form!  -->System.String"));
-        }
-
-        [Test]
-        public void MultiConstructor()
-        {
-            Form form = new FormFactory().New(typeof(MultiConstructorForm));
-            Assert.IsNotNull(form);
-            Assert.AreEqual(typeof(MultiConstructorForm), form.GetType());
-        }
-        
-        private class MultiConstructorForm : Form
-        {
-            private MultiConstructorForm()
-            {
-                // nothing to do.
-            }
-            
-            public MultiConstructorForm(string message)
-            {
-                throw new InvalidOperationException(message);
-            }
+            throw new InvalidOperationException(message);
         }
     }
 }

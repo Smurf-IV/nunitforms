@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,23 +27,22 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Exceptions;
+
+/// <summary>
+/// Exception is thrown when you attempt an action on a Control that is not
+/// enabled.
+/// </summary>
+public class ControlNotEnabledException : Exception
 {
-    /// <summary>
-    /// Exception is thrown when you attempt an action on a Control that is not
-    /// enabled.
-    /// </summary>
-    public class ControlNotEnabledException : Exception
+    public ControlNotEnabledException(string message)
+        : base(message)
     {
-        public ControlNotEnabledException(string message)
-            : base(message)
-        {
-        }
     }
 }

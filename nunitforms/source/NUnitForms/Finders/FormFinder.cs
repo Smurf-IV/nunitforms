@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,78 +35,78 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
+
+
+namespace NUnit.Extensions.Forms.Finders;
+
+/// <summary>
+/// A class to help find a form according to its name.  NUnitForms users should not need to use
+/// this class.  Consider it as internal.  
+/// </summary>
+/// <remarks>
+/// It is also used by the recorder application.</remarks>
+public class FormFinder
 {
-    /// <summary>
-    /// A class to help find a form according to its name.  NUnitForms users should not need to use
-    /// this class.  Consider it as internal.  
-    /// </summary>
-    /// <remarks>
-    /// It is also used by the recorder application.</remarks>
-    public class FormFinder
+    private List<Form> forms;
+
+    private string? name;
+
+    private int FindMatchingForms(IntPtr hwnd, IntPtr lParam)
     {
-        private List<Form> forms;
-
-        private string name;
-
-        private int FindMatchingForms(IntPtr hwnd, IntPtr lParam)
+        if (Form.FromHandle(hwnd) is Form theForm 
+            && (name == null || theForm.Name == name))
         {
-            Form theForm = Form.FromHandle(hwnd) as Form;
-            if (theForm != null && (name == null || theForm.Name == name))
-            {
-                forms.Add(theForm);
-            }
-            return 1;
+            forms.Add(theForm);
         }
+        return 1;
+    }
 
-        /// <summary>
-        /// Finds all of the forms with a specified name and returns them in a FormCollection.
-        /// </summary>
-        /// <param name="formName">The name of the form to search for.</param>
-        /// <returns>the FormCollection of all found forms.</returns>
-        public List<Form> FindAll(string formName)
+    /// <summary>
+    /// Finds all of the forms with a specified name and returns them in a FormCollection.
+    /// </summary>
+    /// <param name="formName">The name of the form to search for.</param>
+    /// <returns>the FormCollection of all found forms.</returns>
+    public List<Form> FindAll(string formName)
+    {
+        lock (this)
         {
-            lock (this)
-            {
-                forms = new List<Form>();
-                name = formName;
-                IntPtr desktop = Win32.GetDesktopWindow();
-                Win32.EnumChildWindows(desktop, FindMatchingForms, IntPtr.Zero);
-                return forms;
-            }
+            forms = [];
+            name = formName;
+            var desktop = Win32.GetDesktopWindow();
+            Win32.EnumChildWindows(desktop, FindMatchingForms, IntPtr.Zero);
+            return forms;
         }
+    }
 
-        /// <summary>
-        /// Finds one form with the specified name.
-        /// </summary>
-        /// <param name="formName">The name of the form to search for.</param>
-        /// <returns>The form it finds.</returns>
-        /// <exception cref="NoSuchControlException">
-        /// Thrown if there are no forms with the specified name.
-        /// </exception>
-        /// <exception cref="AmbiguousNameException">
-        /// Thrown if there is more than one form with the specified name.</exception>
-        public Form Find(string formName)
+    /// <summary>
+    /// Finds one form with the specified name.
+    /// </summary>
+    /// <param name="formName">The name of the form to search for.</param>
+    /// <returns>The form it finds.</returns>
+    /// <exception cref="NoSuchControlException">
+    /// Thrown if there are no forms with the specified name.
+    /// </exception>
+    /// <exception cref="AmbiguousNameException">
+    /// Thrown if there is more than one form with the specified name.</exception>
+    public Form Find(string formName)
+    {
+        var list = FindAll(formName);
+        return list.Count switch
         {
-            List<Form> list = FindAll(formName);
-            if (list.Count == 0)
-            {
-                throw new NoSuchControlException("Could not find form with name '" + formName + "'");
-            }
-            if (list.Count > 1)
-            {
-                throw new AmbiguousNameException("Found too many forms with the name '" + formName + "'");
-            }
-            return list[0];
-        }
+            0 => throw new NoSuchControlException("Could not find form with name '" + formName + "'"),
+            > 1 => throw new AmbiguousNameException("Found too many forms with the name '" + formName + "'"),
+            _ => list[0]
+        };
+    }
 
-        /// <summary>
-        /// Finds all of the forms.
-        /// </summary>
-        /// <returns>FormCollection with all of the forms regardless of name.</returns>
-        public List<Form> FindAll()
-        {
-            return FindAll(null);
-        }
+    /// <summary>
+    /// Finds all of the forms.
+    /// </summary>
+    /// <returns>FormCollection with all of the forms regardless of name.</returns>
+    public List<Form> FindAll()
+    {
+        return FindAll(null);
     }
 }

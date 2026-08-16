@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,79 +27,68 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+///<summary>
+/// The abstract base class for all recordable Actions.
+///</summary>
+public abstract class Action
 {
-    ///<summary>
-    /// The abstract base class for all recordable Actions.
-    ///</summary>
-    public abstract class Action
+    /// <summary>
+    /// Sets or gets the <see cref="Definition"/> associated with this <c>Action</c>.
+    /// </summary>
+    /// <value>
+    /// The associated <see cref="Definition"/>.
+    /// </value>
+    /// <exception cref="ArgumentException">
+    /// This exception is thrown if no effective value is given.
+    /// </exception>
+    public Definition Definition
     {
-        /// <summary>
-        /// The reference to the associated definition.
-        /// </summary>
-        private Definition definition;
-
-        /// <summary>
-        /// Sets or gets the <see cref="Definition"/> associated with this <c>Action</c>.
-        /// </summary>
-        /// <value>
-        /// The associated <see cref="Definition"/>.
-        /// </value>
-        /// <exception cref="ArgumentException">
-        /// This exception is thrown if no effective value is given.
-        /// </exception>
-        public Definition Definition
+        get;
+        set
         {
-            get { return definition; }
-            set
+            if (value != null!)
             {
-                if (value != null)
-                {
-                    definition = value;
-                }
-                else
-                {
-                    throw new ArgumentException();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Control
-        {
-            get { return RemoveSpaces(Definition.Name); }
-        }
-
-        /// <summary>
-        /// Removes all spaces from a string.
-        /// </summary>
-        /// <param name="name">
-        /// Remove all spaces from this string.
-        /// </param>
-        /// <returns>
-        /// <list type="bullet">
-        /// <item><paramref name="name"/> without spaces.</item>
-        /// <item>if <paramref name="name"/> is not effective, returns an empty string</item>
-        /// </list>
-        /// </returns>
-        private static string RemoveSpaces(string name)
-        {
-            if (name != null)
-            {
-                return name.Replace(" ", "");
+                field = value;
             }
             else
             {
-                return String.Empty;
+                throw new ArgumentNullException();
             }
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Control => RemoveSpaces(Definition.Name);
+
+    /// <summary>
+    /// Removes all spaces from a string.
+    /// </summary>
+    /// <param name="name">
+    /// Remove all spaces from this string.
+    /// </param>
+    /// <returns>
+    /// <list type="bullet">
+    /// <item><paramref name="name"/> without spaces.</item>
+    /// <item>if <paramref name="name"/> is not effective, returns an empty string</item>
+    /// </list>
+    /// </returns>
+    private static string RemoveSpaces(string? name)
+    {
+        if (name != null)
+        {
+            return name.Replace(" ", "");
+        }
+
+        return string.Empty;
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,78 +27,84 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
-
 using System;
 using System.Collections;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class CheckedListBoxTest : NUnitFormTest
 {
-    [TestFixture]
-    public class CheckedListBoxTest : NUnitFormTest
+    private CheckedListBoxTestForm? checkedListForm;
+
+    private CheckedListBoxTester? checkedListBox;
+
+    public override void Setup()
     {
-        private CheckedListBoxTestForm checkedListForm = null;
+        checkedListForm = new CheckedListBoxTestForm();
+        checkedListBox = new CheckedListBoxTester("checkedListBox", checkedListForm);
+    }
 
-        private CheckedListBoxTester checkedListBox = null;
+    [TearDown]
+    public override void TearDown()
+    {
+        checkedListForm?.Dispose();
+        base.TearDown();
+    }
 
-        public override void Setup()
-        {
-            checkedListForm = new CheckedListBoxTestForm();
-            checkedListBox = new CheckedListBoxTester("checkedListBox", checkedListForm);
-        }
+    private void FillListBox()
+    {
+        checkedListForm.Show();
+        checkedListBox.Items.AddRange(["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"]);
+    }
 
-        private void FillListBox()
-        {
-            checkedListForm.Show();
-            checkedListBox.Items.AddRange(new string[] {"Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"});
-        }
+    [Test]
+    public void CheckItem()
+    {
+        checkedListForm.Show();
+        var ex = Assert.Throws<IndexOutOfRangeException>(() => checkedListBox.CheckItem("Ultra-Violet"));
+        Assert.That(ex.Message, Does.Contain("Ultra-Violet not in list"));
+    }
 
-        [Test]
-        public void CheckItem()
-        {
-            checkedListForm.Show();
-            var ex = Assert.Throws<IndexOutOfRangeException>(() => checkedListBox.CheckItem("Ultra-Violet"));
-            Assert.That(ex.Message, Does.Contain("Ultra-Violet not in list"));
-        }
+    [Test]
+    public void CheckItems()
+    {
+        checkedListForm.Show();
+        FillListBox();
+        checkedListBox.CheckItem("Red");
+        checkedListBox.CheckItem("Orange");
+        checkedListBox.CheckItem("Indigo");
+        checkedListBox.CheckItem("Violet");
 
-        [Test]
-        public void CheckItems()
-        {
-            checkedListForm.Show();
-            FillListBox();
-            checkedListBox.CheckItem("Red");
-            checkedListBox.CheckItem("Orange");
-            checkedListBox.CheckItem("Indigo");
-            checkedListBox.CheckItem("Violet");
+        checkedListBox.CheckSelectedItems(new ArrayList(new[] {"Red", "Orange", "Indigo", "Violet"}));
+    }
 
-            checkedListBox.CheckSelectedItems(new ArrayList(new string[] {"Red", "Orange", "Indigo", "Violet"}));
-        }
+    [Test]
+    public void ClearItems()
+    {
+        checkedListForm.Show();
+        FillListBox();
+        checkedListBox.CheckItem("Red");
+        checkedListBox.CheckItem("Orange");
+        checkedListBox.CheckItem("Indigo");
+        checkedListBox.CheckItem("Violet");
 
-        [Test]
-        public void ClearItems()
-        {
-            checkedListForm.Show();
-            FillListBox();
-            checkedListBox.CheckItem("Red");
-            checkedListBox.CheckItem("Orange");
-            checkedListBox.CheckItem("Indigo");
-            checkedListBox.CheckItem("Violet");
+        checkedListBox.ClearItem("Orange");
 
-            checkedListBox.ClearItem("Orange");
+        checkedListBox.CheckSelectedItems(new ArrayList(new[] {"Red", "Indigo", "Violet"}));
+    }
 
-            checkedListBox.CheckSelectedItems(new ArrayList(new string[] {"Red", "Indigo", "Violet"}));
-        }
-
-        [Test]
-        public void HookupTestForm()
-        {
-            checkedListForm.Show();
-            Assert.IsTrue(checkedListBox.Properties.Visible);
-        }
+    [Test]
+    public void HookupTestForm()
+    {
+        checkedListForm.Show();
+        Assert.IsTrue(checkedListBox.Properties.Visible);
     }
 }

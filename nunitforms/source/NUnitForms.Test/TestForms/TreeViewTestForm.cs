@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,127 +35,126 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for TreeViewTestForm.
+/// </summary>
+public class TreeViewTestForm : Form
 {
     /// <summary>
-    /// Summary description for TreeViewTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class TreeViewTestForm : Form
+    private readonly Container? components = null;
+
+    private Label myLabel;
+
+    private TreeView myTree;
+
+    public TreeViewTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private Label myLabel;
-
-        private TreeView myTree;
-
-        public TreeViewTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            myLabel.Text = e.Node.Text;
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myTree = new TreeView();
-            this.myLabel = new Label();
-            this.SuspendLayout();
-            // 
-            // myTree
-            // 
-            this.myTree.Anchor = ((AnchorStyles) (((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left)));
-            this.myTree.ImageIndex = -1;
-            this.myTree.Location = new Point(0, 0);
-            this.myTree.Name = "myTree";
-            this.myTree.Nodes.AddRange(
-                new TreeNode[]
-                    {
-                        new TreeNode("Node0",
-                                     new TreeNode[]
-                                         {new TreeNode("Node1", new TreeNode[] {new TreeNode("Node2")})})
-                        ,
-                        new TreeNode("Node3",
-                                     new TreeNode[]
-                                         {
-                                             new TreeNode("Node4",
-                                                          new TreeNode[]
-                                                              {
-                                                                  new TreeNode("Node5"),
-                                                                  new TreeNode("Node6",
-                                                                               new TreeNode[]
-                                                                                   {
-                                                                                       new
-                                                                                           TreeNode
-                                                                                           ("Node7")
-                                                                                       ,
-                                                                                       new
-                                                                                           TreeNode
-                                                                                           ("Node8")
-                                                                                       ,
-                                                                                       new
-                                                                                           TreeNode
-                                                                                           ("Node9")
-                                                                                   })
-                                                              })
-                                         })
-                    });
-            this.myTree.SelectedImageIndex = -1;
-            this.myTree.Size = new Size(224, 488);
-            this.myTree.TabIndex = 0;
-            this.myTree.AfterSelect += new TreeViewEventHandler(this.treeView1_AfterSelect);
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(280, 104);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "default";
-            // 
-            // TreeViewTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(568, 485);
-            this.Controls.Add(this.myLabel);
-            this.Controls.Add(this.myTree);
-            this.Name = "TreeViewTestForm";
-            this.Text = "TreeControlTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+    {
+        myLabel.Text = e.Node.Text;
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myTree = new TreeView();
+        myLabel = new Label();
+        SuspendLayout();
+        // 
+        // myTree
+        // 
+        myTree.Anchor = ((AnchorStyles) (((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left)));
+        myTree.ImageIndex = -1;
+        myTree.Location = new Point(0, 0);
+        myTree.Name = "myTree";
+        myTree.Nodes.AddRange(
+            new TreeNode[]
+            {
+                new TreeNode("Node0",
+                    new TreeNode[]
+                        {new TreeNode("Node1", new TreeNode[] {new TreeNode("Node2")})})
+                ,
+                new TreeNode("Node3",
+                    new TreeNode[]
+                    {
+                        new TreeNode("Node4",
+                            new TreeNode[]
+                            {
+                                new TreeNode("Node5"),
+                                new TreeNode("Node6",
+                                    new TreeNode[]
+                                    {
+                                        new
+                                            TreeNode
+                                            ("Node7")
+                                        ,
+                                        new
+                                            TreeNode
+                                            ("Node8")
+                                        ,
+                                        new
+                                            TreeNode
+                                            ("Node9")
+                                    })
+                            })
+                    })
+            });
+        myTree.SelectedImageIndex = -1;
+        myTree.Size = new Size(224, 488);
+        myTree.TabIndex = 0;
+        myTree.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(280, 104);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "default";
+        // 
+        // TreeViewTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(568, 485);
+        Controls.Add(myLabel);
+        Controls.Add(myTree);
+        Name = "TreeViewTestForm";
+        Text = "TreeControlTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

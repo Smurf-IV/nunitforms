@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,45 +27,48 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using ToolStripTextBoxTester = NUnit.Extensions.Forms.Testers.ToolStripTextBoxTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+///<summary>
+/// Test Fixture for ToolStripTextBoxTester.
+///</summary>
+[TestFixture]
+public class ToolStripTextBoxTest : NUnitFormTest
 {
     ///<summary>
-    /// Test Fixture for ToolStripTextBoxTester.
+    /// Sets up this test.
     ///</summary>
-    [TestFixture]
-    public class ToolStripTextBoxTest : NUnitFormTest
+    public override void Setup()
     {
-        ///<summary>
-        /// Sets up this test.
-        ///</summary>
-        public override void Setup()
-        {
-            new ToolStripTextBoxForm().Show();
-        }
+        new TestForms.ToolStripTextBoxForm().Show();
+    }
 
-        /// <summary>
-        /// This testcase presses a ToolStripButton which will put the string clicked into the ToolStripTextBox. 
-        /// Test is ok if the ToolStripTextBox text is clicked.
-        /// </summary>
-        [Test]
-        public void ToolStripTextBoxOnToolBar()
-        {
-            ToolStripButtonTester button_tester = new ToolStripButtonTester("toolStripButton1");
+    /// <summary>
+    /// This testcase presses a ToolStripButton which will put the string clicked into the ToolStripTextBox. 
+    /// Test is ok if the ToolStripTextBox text is clicked.
+    /// </summary>
+    [Test]
+    public void ToolStripTextBoxOnToolBar()
+    {
+        var button_tester = new ToolStripButtonTester("toolStripButton1");
 
-            ToolStripTextBoxTester textbox_tester = new ToolStripTextBoxTester("toolStripTextBox1");
-            Assert.IsTrue(string.IsNullOrEmpty(textbox_tester.Text));
+        var textbox_tester = new ToolStripTextBoxTester("toolStripTextBox1");
+        Assert.IsTrue(string.IsNullOrEmpty(textbox_tester.Text));
 
-            button_tester.Click();
-            Assert.IsTrue(textbox_tester.Text == "clicked");
+        button_tester.Click();
+        Assert.IsTrue(textbox_tester.Text == "clicked");
 
-            textbox_tester.Enter("entered text");
-            Assert.IsTrue(textbox_tester.Text == "entered text");
-        }
+        textbox_tester.Enter("entered text");
+        Assert.IsTrue(textbox_tester.Text == "entered text");
     }
 }

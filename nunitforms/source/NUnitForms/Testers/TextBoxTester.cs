@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,26 +27,25 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing TextBoxes.
+/// </summary>
+/// <remarks>
+/// There is a convenience method for entering text into a text box.</remarks>
+public partial class TextBoxTester
 {
     /// <summary>
-    /// A ControlTester for testing TextBoxes.
+    /// This method allows you to enter text into the text box.
     /// </summary>
-    /// <remarks>
-    /// There is a convenience method for entering text into a text box.</remarks>
-    public partial class TextBoxTester
+    /// <param name="text">The text to enter into the text box.</param>
+    public void Enter(string text)
     {
-        /// <summary>
-        /// This method allows you to enter text into the text box.
-        /// </summary>
-        /// <param name="text">The text to enter into the text box.</param>
-        public void Enter(string text)
-        {
-            EnterText(text);
-        }
+        EnterText(text);
     }
 }

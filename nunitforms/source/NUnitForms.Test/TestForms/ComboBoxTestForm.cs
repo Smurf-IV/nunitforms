@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -35,94 +36,93 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for ComboBoxTestForm.
+/// </summary>
+public class ComboBoxTestForm : Form
 {
     /// <summary>
-    /// Summary description for ComboBoxTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class ComboBoxTestForm : Form
+    private readonly Container? components = null;
+
+    private ComboBox myComboBox;
+
+    private Label myLabel;
+
+    public ComboBoxTestForm()
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        private ComboBox myComboBox;
-
-        private Label myLabel;
-
-        public ComboBoxTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        private void ComboBox_TextChanged(object sender, EventArgs e)
-        {
-            myLabel.Text = ((ComboBox) sender).Text;
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myComboBox = new ComboBox();
-            this.myLabel = new Label();
-            this.SuspendLayout();
-            // 
-            // myComboBox
-            // 
-            this.myComboBox.Items.AddRange(new object[] {"one", "two", "three", "four", "five"});
-            this.myComboBox.Location = new Point(72, 32);
-            this.myComboBox.Name = "myComboBox";
-            this.myComboBox.Size = new Size(121, 21);
-            this.myComboBox.TabIndex = 0;
-            this.myComboBox.Text = "None";
-            this.myComboBox.TextChanged += new EventHandler(this.ComboBox_TextChanged);
-            // 
-            // myLabel
-            // 
-            this.myLabel.Location = new Point(104, 120);
-            this.myLabel.Name = "myLabel";
-            this.myLabel.TabIndex = 1;
-            this.myLabel.Text = "label1";
-            // 
-            // ComboBoxTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(292, 273);
-            this.Controls.Add(this.myLabel);
-            this.Controls.Add(this.myComboBox);
-            this.Name = "ComboBoxTestForm";
-            this.Text = "ComboBoxTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void ComboBox_TextChanged(object sender, EventArgs e)
+    {
+        myLabel.Text = ((ComboBox) sender).Text;
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myComboBox = new ComboBox();
+        myLabel = new Label();
+        SuspendLayout();
+        // 
+        // myComboBox
+        // 
+        myComboBox.Items.AddRange(new object[] {"one", "two", "three", "four", "five"});
+        myComboBox.Location = new Point(72, 32);
+        myComboBox.Name = "myComboBox";
+        myComboBox.Size = new Size(121, 21);
+        myComboBox.TabIndex = 0;
+        myComboBox.Text = "None";
+        myComboBox.TextChanged += new EventHandler(ComboBox_TextChanged);
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(104, 120);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "label1";
+        // 
+        // ComboBoxTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(292, 273);
+        Controls.Add(myLabel);
+        Controls.Add(myComboBox);
+        Name = "ComboBoxTestForm";
+        Text = "ComboBoxTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

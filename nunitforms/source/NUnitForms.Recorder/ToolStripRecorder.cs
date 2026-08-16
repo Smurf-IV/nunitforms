@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,30 +35,29 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+namespace NUnitForms.Recorder;
+
+/// <summary>
+/// Base recorder class for all ToolStrip classes.
+/// </summary>
+public abstract class ToolStripRecorder : Recorder
 {
-    /// <summary>
-    /// Base recorder class for all ToolStrip classes.
-    /// </summary>
-    public abstract class ToolStripRecorder : Recorder
+    protected ToolStripRecorder(Listener listener)
+        : base(listener)
     {
-        protected ToolStripRecorder(Listener listener)
-            : base(listener)
-        {
-        }
+    }
 
-        public void PropertyAssert(object sender, EventArgs args)
-        {
-            Control source = ((MenuItem) sender).GetContextMenu().SourceControl;
-            string propertyName = ((MenuItem) sender).Text;
-            object propertyValue = GetPropertyValue(source, propertyName);
-            Listener.FireEvent(TesterType, source, new PropertyAssertAction(propertyName, propertyValue));
-        }
+    public void PropertyAssert(object sender, EventArgs args)
+    {
+        Control source = ((MenuItem) sender).GetContextMenu().SourceControl;
+        string propertyName = ((MenuItem) sender).Text;
+        object propertyValue = GetPropertyValue(source, propertyName);
+        Listener.FireEvent(TesterType, source, new PropertyAssertAction(propertyName, propertyValue));
+    }
 
-        private object GetPropertyValue(Control source, string propertyName)
-        {
-            PropertyInfo info = source.GetType().GetProperty(propertyName);
-            return info.GetValue(source, new object[] {});
-        }
+    private object GetPropertyValue(Control source, string propertyName)
+    {
+        PropertyInfo info = source.GetType().GetProperty(propertyName);
+        return info.GetValue(source, []);
     }
 }

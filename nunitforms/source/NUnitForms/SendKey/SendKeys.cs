@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,36 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
-namespace NUnit.Extensions.Forms.SendKey
-{
-	/// <summary>
-	/// Wrapper for the dot Net SendKeys class to allow reference by interface
-	/// for injection and unit testing.
-	/// 
-	/// Microsoft documents the SendKeys class as unreliable. Only use this class
-	/// for implementation of ISendKeys if you must use the dot Net class.
-	/// 
-	/// See: http://msdn2.microsoft.com/en-us/library/system.windows.forms.sendkeys.sendwait(VS.90).aspx
-	/// </summary>
-	public class SendKeys : ISendKeys
-	{
-		[Obsolete("Microsoft documents the SendKeys class as unreliable. See: http://msdn2.microsoft.com/en-us/library/system.windows.forms.sendkeys.sendwait(VS.90).aspx")]
-		public void SendWait(string text)
-		{
-			System.Windows.Forms.SendKeys.SendWait(text);
-		}
-	}
 
-    public class OldSendKeysFactory : ISendKeysFactory
+namespace NUnit.Extensions.Forms.SendKey;
+
+/// <summary>
+/// Wrapper for the dot Net SendKeys class to allow reference by interface
+/// for injection and unit testing.
+/// 
+/// Microsoft documents the SendKeys class as unreliable. Only use this class
+/// for implementation of ISendKeys if you must use the dot Net class.
+/// 
+/// See: http://msdn2.microsoft.com/en-us/library/system.windows.forms.sendkeys.sendwait(VS.90).aspx
+/// </summary>
+public class SendKeys : ISendKeys
+{
+    [Obsolete("Microsoft documents the SendKeys class as unreliable. See: http://msdn2.microsoft.com/en-us/library/system.windows.forms.sendkeys.sendwait(VS.90).aspx")]
+    public void SendWait(string text)
     {
-        public ISendKeys Create(IntPtr window)
-        {
-            return new SendKeys();
-        }
+        System.Windows.Forms.SendKeys.SendWait(text);
+    }
+}
+
+public class OldSendKeysFactory : ISendKeysFactory
+{
+    public ISendKeys Create(IntPtr window)
+    {
+        return new SendKeys();
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,107 +27,106 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.TestApplications;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
 
-namespace NUnit.Extensions.Forms.UnitTests
+namespace NUnit.Extensions.Forms.TestApplications;
+
+/// <summary>
+/// Test existing KeyboardController functionality.
+/// </summary>
+[TestFixture]
+public class KeyboardControllerTest
 {
-	/// <summary>
-	/// Test existing KeyboardController functionality.
-	/// </summary>
-	[TestFixture]
-    [Ignore("They all fail on my systems. Planning to investigate.")]
-    public class KeyboardControllerTest
-	{
-		private KeyboardController keyboardController;
-		private ControlTester textBoxTester;
-		private TextBoxTestForm textBoxForm;
+    private KeyboardController keyboardController;
+    private ControlTester textBoxTester;
+    private TextBoxTestForm textBoxForm;
 
-		[SetUp]
-		public void SetUp()
-		{
-			textBoxForm = new TextBoxTestForm();
-			textBoxForm.Show();
+    [SetUp]
+    public void SetUp()
+    {
+        textBoxForm = new TextBoxTestForm();
+        textBoxForm.Show();
 
-			textBoxTester = new ControlTester("myTextBox");
-			Assert.AreEqual("default", textBoxTester.Text);
+        textBoxTester = new ControlTester("myTextBox");
+        Assert.AreEqual("default", textBoxTester.Text);
 
-			keyboardController = new KeyboardController(textBoxTester);	
-		}
+        keyboardController = new KeyboardController(textBoxTester);
+    }
 
-		[TearDown]
-		public void TearDown()
-		{
-			keyboardController.Dispose();
-			textBoxForm.Close();
-		}
+    [TearDown]
+    public void TearDown()
+    {
+        keyboardController.Dispose();
+        textBoxForm.Close();
+    }
 
-		[Test]
-		public void Type_WithSingleCharacterShift()
-		{
-			keyboardController.Type("a+bc");
-			Assert.AreEqual("aBc", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_WithSingleCharacterShift()
+    {
+        keyboardController.Type("a+bc");
+        Assert.AreEqual("aBc", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_WithGroupedCharacterShift()
-		{
-			keyboardController.Type("a+(bc)d");
-			Assert.AreEqual("aBCd", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_WithGroupedCharacterShift()
+    {
+        keyboardController.Type("a+(bc)d");
+        Assert.AreEqual("aBCd", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_BACKSPACE()
-		{
-			keyboardController.Type("123{BACKSPACE}4");
-			Assert.AreEqual("124", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_BACKSPACE()
+    {
+        keyboardController.Type("123{BACKSPACE}4");
+        Assert.AreEqual("124", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_EscapesFormatCharacters()
-		{
-			keyboardController.Type("a{+}{(}bc{)}de{%}{[}{]} {{}123{}}");
-			Assert.AreEqual("a+(bc)de%[] {123}", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_EscapesFormatCharacters()
+    {
+        keyboardController.Type("a{+}{(}bc{)}de{%}{[}{]} {{}123{}}");
+        Assert.AreEqual("a+(bc)de%[] {123}", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_PreversesCharacterCase()
-		{
-			keyboardController.Type("aBcDE");
-			Assert.AreEqual("aBcDE", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_PreversesCharacterCase()
+    {
+        keyboardController.Type("aBcDE");
+        Assert.AreEqual("aBcDE", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_RepeatCharacters()
-		{
-			keyboardController.Type("-{o 4}-");
-			Assert.AreEqual("-oooo-", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_RepeatCharacters()
+    {
+        keyboardController.Type("-{o 4}-");
+        Assert.AreEqual("-oooo-", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_LEFT()
-		{
-			keyboardController.Type("12{LEFT}34");
-			Assert.AreEqual("1342", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_LEFT()
+    {
+        keyboardController.Type("12{LEFT}34");
+        Assert.AreEqual("1342", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_RIGHT()
-		{
-			keyboardController.Type("123{LEFT}{LEFT}{RIGHT}45");
-			Assert.AreEqual("12453", textBoxTester.Text);
-		}
+    [Test]
+    public void Type_RIGHT()
+    {
+        keyboardController.Type("123{LEFT}{LEFT}{RIGHT}45");
+        Assert.AreEqual("12453", textBoxTester.Text);
+    }
 
-		[Test]
-		public void Type_HOME()
-		{
-			keyboardController.Type("123{HOME}5");
-			Assert.AreEqual("5123", textBoxTester.Text);
-		}
-	}
+    [Test]
+    public void Type_HOME()
+    {
+        keyboardController.Type("123{HOME}5");
+        Assert.AreEqual("5123", textBoxTester.Text);
+    }
 }

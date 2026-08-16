@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,28 +27,32 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using LinkLabelTester = NUnit.Extensions.Forms.Testers.LinkLabelTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class LinkLabelTest : NUnitFormTest
 {
-    [TestFixture]
-    public class LinkLabelTest : NUnitFormTest
+    [Test]
+    public void LinkLabelClick()
     {
-        [Test]
-        public void LinkLabelClick()
-        {
-            new LinkLabelTestForm().Show();
+        new LinkLabelTestForm().Show();
 
-            LinkLabelTester link = new LinkLabelTester("myLinkLabel");
-            LabelTester label = new LabelTester("myLabel");
+        var link = new LinkLabelTester("myLinkLabel");
+        var label = new LabelTester("myLabel");
 
-            Assert.AreEqual("0", label.Text);
-            link.Click();
-            Assert.AreEqual("1", label.Text);
-        }
+        Assert.AreEqual("0", label.Text);
+        link.Click();
+        Assert.AreEqual("1", label.Text);
     }
 }

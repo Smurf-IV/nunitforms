@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,87 +27,88 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms
+using NUnit.Extensions.Forms.Exceptions;
+
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing ListBoxes.  
+/// </summary>
+/// <remarks>
+/// It includes helper methods for selecting items from the list
+/// and for clearing those selections.</remarks>
+public partial class ListBoxTester
 {
     /// <summary>
-    /// A ControlTester for testing ListBoxes.  
+    /// Clears the selections from the list box.
     /// </summary>
-    /// <remarks>
-    /// It includes helper methods for selecting items from the list
-    /// and for clearing those selections.</remarks>
-    public partial class ListBoxTester
+    public void ClearSelected()
     {
-        /// <summary>
-        /// Clears the selections from the list box.
-        /// </summary>
-        public void ClearSelected()
-        {
-            Properties.ClearSelected();
-        }
+        Properties.ClearSelected();
+    }
 
-        /// <summary>
-        /// Selects an item in the ListBox according to its index.
-        /// </summary>
-        /// <param name="i">the index to select.</param>
-        public void Select(int i)
-        {
-            Properties.SelectedIndex = i;
-        }
+    /// <summary>
+    /// Selects an item in the ListBox according to its index.
+    /// </summary>
+    /// <param name="i">the index to select.</param>
+    public void Select(int i)
+    {
+        Properties.SelectedIndex = i;
+    }
 
-        /// <summary>
-        /// Selects an item in the list according to its string value.
-        /// </summary>
-        /// <param name="text">The item to select.</param>
-        public void Select(string text)
+    /// <summary>
+    /// Selects an item in the list according to its string value.
+    /// </summary>
+    /// <param name="text">The item to select.</param>
+    public void Select(string text)
+    {
+        var index = FindItemByString(text);
+        if (index != -1)
         {
-            int index = FindItemByString(text);
-            if (index != -1)
+            Select(index);
+        }
+        else
+        {
+            throw new FormsTestAssertionException("Could not find text '" + text + "' in ComboBox '" + name + "'");
+        }
+    }
+
+    /// <summary>
+    /// Sets the selected property of an item at an index.
+    /// </summary>
+    /// <param name="index">the index to select (or clear)</param>
+    /// <param name="value">true if you want to select, false to clear.</param>
+    public void SetSelected(int index, bool value)
+    {
+        Properties.SetSelected(index, value);
+    }
+
+    /// <summary>
+    /// Sets the selected property of an item with a specified string value.
+    /// </summary>
+    /// <param name="text">the item to select (or clear)</param>
+    /// <param name="value">true if you want to select, false to clear.</param>
+    public void SetSelected(string text, bool value)
+    {
+        SetSelected(FindItemByString(text), value);
+    }
+
+    private int FindItemByString(string text)
+    {
+        //TODO: Could we just use FindString or FindStringExact
+
+        for (var i = 0; i < Properties.Items.Count; i++)
+        {
+            if (Properties.Items[i].ToString() == text)
             {
-                Select(index);
-            }
-            else
-            {
-                throw new FormsTestAssertionException("Could not find text '" + text + "' in ComboBox '" + name + "'");
+                return i;
             }
         }
 
-        /// <summary>
-        /// Sets the selected property of an item at an index.
-        /// </summary>
-        /// <param name="index">the index to select (or clear)</param>
-        /// <param name="value">true if you want to select, false to clear.</param>
-        public void SetSelected(int index, bool value)
-        {
-            Properties.SetSelected(index, value);
-        }
-
-        /// <summary>
-        /// Sets the selected property of an item with a specified string value.
-        /// </summary>
-        /// <param name="text">the item to select (or clear)</param>
-        /// <param name="value">true if you want to select, false to clear.</param>
-        public void SetSelected(string text, bool value)
-        {
-            SetSelected(FindItemByString(text), value);
-        }
-
-        private int FindItemByString(string text)
-        {
-            //TODO: Could we just use FindString or FindStringExact
-
-            for (int i = 0; i < Properties.Items.Count; i++)
-            {
-                if (Properties.Items[i].ToString() == text)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
+        return -1;
     }
 }

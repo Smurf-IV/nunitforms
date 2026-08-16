@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,36 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
-
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Generic_Testers;
 
-namespace NUnit.Extensions.Forms
+#pragma warning disable IDE0130
+namespace NUnit.Extensions.Forms.Testers;
+
+
+public partial class ListViewTester : ControlTester<ListView, ListViewTester>
 {
-    public partial class ListViewTester : ControlTester<ListView, ListViewTester>
+    public ListViewTester()
     {
-        public ListViewTester()
-        {
-        }
+    }
 
-        public ListViewTester(string name, Form form) : base(name, form)
-        {
-        }
+    public ListViewTester(string name, Form form) : base(name, form)
+    {
+    }
 
-        public ListViewTester(string name, string formName) : base(name, formName)
-        {
-        }
+    public ListViewTester(string name, string formName) : base(name, formName)
+    {
+    }
 
-        public ListViewTester(string name) : base(name)
-        {
-        }
+    public ListViewTester(string name) : base(name)
+    {
+    }
 
-        public ListViewTester(ListViewTester tester, int index) : base(tester, index)
-        {
-        }
+    public ListViewTester(ListViewTester tester, int index) : base((ControlTester<ListView, ListViewTester>)tester, index)
+    {
     }
 }

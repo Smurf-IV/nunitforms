@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,40 +27,26 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.Win32Interop;
+using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.SendKey
+namespace NUnit.Extensions.Forms.SendKey;
+
+public class SendKeysParserGroup : ISendKeysParserGroup
 {
-	public class SendKeysParserGroup : ISendKeysParserGroup
-	{
-		private readonly string modifierCharacters;
-		private readonly string body;
-		private readonly VirtualKeyCodes escapedKey;
+    public SendKeysParserGroup(string modifierCharacters, string body, Keys escapedKey)
+    {
+        ModifierCharacters = modifierCharacters;
+        Body = body;
+        EscapedKey = escapedKey;
+    }
 
-		public SendKeysParserGroup(string modifierCharacters, string body, VirtualKeyCodes escapedKey)
-		{
-			this.modifierCharacters = modifierCharacters;
-			this.body = body;
-			this.escapedKey = escapedKey;
-		}
+    public string ModifierCharacters { get; }
 
-		public string ModifierCharacters
-		{
-			get { return modifierCharacters; }
-		}
+    public string Body { get; }
 
-		public string Body
-		{
-			get { return body; }
-		}
-
-		public VirtualKeyCodes EscapedKey
-		{
-			get { return escapedKey; }
-		}
-	}
+    public Keys EscapedKey { get; }
 }

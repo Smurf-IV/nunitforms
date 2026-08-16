@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,109 +27,109 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Exceptions;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Generic_Testers;
+
+public class ControlTester<T, TThis> : Tester<T, TThis>
+    where T : Control
+    where TThis : Tester<T, TThis>, new()
 {
-    public class ControlTester<T, TThis> : Tester<T, TThis>
-        where T : Control
-        where TThis : Tester<T, TThis>, new()
+    public ControlTester()
     {
-        public ControlTester()
+    }
+
+    public ControlTester(string name, string formName) : base(name, formName)
+    {
+    }
+
+    public ControlTester(string name, Form form) : base(name, form)
+    {
+    }
+
+    public ControlTester(string name) : base(name)
+    {
+    }
+
+    public ControlTester(ControlTester<T, TThis> tester, int index) : base(tester, index)
+    {
+    }
+
+    /// <summary>
+    /// Convenience method retrieves the Text property of the tested control.
+    /// </summary>
+    public virtual string Text => Properties.Text;
+
+    /// <summary>
+    /// Convenience method "Clicks" on the control being tested if it is visible
+    /// and enabled.
+    /// </summary>
+    public virtual void Click()
+    {
+        if (!Properties.Visible)
         {
+            throw new ControlNotVisibleException(name);
+        }
+        if (!Properties.Enabled)
+        {
+            throw new ControlNotEnabledException(name);
+        }
+        FireEvent("Click");
+    }
+
+    /// <summary>
+    /// Convenience method "DoubleClicks" on the control being tested if it is visible.
+    /// </summary>
+    /// <exception>
+    /// ControlNotVisibleException is thrown if the Control is not Visible.
+    /// </exception>
+    public virtual void DoubleClick()
+    {
+        if (!Properties.Visible)
+        {
+            throw new ControlNotVisibleException(name);
         }
 
-        public ControlTester(string name, string formName) : base(name, formName)
-        {
-        }
+        FireEvent("DoubleClick");
+    }
 
-        public ControlTester(string name, Form form) : base(name, form)
-        {
-        }
+    /// <summary>
+    /// Default handler for entering text into a text control.
+    /// Must be exposed publically by testers that want to use it.
+    /// </summary>
+    protected virtual void EnterText(string text)
+    {
+        FireEvent("Enter");
+        Properties.Text = text;
+        FireEvent("Leave");
 
-        public ControlTester(string name) : base(name)
-        {
-        }
+        EndCurrentEdit("Text");
+    }
 
-        public ControlTester(ControlTester<T, TThis> tester, int index) : base(tester, index)
+    /// <summary>
+    /// Should call this method after editing something in order to trigger any
+    /// databinding done with the Databindings collection.  (ie text box to a data
+    /// set)
+    /// </summary>
+    public void EndCurrentEdit(string propertyName)
+    {
+        if (Properties.DataBindings[propertyName] != null)
         {
+            Properties.DataBindings[propertyName].BindingManagerBase.EndCurrentEdit();
         }
+    }
 
-        /// <summary>
-        /// Convenience method retrieves the Text property of the tested control.
-        /// </summary>
-        public virtual string Text
-        {
-            get { return Properties.Text; }
-        }
-
-        /// <summary>
-        /// Convenience method "Clicks" on the control being tested if it is visible
-        /// and enabled.
-        /// </summary>
-        public virtual void Click()
-        {
-            if (!Properties.Visible)
-            {
-                throw new ControlNotVisibleException(name);
-            }
-            if (!Properties.Enabled)
-            {
-                throw new ControlNotEnabledException(name);
-            }
-            FireEvent("Click");
-        }
-
-        /// <summary>
-        /// Convenience method "DoubleClicks" on the control being tested if it is visible.
-        /// </summary>
-        /// <exception>
-        /// ControlNotVisibleException is thrown if the Control is not Visible.
-        /// </exception>
-        public virtual void DoubleClick()
-        {
-            if (!Properties.Visible)
-                throw new ControlNotVisibleException(name);
-            FireEvent("DoubleClick");
-        }
-
-        /// <summary>
-        /// Default handler for entering text into a text control.
-        /// Must be exposed publically by testers that want to use it.
-        /// </summary>
-        protected virtual void EnterText(string text)
-        {
-            FireEvent("Enter");
-            Properties.Text = text;
-            FireEvent("Leave");
-
-            EndCurrentEdit("Text");
-        }
-
-        /// <summary>
-        /// Should call this method after editing something in order to trigger any
-        /// databinding done with the Databindings collection.  (ie text box to a data
-        /// set)
-        /// </summary>
-        public void EndCurrentEdit(string propertyName)
-        {
-            if (Properties.DataBindings[propertyName] != null)
-            {
-                Properties.DataBindings[propertyName].BindingManagerBase.EndCurrentEdit();
-            }
-        }
-
-        /// <summary>
-        /// Calls EndCurrentEdit on this control's data binding for the given property.
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected override void DoAfterSetProperty(string propertyName)
-        {
-            EndCurrentEdit(propertyName);
-        }
+    /// <summary>
+    /// Calls EndCurrentEdit on this control's data binding for the given property.
+    /// </summary>
+    /// <param name="propertyName"></param>
+    protected override void DoAfterSetProperty(string propertyName)
+    {
+        EndCurrentEdit(propertyName);
     }
 }

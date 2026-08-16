@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,75 +27,80 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Framework;
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Framework;
+
+using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class TextBoxTest : NUnitFormTest
 {
-    [TestFixture]
-    public class TextBoxTest : NUnitFormTest
+    public void oldhandler(string name, IntPtr hWnd, Form form)
     {
-        public void oldhandler(string name, IntPtr hWnd, Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("Old", mb.Text);
-            mb.ClickOk();
-        }
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("Old", mb.Text);
+        mb.ClickOk();
+    }
 
-        public void newhandler(string name, IntPtr hWnd, Form form)
-        {
-            MessageBoxTester mb = new MessageBoxTester(hWnd);
-            Assert.AreEqual("New", mb.Text);
-            mb.ClickOk();
-        }
+    public void newhandler(string name, IntPtr hWnd, Form form)
+    {
+        var mb = new MessageBoxTester(hWnd);
+        Assert.AreEqual("New", mb.Text);
+        mb.ClickOk();
+    }
 
-        [Test]
-        public void DataSetBinding()
-        {
-            TextBoxDataSetBindingTestForm f = new TextBoxDataSetBindingTestForm();
-            f.Show();
+    [Test]
+    public void DataSetBinding()
+    {
+        var f = new TextBoxDataSetBindingTestForm();
+        f.Show();
 
-            ModalFormHandler = oldhandler;
-            new ButtonTester("btnView").Click();
+        ModalFormHandler = oldhandler;
+        new ButtonTester("btnView").Click();
 
-            new TextBoxTester("myTextBox").Enter("New");
-            ModalFormHandler = newhandler;
-            new ButtonTester("btnView").Click();
+        new TextBoxTester("myTextBox").Enter("New");
+        ModalFormHandler = newhandler;
+        new ButtonTester("btnView").Click();
 
-            f.Close();
-        }
+        f.Close();
+    }
 
-        [Test]
-        public void DataSetBindingWithGenericPropertySetter()
-        {
-            TextBoxDataSetBindingTestForm f = new TextBoxDataSetBindingTestForm();
-            f.Show();
+    [Test]
+    public void DataSetBindingWithGenericPropertySetter()
+    {
+        var f = new TextBoxDataSetBindingTestForm();
+        f.Show();
 
-            ModalFormHandler = oldhandler;
-            new ButtonTester("btnView").Click();
+        ModalFormHandler = oldhandler;
+        new ButtonTester("btnView").Click();
 
-            new TextBoxTester("myTextBox")["Text"] = "New";
+        new TextBoxTester("myTextBox")["Text"] = "New";
 
-            ModalFormHandler = newhandler;
-            new ButtonTester("btnView").Click();
-            f.Close();
-        }
+        ModalFormHandler = newhandler;
+        new ButtonTester("btnView").Click();
+        f.Close();
+    }
 
-        [Test]
-        public void TextBox()
-        {
-            TextBoxTestForm f = new TextBoxTestForm();
-            f.Show();
-            TextBoxTester box = new TextBoxTester("myTextBox");
-            Assert.AreEqual("default", box.Text);
-            box.Enter("Text");
-            Assert.AreEqual("Text", box.Text);
-            f.Close();
-        }
+    [Test]
+    public void TextBox()
+    {
+        var f = new TextBoxTestForm();
+        f.Show();
+        var box = new TextBoxTester("myTextBox", f);
+        Assert.AreEqual("default", box.Text);
+        box.Enter("Text");
+        Assert.AreEqual("Text", box.Text);
+        f.Close();
     }
 }

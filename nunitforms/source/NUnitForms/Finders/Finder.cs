@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon
+#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,276 +35,234 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Exceptions;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Finders;
+
+/// <summary>
+/// Internal use only.  Finds controls, components, and menuitems
+/// according to their name property.
+/// </summary>
+/// <remarks>
+/// It is also used by the recorder application which is why it is not
+/// internal.
+/// </remarks>
+/// the recorder application.
+public class Finder<T>
 {
-    /// <summary>
-    /// Internal use only.  Finds controls, components, and menuitems
-    /// according to their name property.
-    /// </summary>
-    /// <remarks>
-    /// It is also used by the recorder application which is why it is not
-    /// internal.
-    /// </remarks>
-    /// the recorder application.
-    public class Finder<T>
+    private readonly List<Form>? forms;
+    private readonly string name;
+
+    public Finder()
     {
-        private readonly List<Form> forms = null;
-        private readonly string name;
+    }
 
-        public Finder()
+    /// <summary>
+    /// Creates a Finder that will find things on a specific Form according to their name.
+    /// </summary>
+    /// <param name="name">The name of the Control to find.</param>
+    /// <param name="form">The form to search for the control.</param>
+    public Finder(string name, Form? form)
+    {
+        this.name = name;
+        if (form != null)
         {
+            forms = [form];
         }
+    }
 
-        /// <summary>
-        /// Creates a Finder that will find things on a specific Form according to their name.
-        /// </summary>
-        /// <param name="name">The name of the Control to find.</param>
-        /// <param name="form">The form to search for the control.</param>
-        public Finder(string name, Form form)
+    /// <summary>
+    /// Creates a Finder that will find things according to their name.  
+    /// </summary>
+    /// <param name="name">The name of the thing to find.</param>
+    public Finder(string name)
+    {
+        this.name = name;
+    }
+
+    public int Count => FindAll(typeof (T)).Count;
+
+    private List<Form> FormCollection
+    {
+        get
         {
-            this.name = name;
-            if (form != null)
+            if (forms == null)
             {
-                forms = new List<Form>();
-                forms.Add(form);
+                return new FormFinder().FindAll();
             }
+            return forms;
         }
+    }
 
-        /// <summary>
-        /// Creates a Finder that will find things according to their name.  
-        /// </summary>
-        /// <param name="name">The name of the thing to find.</param>
-        public Finder(string name)
+    /// <summary>
+    /// Finds a control.  
+    /// </summary>
+    /// <exception>
+    /// If there is more than one with the specified name, it will
+    /// throw an AmbiguousNameException.  If the Control does not exist, it will throw
+    /// a NoSuchControlException.
+    /// </exception>
+    /// <returns>The control if one is found.</returns>
+    public T Find()
+    {
+        return Find(-1);
+    }
+
+    public T Find(int index)
+    {
+        return (T) Find(index, typeof (T));
+    }
+
+    private List<object> FindAll()
+    {
+        var found = new List<object>();
+        foreach (var form in FormCollection)
         {
-            this.name = name;
+            found.AddRange(Find(name, form, null));
         }
+        return found;
+    }
 
-        public int Count
+    private List<object> FindAll(Type type)
+    {
+        var found = new List<object>();
+        var allFound = FindAll();
+        foreach (var o in allFound)
         {
-            get { return FindAll(typeof (T)).Count; }
-        }
-
-        private List<Form> FormCollection
-        {
-            get
+            if (type.IsAssignableFrom(o.GetType()))
             {
-                if (forms == null)
-                {
-                    return new FormFinder().FindAll();
-                }
-                return forms;
-            }
-        }
-
-        /// <summary>
-        /// Finds a control.  
-        /// </summary>
-        /// <exception>
-        /// If there is more than one with the specified name, it will
-        /// throw an AmbiguousNameException.  If the Control does not exist, it will throw
-        /// a NoSuchControlException.
-        /// </exception>
-        /// <returns>The control if one is found.</returns>
-        public T Find()
-        {
-            return Find(-1);
-        }
-
-        public T Find(int index)
-        {
-            return (T) Find(index, typeof (T));
-        }
-
-        private List<object> FindAll()
-        {
-            List<Object> found = new List<Object>();
-            foreach (Form form in FormCollection)
-            {
-                found.AddRange(Find(name, form, null));
-            }
-            return found;
-        }
-
-        private List<object> FindAll(Type type)
-        {
-            List<Object> found = new List<object>();
-            List<Object> allFound = FindAll();
-            foreach (object o in allFound)
-            {
-                if (type.IsAssignableFrom(o.GetType()))
-                {
-                    found.Add(o);
-                }
-            }
-            return found;
-        }
-
-        private Object Find(int index, Type type)
-        {
-            List<Object> found = FindAll(type);
-            if (index < 0)
-            {
-                if (found.Count == 1)
-                {
-                    return found[0];
-                }
-                else if (found.Count == 0)
-                {
-                    throw new NoSuchControlException(name);
-                }
-                else
-                {
-                    throw new AmbiguousNameException(name);
-                }
-            }
-            else
-            {
-                if (found.Count > index)
-                {
-                    return found[index];
-                }
-                else
-                {
-                    throw new NoSuchControlException(name + "[" + index + "]");
-                }
+                found.Add(o);
             }
         }
+        return found;
+    }
 
-        private List<Object> Find(string name, Object obj, Object src)
+    private object Find(int index, Type type)
+    {
+        var found = FindAll(type);
+        if (index < 0)
         {
-            List<Object> results = new List<Object>();
-
-            if (Matches(name, obj, src))
+            return found.Count switch
             {
-                results.Add(obj);
-            }
-
-            if (obj is Form)
-            {
-                Form f = (Form) obj;
-                if (f.Menu != null)
-                {
-                    results.AddRange(Find(name, f.Menu, f));
-                }
-            }
-
-            if (obj is ToolStrip)
-            {
-                ToolStrip t = (ToolStrip) obj;
-                foreach (ToolStripItem t2 in t.Items)
-                {
-                    results.AddRange(Find(name, t2, null));
-                }
-            }
-
-            if (obj is ToolStripDropDownItem)
-            {
-                ToolStripDropDownItem i = (ToolStripDropDownItem) obj;
-                foreach (ToolStripItem i2 in i.DropDownItems)
-                {
-                    results.AddRange(Find(name, i2, null));
-                }
-            }
-
-            if (obj is Control)
-            {
-                Control c = (Control) obj;
-                foreach (Control c2 in c.Controls)
-                {
-                    results.AddRange(Find(name, c2, null));
-                }
-                if (c.ContextMenu != null)
-                {
-                    results.AddRange(Find(name, c.ContextMenu, c));
-                }
-                if (c.ContextMenuStrip != null)
-                {
-                    foreach (ToolStripItem item in c.ContextMenuStrip.Items)
-                    {
-                        results.AddRange(Find(name, item, null));
-                    }
-                }
-            }
-
-            if (obj is Menu)
-            {
-                Menu m = (Menu) obj;
-                foreach (MenuItem m2 in m.MenuItems)
-                {
-                    results.AddRange(Find(name, m2, src));
-                }
-            }
-            return results;
+                1 => found[0],
+                0 => throw new NoSuchControlException(name),
+                _ => throw new AmbiguousNameException(name)
+            };
         }
 
-        private bool Matches(string name, object control, object src)
+        if (found.Count > index)
         {
-            object c = control;
-            string[] names = name.Split('.');
-            for (int i = names.Length - 1; i >= 0; i--)
-            {
-                if (!names[i].Equals(Name(c)))
-                {
-                    return false;
-                }
-                c = Parent(c);
-                if (c == null && src != null)
-                {
-                    c = src;
-                }
-            }
-            return true;
+            return found[index];
         }
 
-        public object Parent(object o)
+        throw new NoSuchControlException(name + "[" + index + "]");
+    }
+
+    private List<object> Find(string name, object obj, object src)
+    {
+        var results = new List<object>();
+
+        if (Matches(name, obj, src))
         {
-            if (o is Control)
-            {
-                return ((Control) o).Parent;
-            }
-            if (o is MenuItem)
-            {
-                return ((MenuItem) o).Parent;
-            }
-            if (o is Component)
-            {
-                return ((Component) o).Container;
-            }
-            return null;
+            results.Add(obj);
         }
 
-        public string Name(object o)
+        if (obj is Form form)
         {
-            if (o is ToolStripControlHost)
+            var f = form;
+            if (f.Menu != null)
             {
-                return ((ToolStripControlHost) o).Name;
+                results.AddRange(Find(name, f.Menu, f));
             }
-            if (o is ToolStripItem)
-            {
-                return ((ToolStripItem) o).Name;
-            }
-            if (o is Control)
-            {
-                return ((Control) o).Name;
-            }
-            if (o is MenuItem)
-            {
-                return ((MenuItem) o).Text.Replace("&", string.Empty).Replace(".", string.Empty);
-            }
-            if (o is MainMenu)
-            {
-                return "MainMenu";
-            }
-            if (o is ContextMenu)
-            {
-                return "ContextMenu";
-            }
-            if (o is Component)
-            {
-                return ((Component) o).Site.Name;
-            }
-            throw new Exception("Object name not defined");
         }
+
+        if (obj is ToolStrip strip)
+        {
+            foreach (ToolStripItem t2 in strip.Items)
+            {
+                results.AddRange(Find(name, t2, null));
+            }
+        }
+
+        if (obj is ToolStripDropDownItem downItem)
+        {
+            foreach (ToolStripItem i2 in downItem.DropDownItems)
+            {
+                results.AddRange(Find(name, i2, null));
+            }
+        }
+
+        if (obj is Control control)
+        {
+            foreach (Control c2 in control.Controls)
+            {
+                results.AddRange(Find(name, c2, null));
+            }
+            if (control.ContextMenu != null)
+            {
+                results.AddRange(Find(name, control.ContextMenu, control));
+            }
+            if (control.ContextMenuStrip != null)
+            {
+                foreach (ToolStripItem item in control.ContextMenuStrip.Items)
+                {
+                    results.AddRange(Find(name, item, null));
+                }
+            }
+        }
+
+        if (obj is Menu menu)
+        {
+            foreach (MenuItem m2 in menu.MenuItems)
+            {
+                results.AddRange(Find(name, m2, src));
+            }
+        }
+        return results;
+    }
+
+    private bool Matches(string name, object control, object src)
+    {
+        var c = control;
+        var names = name.Split('.');
+        for (var i = names.Length - 1; i >= 0; i--)
+        {
+            if (!names[i].Equals(Name(c)))
+            {
+                return false;
+            }
+            c = Parent(c);
+            if (c == null && src != null)
+            {
+                c = src;
+            }
+        }
+        return true;
+    }
+
+    public object? Parent(object o)
+    {
+        return o switch
+        {
+            Control control => control.Parent,
+            MenuItem item => item.Parent,
+            Component component => component.Container,
+            _ => null
+        };
+    }
+
+    public string Name(object o)
+    {
+        return o switch
+        {
+            ToolStripControlHost host => host.Name,
+            ToolStripItem item => item.Name,
+            Control control => control.Name,
+            MenuItem menuItem => menuItem.Text.Replace("&", string.Empty).Replace(".", string.Empty),
+            MainMenu => "MainMenu",
+            ContextMenu => "ContextMenu",
+            Component component => component.Site.Name,
+            _ => throw new Exception("Object name not defined")
+        };
     }
 }

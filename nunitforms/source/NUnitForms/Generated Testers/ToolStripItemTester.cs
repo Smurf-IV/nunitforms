@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,37 +27,40 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Generic_Testers;
 
-namespace NUnit.Extensions.Forms
+
+#pragma warning disable IDE0130
+namespace NUnit.Extensions.Forms.Testers;
+
+
+///<summary>
+/// Base class for Tool Strip Item testers.
+///</summary>
+public class ToolStripItemTester : ToolStripItemTester<ToolStripItem, ToolStripItemTester>
 {
-    ///<summary>
-    /// Base class for Tool Strip Item testers.
-    ///</summary>
-    public partial class ToolStripItemTester : ToolStripItemTester<ToolStripItem, ToolStripItemTester>
+    public ToolStripItemTester()
     {
-        public ToolStripItemTester()
-        {
-        }
+    }
 
-        public ToolStripItemTester(string name, Form form) : base(name, form)
-        {
-        }
+    public ToolStripItemTester(string name, Form form) : base(name, form)
+    {
+    }
 
-        public ToolStripItemTester(string name, string formName) : base(name, formName)
-        {
-        }
+    public ToolStripItemTester(string name, string formName) : base(name, formName)
+    {
+    }
 
-        public ToolStripItemTester(string name) : base(name)
-        {
-        }
+    public ToolStripItemTester(string name) : base(name)
+    {
+    }
 
-        public ToolStripItemTester(ToolStripItemTester tester, int index) : base(tester, index)
-        {
-        }
+    public ToolStripItemTester(ToolStripItemTester tester, int index) : base(tester, index)
+    {
     }
 }

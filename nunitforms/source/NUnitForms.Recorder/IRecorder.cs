@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,39 +27,39 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Reflection;
 
-namespace NUnit.Extensions.Forms.Recorder
+
+namespace NUnitForms.Recorder;
+
+/// <summary>
+/// Defines the public interface for all event recorders.
+/// </summary>
+public interface IRecorder
 {
     /// <summary>
-    /// Defines the public interface for all event recorders.
+    /// Gets the type of object being recorded.
     /// </summary>
-    public interface IRecorder
-    {
-        /// <summary>
-        /// Gets the type of object being recorded.
-        /// </summary>
-        Type RecorderType { get; }
+    Type RecorderType { get; }
 
-        /// <summary>
-        /// Gets the type of the <see cref="ControlTester"/>
-        /// being used.
-        /// </summary>
-        Type TesterType { get; }
+    /// <summary>
+    /// Gets the type of the <see cref="ControlTester"/>
+    /// being used.
+    /// </summary>
+    Type TesterType { get; }
 
-        /// <summary>
-        /// Gets the <see cref="Listener"/>.
-        /// </summary>
-        Listener Listener { get; }
+    /// <summary>
+    /// Gets the <see cref="Listener"/>.
+    /// </summary>
+    Listener Listener { get; }
 
-        /// <summary>
-        /// Returns the event key for the given event name.
-        /// </summary>
-        FieldInfo EventKey(string name);
-    }
+    /// <summary>
+    /// Returns the event key for the given event name.
+    /// </summary>
+    FieldInfo EventKey(string name);
 }

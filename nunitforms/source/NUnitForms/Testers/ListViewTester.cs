@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) :2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,117 +27,107 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
-
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms.Testers;
+
+/// <summary>
+/// A ControlTester for testing List Views.  
+/// </summary>
+/// <remarks>
+/// It includes helper methods for selecting items from the list
+/// and for clearing those selections.</remarks>
+public partial class ListViewTester
 {
     /// <summary>
-    /// A ControlTester for testing List Views.  
+    /// Helper method to return the List View's Items property
     /// </summary>
-    /// <remarks>
-    /// It includes helper methods for selecting items from the list
-    /// and for clearing those selections.</remarks>
-    public partial class ListViewTester
+    public ListView.ListViewItemCollection Items => Properties.Items;
+
+    /// <summary>
+    /// Helper method to return the columns of the list view
+    /// </summary>
+    public ListView.ColumnHeaderCollection Columns => Properties.Columns;
+
+    /// <summary>
+    /// Clears the selections from the list box.
+    /// </summary>
+    public void ClearSelected()
     {
-        /// <summary>
-        /// Helper method to return the List View's Items property
-        /// </summary>
-        public ListView.ListViewItemCollection Items
+        foreach (ListViewItem item in Properties.Items)
         {
-            get { return Properties.Items; }
+            item.Selected = false;
         }
+    }
 
-        /// <summary>
-        /// Helper method to return the columns of the list view
-        /// </summary>
-        public ListView.ColumnHeaderCollection Columns
+    /// <summary>
+    /// Selects an item in the ListBox according to its index.
+    /// </summary>
+    /// <param name="i">the index to select.</param>
+    public void Select(int i)
+    {
+        Properties.Items[i].Selected = true;
+        FireEvent("ItemActivate");
+    }
+
+    /// <summary>
+    /// Selects an item in the list according to its string value.
+    /// </summary>
+    /// <param name="text">The item to select.</param>
+    public void Select(string text)
+    {
+        var index = FindItemByString(text);
+
+        if (index != -1)
         {
-            get { return Properties.Columns; }
+            Select(index);
         }
+    }
 
-        /// <summary>
-        /// Clears the selections from the list box.
-        /// </summary>
-        public void ClearSelected()
+    /// <summary>
+    /// Multiple selection of a range of items
+    /// </summary>
+    /// <param name="items"></param>
+    public void SelectItems(string[] items)
+    {
+        foreach (var item in items)
         {
-            foreach (ListViewItem item in Properties.Items)
+            Select(item);
+        }
+    }
+
+    /// <summary>
+    /// Test that only the indicated items are selected
+    /// </summary>
+    /// <param name="matches"></param>
+    public bool SelectedItemsMatch(string[] matches)
+    {
+        var matchList = new List<string>(matches);
+
+        if (matchList.Count != Properties.SelectedItems.Count)
+        {
+            return false;
+        }
+        var listViewItems = Enumerable.Cast<ListViewItem>(Properties.SelectedItems);
+        return listViewItems.All(item => matchList.Contains(item.Text));
+    }
+
+    private int FindItemByString(string text)
+    {
+        for (var i = 0; i < Properties.Items.Count; i++)
+        {
+            if (Properties.Items[i].Text == text)
             {
-                item.Selected = false;
+                return i;
             }
         }
 
-        /// <summary>
-        /// Selects an item in the ListBox according to its index.
-        /// </summary>
-        /// <param name="i">the index to select.</param>
-        public void Select(int i)
-        {
-            Properties.Items[i].Selected = true;
-            FireEvent("ItemActivate");
-        }
-
-        /// <summary>
-        /// Selects an item in the list according to its string value.
-        /// </summary>
-        /// <param name="text">The item to select.</param>
-        public void Select(string text)
-        {
-            int index = FindItemByString(text);
-
-            if (index != -1)
-            {
-                Select(index);
-            }
-        }
-
-        /// <summary>
-        /// Multiple selection of a range of items
-        /// </summary>
-        /// <param name="items"></param>
-        public void SelectItems(string[] items)
-        {
-            foreach (string item in items)
-            {
-                Select(item);
-            }
-        }
-
-        /// <summary>
-        /// Test that only the indicated items are selected
-        /// </summary>
-        /// <param name="matches"></param>
-        public bool SelectedItemsMatch(string[] matches)
-        {
-            var matchList = new List<string>(matches);
-
-            if (matchList.Count != Properties.SelectedItems.Count)
-            {
-                return false;
-            }
-            var listViewItems = Properties.SelectedItems.Cast<ListViewItem>();
-            return listViewItems.All(item => matchList.Contains(item.Text));
-        }
-
-        private int FindItemByString(string text)
-        {
-            for (int i = 0; i < Properties.Items.Count; i++)
-            {
-                if (Properties.Items[i].Text == text)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
+        return -1;
     }
 }

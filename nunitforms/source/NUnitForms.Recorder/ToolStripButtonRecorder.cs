@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,35 +27,32 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Testers;
 
-namespace NUnit.Extensions.Forms.Recorder
+
+namespace NUnitForms.Recorder;
+
+public class ToolStripButtonRecorder : ToolStripRecorder
 {
-    public class ToolStripButtonRecorder : ToolStripRecorder
+    public ToolStripButtonRecorder(Listener listener)
+        : base(listener)
     {
-        public ToolStripButtonRecorder(Listener listener)
-            : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (ToolStripButton); }
-        }
+    /// <inheritdoc />
+    public override Type RecorderType => typeof (ToolStripButton);
 
-        public override Type TesterType
-        {
-            get { return typeof (ToolStripButtonTester); }
-        }
+    /// <inheritdoc />
+    public override Type TesterType => typeof (ToolStripButtonTester);
 
-        public void Click(object sender, EventArgs args)
-        {
-            Listener.FireEvent(TesterType, sender, "Click");
-        }
+    public void Click(object sender, EventArgs args)
+    {
+        Listener.FireEvent(TesterType, sender, "Click");
     }
 }

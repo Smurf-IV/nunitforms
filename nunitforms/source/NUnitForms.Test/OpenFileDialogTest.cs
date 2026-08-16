@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,125 +27,128 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.IO;
+using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+///<summary>
+/// Test Fixture for the OpenFileDialogTester class.
+///</summary>
+[TestFixture]
+[Explicit("This dialog caused my tests to hang.")]
+public class OpenFileDialogTest : NUnitFormTest
 {
+
+
     ///<summary>
-    /// Test Fixture for the OpenFileDialogTester class.
+    /// Sets up this test by showing a new OpenFileDialogTestForm form.
     ///</summary>
-    [TestFixture]
-    //[Ignore("This dialog caused my tests to hang.")]
-    public class OpenFileDialogTest : NUnitFormTest
+    public override void Setup()
     {
+        base.Setup();
+    }
 
-        
-        ///<summary>
-        /// Sets up this test by showing a new OpenFileDialogTestForm form.
-        ///</summary>
-        public override void Setup()
+    ///<summary>
+    /// Modal handler to click the open button.
+    ///</summary>
+    public void OpenFileHandler(string name, IntPtr hWnd, Form form)
+    {
+        var dlg_tester = new OpenFileDialogTester(hWnd);
+        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+        dlg_tester.OpenFile(fileName);
+    }
+
+    ///<summary>
+    /// Modal handler to click the cancel button.
+    ///</summary>
+    public void CancelFileHandler(string name, IntPtr hWnd, Form form)
+    {
+        var dlg_tester = new OpenFileDialogTester(hWnd);
+        dlg_tester.ClickCancel();
+    }
+
+    ///<summary>
+    /// Tests cancelling.
+    ///</summary>
+    [Test, STAThread]
+    public void CancelTest()
+    {
+        var f = new TestForms.OpenFileDialogTestForm();
+        f.Show();
+
+        var label1 = new LabelTester("lblFileName");
+        var open_btn = new ButtonTester("btOpenFile");
+        ModalFormHandler = CancelFileHandler;
+        Application.DoEvents();
+        open_btn.Click();
+        Application.DoEvents();
+
+
+        Assert.AreEqual(label1.Text, "cancel pressed");
+
+        f.Close();
+
+        Assert.Pass();
+    }
+
+    ///<summary>
+    /// Tests opening a file.
+    ///</summary>
+    [Test, STAThread]
+    public void OpenTest()
+    {
+        var f = new TestForms.OpenFileDialogTestForm();
+        f.Show();
+        var label1 = new LabelTester("lblFileName");
+        ModalFormHandler = OpenFileHandler;
+        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+        var open_btn = new ButtonTester("btOpenFile");
+        open_btn.Click();
+
+        Assert.AreEqual(label1.Text.ToLower(), fileName.ToLower());
+        f.Close();
+        Assert.Pass();
+    }
+
+    [Test,
+     Ignore("This test is used for debug confidence, not to prove the functionality of the OpenFileDialogTester.")]
+    public void OpenTest_ConfidenceOnManyOpens()
+    {
+        var f = new TestForms.OpenFileDialogTestForm();
+        f.Show();
+        for (var count = 0; count < 1000; count++)
         {
-            base.Setup();
-        }
+            //PROBLEM
+            // This test runs most of the time. 
+            // Every now and then it will leave an open file dialog on display as though the handler has not been run.
+            // When this happens, switching focus away from it then back to it allows the handler to run, 
+            // but fails the test when checking the number of invocations.
 
-        ///<summary>
-        /// Modal handler to click the open button.
-        ///</summary>
-        public void OpenFileHandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            OpenFileDialogTester dlg_tester = new OpenFileDialogTester(hWnd);
-            string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
-            dlg_tester.OpenFile(fileName);
-        }
+            //SOLUTION
+            /* The 'SetDlgItemText' function in the 'FileDialogTester.cs' file did not set the text
+             * in the dialog box occassionaly. The solution was to set the text twice on the dialog box.
+             * The code below was run upto 1000 times to check that the solution works.
+             */
 
-        ///<summary>
-        /// Modal handler to click the cancel button.
-        ///</summary>
-        public void CancelFileHandler(string name, System.IntPtr hWnd, System.Windows.Forms.Form form)
-        {
-            OpenFileDialogTester dlg_tester = new OpenFileDialogTester(hWnd);
-            dlg_tester.ClickCancel();
-        }
-
-        ///<summary>
-        /// Tests cancelling.
-        ///</summary>
-        [Test, STAThread]
-        public void CancelTest()
-        {
-            OpenFileDialogTestForm f = new OpenFileDialogTestForm();
-            f.Show();
-
-            LabelTester label1 = new LabelTester("lblFileName");
-            ButtonTester open_btn = new ButtonTester("btOpenFile");
-            ModalFormHandler = CancelFileHandler;
-            System.Windows.Forms.Application.DoEvents();
-            open_btn.Click();
-            System.Windows.Forms.Application.DoEvents();
-
-
-            Assert.AreEqual(label1.Text, "cancel pressed");
-
-            f.Close();
-
-            Assert.Pass();
-        }
-
-        ///<summary>
-        /// Tests opening a file.
-        ///</summary>
-        [Test, STAThread]
-        public void OpenTest()
-        {
-            OpenFileDialogTestForm f = new OpenFileDialogTestForm();
-            f.Show();
-            LabelTester label1 = new LabelTester("lblFileName");
+            var label1 = new LabelTester("lblFileName");
             ModalFormHandler = OpenFileHandler;
             string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
-            ButtonTester open_btn = new ButtonTester("btOpenFile");
+            var open_btn = new ButtonTester("btOpenFile");
             open_btn.Click();
 
-            Assert.AreEqual(label1.Text.ToLower(), fileName.ToLower());
-            f.Close();
-            Assert.Pass();
+            Assert.AreEqual(label1.Text.ToLowerInvariant(), fileName.ToLowerInvariant());
         }
-
-        [Test,
-         Ignore("This test is used for debug confidence, not to prove the functionality of the OpenFileDialogTester.")]
-        public void OpenTest_ConfidenceOnManyOpens()
-        {
-            OpenFileDialogTestForm f = new OpenFileDialogTestForm();
-            f.Show();
-            for (int count = 0; count < 1000; count++)
-            {
-                //PROBLEM
-                // This test runs most of the time. 
-                // Every now and then it will leave an open file dialog on display as though the handler has not been run.
-                // When this happens, switching focus away from it then back to it allows the handler to run, 
-                // but fails the test when checking the number of invocations.
-
-                //SOLUTION
-                /* The 'SetDlgItemText' function in the 'FileDialogTester.cs' file did not set the text 
-                 * in the dialog box occassionaly. The solution was to set the text twice on the dialog box.
-                 * The code below was run upto 1000 times to check that the solution works. 
-                 */
-
-                LabelTester label1 = new LabelTester("lblFileName");
-                ModalFormHandler = OpenFileHandler;
-                string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
-                ButtonTester open_btn = new ButtonTester("btOpenFile");
-                open_btn.Click();
-
-                Assert.AreEqual(label1.Text.ToLowerInvariant(), fileName.ToLowerInvariant());
-            }
-            f.Close();
-            Assert.Pass();
-        }
+        f.Close();
+        Assert.Pass();
     }
 }

@@ -1,8 +1,9 @@
-﻿#region Copyright (c) 2003-2005, Luke T. Maxon
+﻿#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,32 +27,29 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+/// <summary>
+/// Meant to be used as a member in a test class not derived from NUnitFormTest.
+/// The member should be created by setup, and disposed by teardown, or using
+/// in the test function itself.
+/// </summary>
+public class OuterTest : NUnitFormTest, IDisposable
 {
-    /// <summary>
-    /// Meant to be used as a member in a test class not derived from NUnitFormTest.
-    /// The member should be created by setup, and disposed by teardown, or usinged
-    /// in the test function itself.
-    /// </summary>
-    public class OuterTest : NUnitFormTest, IDisposable
+    public OuterTest()
     {
-        public OuterTest()
-        {
-            init();
-        }
+        init();
+    }
 
-        public void Dispose()
-        {
-            Verify();
-        }
+    public void Dispose()
+    {
+        Verify();
     }
 }

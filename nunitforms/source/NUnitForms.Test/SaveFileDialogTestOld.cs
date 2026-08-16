@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,97 +27,108 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
+using System;
 using System.IO;
+
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+[Explicit("This dialog caused my tests to hang.")]
+public class SaveFileDialogTestOld : NUnitFormTest
 {
-    [TestFixture]
-    [Ignore("This dialog caused my tests to hang.")]
-    public class SaveFileDialogTestOld : NUnitFormTest
+    private readonly LabelTester label1 = new LabelTester("lblFileName");
+    private string _fileName = "";
+    private TestForms.SaveFileDialogTestForm form;
+
+    public override void Setup()
     {
-        private LabelTester label1 = new LabelTester("lblFileName");
-        private string _fileName = "";
-        private SaveFileDialogTestForm form;
+        base.Setup();
 
-        public override void Setup()
+        form = new TestForms.SaveFileDialogTestForm();
+        form.Show();
+    }
+
+    [TearDown]
+    public override void TearDown()
+    {
+        form.Close();
+        form.Dispose();
+        base.TearDown();
+    }
+
+    private void ClickSaveButton()
+    {
+        var save_btn = new ButtonTester("btSave", form);
+        save_btn.Click();
+    }
+
+    public void SaveFileHandler()
+    {
+        var dlg_tester = new SaveFileDialogTester("Save As");
+        dlg_tester.SaveFile(_fileName);
+    }
+
+    public void CancelFileHandler()
+    {
+        var dlg_tester = new SaveFileDialogTester("Save As");
+        dlg_tester.ClickCancel();
+    }
+
+    public void SaveDefaultFileHandler()
+    {
+        var dlg_tester = new SaveFileDialogTester("Save As");
+        dlg_tester.SaveFile();
+    }
+
+    private void EnsureFileDoesntExist()
+    {
+        // If exists remove it
+        if (File.Exists(_fileName))
         {
-            base.Setup();
-
-            form = new SaveFileDialogTestForm();
-            form.Show();
+            File.Delete(_fileName);
         }
+    }
 
-        private void ClickSaveButton()
-        {
-            ButtonTester save_btn = new ButtonTester("btSave");
-            save_btn.Click();
-        }
+    [Test, STAThread]
+    public void CancelTest()
+    {
+        ExpectFileDialog("CancelFileHandler");
+        ClickSaveButton();
+        Assert.AreEqual(label1.Text, "cancel pressed");
+    }
 
-        public void SaveFileHandler()
-        {
-            SaveFileDialogTester dlg_tester = new SaveFileDialogTester("Save As");
-            dlg_tester.SaveFile(_fileName);
-        }
+    [Test, STAThread]
+    public void SaveTest()
+    {
+        ExpectFileDialog("SaveFileHandler");
 
-        public void CancelFileHandler()
-        {
-            SaveFileDialogTester dlg_tester = new SaveFileDialogTester("Save As");
-            dlg_tester.ClickCancel();
-        }
+        // Generate a temporary file
+        _fileName = Path.GetTempPath() + "NUnitFormsTestFile.tmp";
+        EnsureFileDoesntExist();
 
-        public void SaveDefaultFileHandler()
-        {
-            SaveFileDialogTester dlg_tester = new SaveFileDialogTester("Save As");
-            dlg_tester.SaveFile();
-        }
-
-        private void EnsureFileDoesntExist()
-        {
-            // If exists remove it
-            if (File.Exists(_fileName))
-            {
-                File.Delete(_fileName);
-            }
-        }
-
-        [Test, System.STAThread]
-        public void CancelTest()
-        {
-            ExpectFileDialog("CancelFileHandler");
-            ClickSaveButton();
-            Assert.AreEqual(label1.Text, "cancel pressed");
-        }
-
-        [Test, System.STAThread]
-        public void SaveTest()
-        {
-            ExpectFileDialog("SaveFileHandler");
-
-            // Generate a temporary file
-            _fileName = Path.GetTempPath() + "NUnitFormsTestFile.tmp";
-            EnsureFileDoesntExist();
-
-            ClickSaveButton();
-            Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
-        }
+        ClickSaveButton();
+        Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
+    }
 
 
-        [Test, System.STAThread]
-        public void SaveWithDefaultFile()
-        {
-            ExpectFileDialog("SaveDefaultFileHandler");
+    [Test, STAThread]
+    public void SaveWithDefaultFile()
+    {
+        ExpectFileDialog("SaveDefaultFileHandler");
 
-            _fileName = Path.GetTempPath() + "NUnitFormsDefaultTestFile.tmp";
-            EnsureFileDoesntExist();
+        _fileName = Path.GetTempPath() + "NUnitFormsDefaultTestFile.tmp";
+        EnsureFileDoesntExist();
 
-            form.SetDefaultTestFileName(_fileName);
-            ClickSaveButton();
-            Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
-        }
+        form.SetDefaultTestFileName(_fileName);
+        ClickSaveButton();
+        Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
     }
 }

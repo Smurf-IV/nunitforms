@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,46 +27,49 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Extensions.Forms.Test.TestForms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
+using ToolStripContainerTestForm = NUnit.Extensions.Forms.TestApplications.TestForms.ToolStripContainerTestForm;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ToolStripContainerTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ToolStripContainerTest : NUnitFormTest
+    private ButtonTester button;
+    private TextBoxTester box;
+    private ToolStripItemTester tsb;
+    private ToolStripItemTester tsl;
+
+    public override void Setup()
     {
-        private ButtonTester button;
-        private TextBoxTester box;
-        private ToolStripItemTester tsb;
-        private ToolStripItemTester tsl;
+        new ToolStripContainerTestForm().Show();
+        button = new ButtonTester("b1");
+        box = new TextBoxTester("tb1");
+        tsb = new ToolStripItemTester("tsb"); //tool strip button as control
+        tsl = new ToolStripItemTester("tsl"); //tool strip label as control.
+    }
 
-        public override void Setup()
-        {
-            new ToolStripContainerTestForm().Show();
-            button = new ButtonTester("b1");
-            box = new TextBoxTester("tb1");
-            tsb = new ToolStripItemTester("tsb"); //tool strip button as control
-            tsl = new ToolStripItemTester("tsl"); //tool strip label as control.
-        }
+    [Test]
+    public void ButtonClick()
+    {
+        Assert.AreEqual("", box.Text);
+        button.Click();
+        Assert.AreEqual("Clicked", box.Text);
+    }
 
-        [Test]
-        public void ButtonClick()
-        {
-            Assert.AreEqual("", box.Text);
-            button.Click();
-            Assert.AreEqual("Clicked", box.Text);
-        }
-
-        [Test]
-        public void ToolStripButtonClick()
-        {
-            Assert.AreEqual("toolStripLabel1", tsl.Text);
-            tsb.Click();
-            Assert.AreEqual("Clicked", tsl.Text);
-        }
+    [Test]
+    public void ToolStripButtonClick()
+    {
+        Assert.AreEqual("toolStripLabel1", tsl.Text);
+        tsb.Click();
+        Assert.AreEqual("Clicked", tsl.Text);
     }
 }

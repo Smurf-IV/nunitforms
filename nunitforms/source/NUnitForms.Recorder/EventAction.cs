@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,88 +35,78 @@ using System;
 using System.CodeDom;
 using System.IO;
 using System.Text;
+
 using Microsoft.CSharp;
 
-namespace NUnit.Extensions.Forms.Recorder
+
+namespace NUnitForms.Recorder;
+
+///<summary>
+/// Recordable action for an Event.
+///</summary>
+public class EventAction : Action
 {
+    private string comment;
+
     ///<summary>
-    /// Recordable action for an Event.
+    /// Constructs a new EventAction.
     ///</summary>
-    public class EventAction : Action
+    public EventAction(string methodName, params object[] args)
     {
-        private object[] args;
+        MethodName = methodName;
 
-        private string comment;
-        private string methodName;
-
-        ///<summary>
-        /// Constructs a new EventAction.
-        ///</summary>
-        public EventAction(string methodName, params object[] args)
+        if (args.Length > 0 && args[0] is Array)
         {
-            this.methodName = methodName;
+            Args = (object[])args[0];
+        }
+        else
+        {
+            Args = args;
+        }
 
-            if (args.Length > 0 && args[0] is Array)
+        comment = string.Empty;
+    }
+
+    public string MethodName { get; }
+
+    public object[] Args { get; }
+
+    public string Comment
+    {
+        set => comment = " //" + value;
+    }
+
+    private string NoSpace(string name)
+    {
+        return name.Replace(" ", "");
+    }
+
+    public override string ToString()
+    {
+        return $"{NoSpace(Definition.VarName)}.{MethodName}({GetArgs(Args)});{comment}";
+    }
+
+    private static string GetArgs(object[] newArgs)
+    {
+        StringBuilder sb = new StringBuilder();
+        bool first = true;
+        foreach (object arg in newArgs)
+        {
+            if (!first)
             {
-                this.args = (object[]) args[0];
+                sb.Append(", ");
             }
-            else
-            {
-                this.args = args;
-            }
-
-            comment = string.Empty;
+            first = false;
+            sb.Append(FormatArgument(arg));
         }
+        return sb.ToString();
+    }
 
-        public string MethodName
-        {
-            get { return methodName; }
-        }
-
-        public object[] Args
-        {
-            get { return args; }
-        }
-
-        public string Comment
-        {
-            set { comment = " //" + value; }
-        }
-
-        private string NoSpace(string name)
-        {
-            return name.Replace(" ", "");
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}.{1}({2});{3}", NoSpace(Definition.VarName), methodName, GetArgs(args), comment);
-        }
-
-        private static string GetArgs(object[] newArgs)
-        {
-            StringBuilder sb = new StringBuilder();
-            bool first = true;
-            foreach (object arg in newArgs)
-            {
-                if (!first)
-                {
-                    sb.Append(", ");
-                }
-                first = false;
-                sb.Append(FormatArgument(arg));
-            }
-            return sb.ToString();
-        }
-
-        private static string FormatArgument(object arg)
-        {
-            using(StringWriter sw = new StringWriter())
-            {
-                CSharpCodeProvider provider = new CSharpCodeProvider();
-                provider.GenerateCodeFromExpression(new CodePrimitiveExpression(arg), sw, null);
-                return sw.ToString();
-            }
-        }
+    private static string FormatArgument(object arg)
+    {
+        using StringWriter sw = new StringWriter();
+        CSharpCodeProvider provider = new CSharpCodeProvider();
+        provider.GenerateCodeFromExpression(new CodePrimitiveExpression(arg), sw, null);
+        return sw.ToString();
     }
 }

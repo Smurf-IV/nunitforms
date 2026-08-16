@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,130 +35,131 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms;
 
-namespace NUnit.Extensions.Forms.Recorder
+using NUnit.Extensions.Forms.ScreenCapture;
+
+
+namespace NUnitForms.Recorder;
+
+/// <summary>
+/// The main form for the Recorder application.
+/// </summary>
+public partial class AppForm : Form
 {
-    /// <summary>
-    /// The main form for the Recorder application.
-    /// </summary>
-    public partial class AppForm : Form
+    private EventHandler? handler;
+    private TestWriter? writer;
+
+    ///<summary>
+    /// Constructs a new <see cref="AppForm"/>.
+    ///</summary>
+    public AppForm()
     {
-        private EventHandler handler = null;
-        private TestWriter writer = null;
+        InitializeComponent();
+    }
 
-        ///<summary>
-        /// Constructs a new <see cref="AppForm"/>.
-        ///</summary>
-        public AppForm()
+    private void Load_Click(object sender, EventArgs e)
+    {
+        AppDomain currentDomain = AppDomain.CurrentDomain;
+        OpenFileDialog ofd = new OpenFileDialog();
+        ofd.InitialDirectory = @"D:\opensource\nunit2.0\bin";
+        ofd.Filter = "Dll files (*.dll)|*.dll|Exe files (*.exe)|*.exe|All files (*.*)|*.*";
+        ofd.FilterIndex = 1;
+        ofd.Multiselect = true;
+        ofd.ReadOnlyChecked = true;
+        ofd.RestoreDirectory = true;
+
+        if (ofd.ShowDialog() == DialogResult.OK)
         {
-            InitializeComponent();
-        }
-
-        private void Load_Click(object sender, EventArgs e)
-        {
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = @"D:\opensource\nunit2.0\bin";
-            ofd.Filter = "Dll files (*.dll)|*.dll|Exe files (*.exe)|*.exe|All files (*.*)|*.*";
-            ofd.FilterIndex = 1;
-            ofd.Multiselect = true;
-            ofd.ReadOnlyChecked = true;
-            ofd.RestoreDirectory = true;
-
-            if (ofd.ShowDialog() == DialogResult.OK)
+            foreach (string fileName in ofd.FileNames)
             {
-                foreach (string fileName in ofd.FileNames)
+                Assembly.LoadFrom(new FileInfo(fileName).ToString());
+
+                combo.SelectedIndexChanged -= combo_SelectedIndexChanged;
+
+                combo.Items.Clear();
+                foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    Assembly.LoadFrom(new FileInfo(fileName).ToString());
-
-                    combo.SelectedIndexChanged -= combo_SelectedIndexChanged;
-
-                    combo.Items.Clear();
-                    foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                    foreach (Type t in a.GetTypes())
                     {
-                        foreach (Type t in a.GetTypes())
+                        if (t.IsSubclassOf(typeof(Form)) && !t.FullName.StartsWith("System."))
                         {
-                            if (t.IsSubclassOf(typeof (Form)) && ! t.FullName.StartsWith("System."))
-                            {
-                                combo.Items.Add(t.FullName);
-                            }
+                            combo.Items.Add(t.FullName);
                         }
                     }
-                    combo.SelectedIndex = 0;
-                    combo.SelectedIndexChanged += combo_SelectedIndexChanged;
                 }
+                combo.SelectedIndex = 0;
+                combo.SelectedIndexChanged += combo_SelectedIndexChanged;
             }
         }
+    }
 
-        public void UpdateTests(object sender, EventArgs args)
+    public void UpdateTests(object sender, EventArgs args)
+    {
+        textBox.Text = writer.Test;
+        textBox.Select(textBox.TextLength, 0);
+        textBox.ScrollToCaret();
+    }
+
+    private void combo_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (handler == null)
         {
-            textBox.Text = writer.Test;
-            textBox.Select(textBox.TextLength, 0);
-            textBox.ScrollToCaret();
+            handler = UpdateTests;
+        }
+        if (writer != null)
+        {
+            writer.TestChanged -= handler;
         }
 
-        private void combo_SelectedIndexChanged(object sender, EventArgs e)
+        Type type = Type.GetType(combo.SelectedItem.ToString());
+        if (type == null)
         {
-            if (handler == null)
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                handler = UpdateTests;
-            }
-            if (writer != null)
-            {
-                writer.TestChanged -= handler;
-            }
-
-            Type type = Type.GetType(combo.SelectedItem.ToString());
-            if (type == null)
-            {
-                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                type = assembly.GetType(combo.SelectedItem.ToString());
+                if (type != null)
                 {
-                    type = assembly.GetType(combo.SelectedItem.ToString());
-                    if (type != null)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
-
-            form = new FormFactory().New(type);
-
-            writer = new TestWriter(form);
-            writer.TestChanged += handler;
-
-            form.Show();
         }
 
-        private void New_Click(object sender, EventArgs e)
-        {
-            textBox.Text = "";
-        }
+        form = new FormFactory().New(type);
 
-        private void AppForm_Load(object sender, EventArgs e)
-        {
-            //New_Click(null, null);
-            //Load_Click(null, null);
-        }
+        writer = new TestWriter(form);
+        writer.TestChanged += handler;
 
-        private void button1_Click(object sender, EventArgs e)
+        form.Show();
+    }
+
+    private void New_Click(object sender, EventArgs e)
+    {
+        textBox.Text = "";
+    }
+
+    private void AppForm_Load(object sender, EventArgs e)
+    {
+        //New_Click(null, null);
+        //Load_Click(null, null);
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        if (form != null)
         {
-            if (form != null)
+            try
             {
-                try
-                {
-                    ImageFormatHandler handlers = new ImageFormatHandler();
-                    ScreenCapture capture = new ScreenCapture(handlers);
-                    pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
-                    pictureBox1.Image = capture.Capture(form, @"NUnitFormsCapture\");
-                    CompareControlCaptureAction action = new CompareControlCaptureAction(capture.LastCapture, null);
-                    writer.AddAction(action);
-                    textBox.Text = writer.Test;
-                }
-                catch (ObjectDisposedException)
-                {
-                    MessageBox.Show("Please re-open your form.");
-                }
+                ImageFormatHandler handlers = new ImageFormatHandler();
+                ScreenCapture capture = new ScreenCapture(handlers);
+                pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+                pictureBox1.Image = capture.Capture(form, @"NUnitFormsCapture\");
+                CompareControlCaptureAction action = new CompareControlCaptureAction(capture.LastCapture, null);
+                writer.AddAction(action);
+                textBox.Text = writer.Test;
+            }
+            catch (ObjectDisposedException)
+            {
+                MessageBox.Show("Please re-open your form.");
             }
         }
     }

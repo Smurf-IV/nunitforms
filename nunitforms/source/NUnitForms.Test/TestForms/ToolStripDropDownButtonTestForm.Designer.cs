@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,18 +27,22 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-namespace NUnit.Extensions.Forms.TestApplications
+using System.ComponentModel;
+using System.Windows.Forms;
+
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+partial class ToolStripDropDownButtonTestForm
 {
-  partial class ToolStripDropDownButtonTestForm
-  {
     /// <summary>
     /// Required designer variable.
     /// </summary>
-    private System.ComponentModel.IContainer components = null;
+    private IContainer? components = null;
 
     /// <summary>
     /// Clean up any resources being used.
@@ -45,11 +50,11 @@ namespace NUnit.Extensions.Forms.TestApplications
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-      if (disposing && (components != null))
-      {
-        components.Dispose();
-      }
-      base.Dispose(disposing);
+        if (disposing && (components != null))
+        {
+            components.Dispose();
+        }
+        base.Dispose(disposing);
     }
 
     #region Windows Form Designer generated code
@@ -60,90 +65,89 @@ namespace NUnit.Extensions.Forms.TestApplications
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolStripDropDownButtonTestForm));
-      this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-      this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-      this.oneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.twoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.threeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.textBox1 = new System.Windows.Forms.TextBox();
-      this.toolStrip1.SuspendLayout();
-      this.SuspendLayout();
-      // 
-      // toolStrip1
-      // 
-      this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestForms.ToolStripDropDownButtonTestForm));
+        this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+        this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+        this.oneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.twoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.threeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.textBox1 = new System.Windows.Forms.TextBox();
+        this.toolStrip1.SuspendLayout();
+        this.SuspendLayout();
+        // 
+        // toolStrip1
+        // 
+        this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1});
-      this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-      this.toolStrip1.Name = "toolStrip1";
-      this.toolStrip1.Size = new System.Drawing.Size(292, 25);
-      this.toolStrip1.TabIndex = 0;
-      this.toolStrip1.Text = "toolStrip1";
-      // 
-      // toolStripDropDownButton1
-      // 
-      this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+        this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+        this.toolStrip1.Name = "toolStrip1";
+        this.toolStrip1.Size = new System.Drawing.Size(292, 25);
+        this.toolStrip1.TabIndex = 0;
+        this.toolStrip1.Text = "toolStrip1";
+        // 
+        // toolStripDropDownButton1
+        // 
+        this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+        this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.oneToolStripMenuItem,
             this.twoToolStripMenuItem,
             this.threeToolStripMenuItem});
-      this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-      this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-      this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-      this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-      this.toolStripDropDownButton1.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripDropDownButton1_DropDownItemClicked);
-      this.toolStripDropDownButton1.Click += new System.EventHandler(this.toolStripDropDownButton1_Click);
-      // 
-      // oneToolStripMenuItem
-      // 
-      this.oneToolStripMenuItem.Name = "oneToolStripMenuItem";
-      this.oneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.oneToolStripMenuItem.Text = "One";
-      this.oneToolStripMenuItem.Click += new System.EventHandler(this.oneToolStripMenuItem_Click);
-      // 
-      // twoToolStripMenuItem
-      // 
-      this.twoToolStripMenuItem.Name = "twoToolStripMenuItem";
-      this.twoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.twoToolStripMenuItem.Text = "Two";
-      // 
-      // threeToolStripMenuItem
-      // 
-      this.threeToolStripMenuItem.Name = "threeToolStripMenuItem";
-      this.threeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.threeToolStripMenuItem.Text = "Three";
-      // 
-      // textBox1
-      // 
-      this.textBox1.Location = new System.Drawing.Point(83, 121);
-      this.textBox1.Name = "textBox1";
-      this.textBox1.Size = new System.Drawing.Size(100, 20);
-      this.textBox1.TabIndex = 1;
-      // 
-      // ToolStripDropDownButtonTestForm
-      // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(292, 266);
-      this.Controls.Add(this.textBox1);
-      this.Controls.Add(this.toolStrip1);
-      this.Name = "ToolStripDropDownButtonTestForm";
-      this.Text = "ToolStripDropDownButtonTestForm";
-      this.toolStrip1.ResumeLayout(false);
-      this.toolStrip1.PerformLayout();
-      this.ResumeLayout(false);
-      this.PerformLayout();
+        this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+        this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+        this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+        this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+        this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+        this.toolStripDropDownButton1.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripDropDownButton1_DropDownItemClicked);
+        this.toolStripDropDownButton1.Click += new System.EventHandler(this.toolStripDropDownButton1_Click);
+        // 
+        // oneToolStripMenuItem
+        // 
+        this.oneToolStripMenuItem.Name = "oneToolStripMenuItem";
+        this.oneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+        this.oneToolStripMenuItem.Text = "One";
+        this.oneToolStripMenuItem.Click += new System.EventHandler(this.oneToolStripMenuItem_Click);
+        // 
+        // twoToolStripMenuItem
+        // 
+        this.twoToolStripMenuItem.Name = "twoToolStripMenuItem";
+        this.twoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+        this.twoToolStripMenuItem.Text = "Two";
+        // 
+        // threeToolStripMenuItem
+        // 
+        this.threeToolStripMenuItem.Name = "threeToolStripMenuItem";
+        this.threeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+        this.threeToolStripMenuItem.Text = "Three";
+        // 
+        // textBox1
+        // 
+        this.textBox1.Location = new System.Drawing.Point(83, 121);
+        this.textBox1.Name = "textBox1";
+        this.textBox1.Size = new System.Drawing.Size(100, 20);
+        this.textBox1.TabIndex = 1;
+        // 
+        // ToolStripDropDownButtonTestForm
+        // 
+        this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        this.ClientSize = new System.Drawing.Size(292, 266);
+        this.Controls.Add(this.textBox1);
+        this.Controls.Add(this.toolStrip1);
+        this.Name = "ToolStripDropDownButtonTestForm";
+        this.Text = "ToolStripDropDownButtonTestForm";
+        this.toolStrip1.ResumeLayout(false);
+        this.toolStrip1.PerformLayout();
+        this.ResumeLayout(false);
+        this.PerformLayout();
 
     }
 
     #endregion
 
-    private System.Windows.Forms.ToolStrip toolStrip1;
-    private System.Windows.Forms.TextBox textBox1;
-    private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-    private System.Windows.Forms.ToolStripMenuItem oneToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem twoToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem threeToolStripMenuItem;
-  }
+    private ToolStrip toolStrip1;
+    private TextBox textBox1;
+    private ToolStripDropDownButton toolStripDropDownButton1;
+    private ToolStripMenuItem oneToolStripMenuItem;
+    private ToolStripMenuItem twoToolStripMenuItem;
+    private ToolStripMenuItem threeToolStripMenuItem;
 }

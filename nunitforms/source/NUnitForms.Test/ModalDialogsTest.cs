@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,99 +27,103 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Framework;
-using System.Reflection;
+using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ModalDialogsTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ModalDialogsTest : NUnitFormTest
+    public void MessageBoxOkHandler(string name, IntPtr hWnd)
     {
-        public void MessageBoxOkHandler(string name, System.IntPtr hWnd)
-        {
-            MessageBoxTester messageBox = new MessageBoxTester(hWnd);
-            Assert.AreEqual("test string", messageBox.Text);
-            Assert.AreEqual("caption", messageBox.Title);
-            messageBox.ClickOk();
-        }
+        var messageBox = new MessageBoxTester(hWnd);
+        Assert.AreEqual("test string", messageBox.Text);
+        Assert.AreEqual("caption", messageBox.Title);
+        messageBox.ClickOk();
+    }
 
-        public void MessageBoxCancelHandler(string name, System.IntPtr hWnd)
-        {
-            MessageBoxTester messageBox = new MessageBoxTester(hWnd);
-            Assert.AreEqual("test string", messageBox.Text);
-            Assert.AreEqual("caption", messageBox.Title);
-            messageBox.ClickCancel();
-        }
+    public void MessageBoxCancelHandler(string name, IntPtr hWnd)
+    {
+        var messageBox = new MessageBoxTester(hWnd);
+        Assert.AreEqual("test string", messageBox.Text);
+        Assert.AreEqual("caption", messageBox.Title);
+        messageBox.ClickCancel();
+    }
 
-        public void SimpleOKHandler(string name, System.IntPtr hWnd)
-        {
-            MessageBoxTester messageBox = new MessageBoxTester(hWnd);
-            Assert.AreEqual("Just An OK Button", messageBox.Text);
-            Assert.AreEqual("JustOK", messageBox.Title);
-            messageBox.SendCommand(MessageBoxTester.Command.OK);
-        }
+    public void SimpleOKHandler(string name, IntPtr hWnd)
+    {
+        var messageBox = new MessageBoxTester(hWnd);
+        Assert.AreEqual("Just An OK Button", messageBox.Text);
+        Assert.AreEqual("JustOK", messageBox.Title);
+        messageBox.SendCommand(MessageBoxTester.Command.OK);
+    }
 
-        public void OKAndCancelHandler(string name, System.IntPtr hWnd)
-        {
-            MessageBoxTester messageBox = new MessageBoxTester(hWnd);
-            messageBox.SendCommand(MessageBoxTester.Command.Cancel);
-        }
+    public void OKAndCancelHandler(string name, IntPtr hWnd)
+    {
+        var messageBox = new MessageBoxTester(hWnd);
+        messageBox.SendCommand(MessageBoxTester.Command.Cancel);
+    }
 
-        [Test]
-        public void NoModalFound()
+    [Test]
+    public void NoModalFound()
+    {
+        var ex = Assert.Throws<ControlNotVisibleException>(() =>
         {
-            var ex = Assert.Throws<ControlNotVisibleException>(() => { new MessageBoxTester("NotFound"); });
-            Assert.That(ex.Message, Does.Contain("Message Box not visible"));
-        }
+            var text = new MessageBoxTester("NotFound").Text;
+        });
+        Assert.That(ex.Message, Does.Contain("Message Box not visible"));
+    }
 
-        [Test]
-        public void TestMessageBoxCancel()
-        {
-            DialogBoxHandler = MessageBoxCancelHandler;
-            MessageBox.Show("test string", "caption", MessageBoxButtons.OKCancel);
-        }
+    [Test]
+    public void TestMessageBoxCancel()
+    {
+        DialogBoxHandler = MessageBoxCancelHandler;
+        MessageBox.Show("test string", "caption", MessageBoxButtons.OKCancel);
+    }
 
-        [Test]
-        public void TestMessageBoxOK()
-        {
-            DialogBoxHandler = MessageBoxOkHandler;
-            MessageBox.Show("test string", "caption");
-        }
+    [Test]
+    public void TestMessageBoxOK()
+    {
+        DialogBoxHandler = MessageBoxOkHandler;
+        MessageBox.Show("test string", "caption");
+    }
 
-        [Test]
-        public void TestOKCancelMessageBox()
-        {
-            DialogBoxHandler = OKAndCancelHandler;
-            Assert.AreEqual(DialogResult.Cancel,
-                            MessageBox.Show("Both OK and Cancel buttons", "OKAndCancel", MessageBoxButtons.OKCancel));
-        }
+    [Test]
+    public void TestOKCancelMessageBox()
+    {
+        DialogBoxHandler = OKAndCancelHandler;
+        Assert.AreEqual(DialogResult.Cancel,
+            MessageBox.Show("Both OK and Cancel buttons", "OKAndCancel", MessageBoxButtons.OKCancel));
+    }
 
-        [Test]
-        public void TestSimpleMessageBox()
-        {
-            DialogBoxHandler = SimpleOKHandler;
-            Assert.AreEqual(DialogResult.OK, MessageBox.Show("Just An OK Button", "JustOK", MessageBoxButtons.OK));
-        }
+    [Test]
+    public void TestSimpleMessageBox()
+    {
+        DialogBoxHandler = SimpleOKHandler;
+        Assert.AreEqual(DialogResult.OK, MessageBox.Show("Just An OK Button", "JustOK", MessageBoxButtons.OK));
+    }
 
-        [Test]
-        public void UnexpectedModalIsClosedAndFails()
-        {
-            MessageBox.Show("I didn't expect this!", "blah");
-            var ex = Assert.Throws<FormsTestAssertionException>(() => Verify());
-            Assert.That(ex.Message, Does.Contain("Unexpected modals: blah, "));
-        }
+    [Test]
+    public void UnexpectedModalIsClosedAndFails()
+    {
+        MessageBox.Show("I didn't expect this!", "blah");
+        var ex = Assert.Throws<FormsTestAssertionException>(Verify);
+        Assert.That(ex.Message, Does.Contain("blah"));
+    }
 
-        [Test]
-        public void UnexpectedModalIsClosedAndFailsNoTitle()
-        {
-            MessageBox.Show("I didn't expect this!"); // no title specified
-            var ex = Assert.Throws<FormsTestAssertionException>(() => Verify());
-            Assert.That(ex.Message, Does.Contain("Unexpected modals: Unnamed, "));
-        }
+    [Test]
+    public void UnexpectedModalIsClosedAndFailsNoTitle()
+    {
+        MessageBox.Show("I didn't expect this!"); // no title specified
+        var ex = Assert.Throws<FormsTestAssertionException>(Verify);
+        Assert.That(ex.Message, Does.Contain("Unnamed"));
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : (Contributed by Ian Cooper) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,49 +27,44 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-//Contributed by: Ian Cooper
+namespace NUnit.Extensions.Forms.Testers;
 
-using System.Windows.Forms;
-
-namespace NUnit.Extensions.Forms
+/// <summary>
+/// A ControlTester for testing Toolbars.  
+/// </summary>
+public partial class ToolBarTester
 {
     /// <summary>
-    /// A ControlTester for testing Toolbars.  
+    /// Get the toolbar with the specified text
     /// </summary>
-    public partial class ToolBarTester
+    /// <param name="buttonText">The text of the ToolBarButton</param>
+    /// <returns>A ToolBarButtonTester containing the matching ToolBarButton</returns>
+    public ToolBarButtonTester? GetButton(string buttonText)
     {
-        /// <summary>
-        /// Get the toolbar with the specified text
-        /// </summary>
-        /// <param name="buttonText">The text of the ToolBarButton</param>
-        /// <returns>A ToolBarButtonTester containing the matching ToolBarButton</returns>
-        public ToolBarButtonTester GetButton(string buttonText)
+        for (var i = 0; i < Properties.Buttons.Count; ++i)
         {
-            for (int i = 0; i < Properties.Buttons.Count; ++i)
+            var button = Properties.Buttons[i];
+            if (button.Text == buttonText)
             {
-                ToolBarButton button = Properties.Buttons[i];
-                if (button.Text == buttonText)
-                {
-                    return GetButton(i);
-                }
+                return GetButton(i);
             }
-
-            return null;
         }
 
-        /// <summary>
-        /// Get the toolbar at the index
-        /// </summary>
-        /// <param name="index">The index of the button within the toolbar</param>
-        /// <returns>A ToolBarButtonTester containing the matching ToolBarButton</returns>
-        /// <remarks>We cannot use this[int index] here as used for ControlTester</remarks>
-        public ToolBarButtonTester GetButton(int index)
-        {
-            return new ToolBarButtonTester(Properties.Buttons[index], this);
-        }
+        return null;
+    }
+
+    /// <summary>
+    /// Get the toolbar at the index
+    /// </summary>
+    /// <param name="index">The index of the button within the toolbar</param>
+    /// <returns>A ToolBarButtonTester containing the matching ToolBarButton</returns>
+    /// <remarks>We cannot use this[int index] here as used for ControlTester</remarks>
+    public ToolBarButtonTester GetButton(int index)
+    {
+        return new ToolBarButtonTester(Properties.Buttons[index], this);
     }
 }

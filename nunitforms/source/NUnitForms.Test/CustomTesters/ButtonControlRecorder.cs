@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,34 +27,30 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
-using NUnit.Extensions.Forms.Recorder;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using NUnitForms.Recorder;
+
+
+namespace NUnit.Extensions.Forms.TestApplications.CustomTesters;
+
+public class ButtonControlRecorder : ControlRecorder
 {
-    public class ButtonControlRecorder : ControlRecorder
+    public ButtonControlRecorder(Listener listener)
+        : base(listener)
     {
-        public ButtonControlRecorder(Listener listener) : base(listener)
-        {
-        }
+    }
 
-        public override Type RecorderType
-        {
-            get { return typeof (ButtonControl); }
-        }
+    public override Type RecorderType => typeof(TestForms.ButtonControl);
 
-        public override Type TesterType
-        {
-            get { return typeof (ButtonControlTester); }
-        }
+    public override Type TesterType => typeof(ButtonControlTester);
 
-        public void SuperClick(object sender, EventArgs args)
-        {
-            Listener.FireEvent(TesterType, sender, "SuperClick");
-        }
+    public void SuperClick(object sender, EventArgs args)
+    {
+        Listener.FireEvent(TesterType, sender, "SuperClick");
     }
 }

@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,28 +27,31 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.SupportedAPI;
+
+[TestFixture]
+public class SupportFormSpecificationTest : NUnitFormTest
 {
-    [TestFixture]
-    public class SupportFormSpecificationTest : NUnitFormTest
+    [Test]
+    public void ButtonClick()
     {
-        [Test]
-        public void ButtonClick()
-        {
-            Form form = new ButtonTestForm();
-            form.Show();
-            ButtonTester button = new ButtonTester("myButton", form);
-            LabelTester label = new LabelTester("myLabel", form);
-            Assert.AreEqual("0", label.Text);
-            button.Click();
-            Assert.AreEqual("1", label.Text);
-        }
+        Form form = new ButtonTestForm();
+        form.Show();
+        var button = new ButtonTester("myButton", form);
+        var label = new LabelTester("myLabel", form);
+        Assert.AreEqual("0", label.Text);
+        button.Click();
+        Assert.AreEqual("1", label.Text);
     }
 }

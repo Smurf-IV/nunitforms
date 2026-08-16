@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,130 +27,129 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+/// <summary>
+/// One of three base classes for your NUnitForms tests.  This one can be
+/// used by people who want "built-in" Assert functionality and prefer
+/// the newer style "Assert" syntax.
+/// </summary>
+[TestFixture]
+public class NUnitFormsAssertTest : NUnitFormTest
 {
-    /// <summary>
-    /// One of three base classes for your NUnitForms tests.  This one can be
-    /// used by people who want "built-in" Assert functionality and prefer
-    /// the newer style "Assert" syntax.
-    /// </summary>
-    [TestFixture]
-    public class NUnitFormsAssertTest : NUnitFormTest
+    public void AreEqual(double expected, double actual, double delta)
     {
-        public void AreEqual(double expected, double actual, double delta)
-        {
-            Assert.AreEqual(expected, actual, delta);
-        }
+        Assert.AreEqual(expected, actual, delta);
+    }
 
-        public void AreEqual(float expected, float actual, float delta)
-        {
-            Assert.AreEqual(expected, actual, delta);
-        }
+    public void AreEqual(float expected, float actual, float delta)
+    {
+        Assert.AreEqual(expected, actual, delta);
+    }
 
-        public void AreEqual(object expected, object actual)
-        {
-            Assert.AreEqual(expected, actual);
-        }
+    public void AreEqual(object expected, object actual)
+    {
+        Assert.AreEqual(expected, actual);
+    }
 
-        public void AreEqual(int expected, int actual)
-        {
-            Assert.AreEqual(expected, actual);
-        }
+    public void AreEqual(int expected, int actual)
+    {
+        Assert.AreEqual(expected, actual);
+    }
 
-        public void AreEqual(decimal expected, decimal actual)
-        {
-            Assert.AreEqual(expected, actual);
-        }
+    public void AreEqual(decimal expected, decimal actual)
+    {
+        Assert.AreEqual(expected, actual);
+    }
 
-        public void AreEqual(double expected, double actual, double delta, string message)
-        {
-            Assert.AreEqual(expected, actual, delta, message);
-        }
+    public void AreEqual(double expected, double actual, double delta, string message)
+    {
+        Assert.AreEqual(expected, actual, delta, message);
+    }
 
-        public void AreEqual(float expected, float actual, float delta, string message)
-        {
-            Assert.AreEqual(expected, actual, delta, message);
-        }
+    public void AreEqual(float expected, float actual, float delta, string message)
+    {
+        Assert.AreEqual(expected, actual, delta, message);
+    }
 
-        public void AreEqual(object expected, object actual, string message)
-        {
-            Assert.AreEqual(expected, actual, message);
-        }
+    public void AreEqual(object expected, object actual, string message)
+    {
+        Assert.AreEqual(expected, actual, message);
+    }
 
-        public void AreEqual(int expected, int actual, string message)
-        {
-            Assert.AreEqual(expected, actual, message);
-        }
+    public void AreEqual(int expected, int actual, string message)
+    {
+        Assert.AreEqual(expected, actual, message);
+    }
 
-        public void AreEqual(decimal expected, decimal actual, string message)
-        {
-            Assert.AreEqual(expected, actual, message);
-        }
+    public void AreEqual(decimal expected, decimal actual, string message)
+    {
+        Assert.AreEqual(expected, actual, message);
+    }
 
-        public void AreSame(object expected, object actual)
-        {
-            Assert.AreSame(expected, actual);
-        }
+    public void AreSame(object expected, object actual)
+    {
+        Assert.AreSame(expected, actual);
+    }
 
-        public void AreSame(object expected, object actual, string message)
-        {
-            Assert.AreSame(expected, actual, message);
-        }
+    public void AreSame(object expected, object actual, string message)
+    {
+        Assert.AreSame(expected, actual, message);
+    }
 
-        public void Fail()
-        {
-            Assert.Fail();
-        }
+    public void Fail()
+    {
+        Assert.Fail();
+    }
 
-        public void Fail(string message)
-        {
-            Assert.Fail(message);
-        }
+    public void Fail(string message)
+    {
+        Assert.Fail(message);
+    }
 
-        public void IsTrue(bool condition)
-        {
-            Assert.IsTrue(condition);
-        }
+    public void IsTrue(bool condition)
+    {
+        Assert.IsTrue(condition);
+    }
 
-        public void IsTrue(bool condition, string message)
-        {
-            Assert.IsTrue(condition, message);
-        }
+    public void IsTrue(bool condition, string message)
+    {
+        Assert.IsTrue(condition, message);
+    }
 
-        public void IsFalse(bool condition)
-        {
-            Assert.IsFalse(condition);
-        }
+    public void IsFalse(bool condition)
+    {
+        Assert.IsFalse(condition);
+    }
 
-        public void IsFalse(bool condition, string message)
-        {
-            Assert.IsFalse(condition, message);
-        }
+    public void IsFalse(bool condition, string message)
+    {
+        Assert.IsFalse(condition, message);
+    }
 
-        public void IsNull(object anObject)
-        {
-            Assert.IsNull(anObject);
-        }
+    public void IsNull(object anObject)
+    {
+        Assert.IsNull(anObject);
+    }
 
-        public void IsNull(object anObject, string message)
-        {
-            Assert.IsNull(anObject, message);
-        }
+    public void IsNull(object anObject, string message)
+    {
+        Assert.IsNull(anObject, message);
+    }
 
-        public void IsNotNull(object anObject)
-        {
-            Assert.IsNotNull(anObject);
-        }
+    public void IsNotNull(object anObject)
+    {
+        Assert.IsNotNull(anObject);
+    }
 
-        public void IsNotNull(object anObject, string message)
-        {
-            Assert.IsNotNull(anObject, message);
-        }
+    public void IsNotNull(object anObject, string message)
+    {
+        Assert.IsNotNull(anObject, message);
     }
 }

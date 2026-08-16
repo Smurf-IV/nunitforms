@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,68 +27,67 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.SupportedAPI;
+
+/// <summary>
+/// A note about this class: it only tests that those methods exist on the
+/// base class and not that they are completely implemented correctly.  I think
+/// that it works, tell me if it does not.  It may be marked obsolete shortly
+/// because that is what the next version of nunit does.
+/// </summary>
+[Obsolete]
+[TestFixture]
+public class SupportsAssertionExtensionTest : NUnitFormsAssertionTest
 {
-    /// <summary>
-    /// A note about this class: it only tests that those methods exist on the
-    /// base class and not that they are completely implemented correctly.  I think
-    /// that it works, tell me if it does not.  It may be marked obsolete shortly
-    /// because that is what the next version of nunit does.
-    /// </summary>
-    [Obsolete()]
-    [TestFixture]
-    public class SupportsAssertionExtensionTest : NUnitFormsAssertionTest
+    public void BaseClassAssertNotNull()
     {
-        public void BaseClassAssertNotNull()
-        {
-            AssertNotNull("test");
-            AssertNotNull("message", "test");
-        }
+        AssertNotNull("test");
+        AssertNotNull("message", "test");
+    }
 
-        [Test]
-        public void BaseClassAssert()
-        {
-            Assert(true);
-            Assert(true, "message");
-        }
+    [Test]
+    public void BaseClassAssert()
+    {
+        Assert(true);
+        Assert(true, "message");
+    }
 
-        [Test]
-        public void BaseClassAssertEquals()
-        {
-            AssertEquals(1.0d, 1.0d, 0.0d);
-            AssertEquals(1.0f, 1.0f, 0.0f);
-            AssertEquals("test", "test");
-            AssertEquals(1, 1);
-            AssertEquals("message", 1.0d, 1.0d, 0.0d);
-            AssertEquals("message", 1.0f, 1.0f, 0.0f);
-            AssertEquals("message", "test", "test");
-            AssertEquals("message", 1, 1);
-        }
+    [Test]
+    public void BaseClassAssertEquals()
+    {
+        AssertEquals(1.0d, 1.0d, 0.0d);
+        AssertEquals(1.0f, 1.0f, 0.0f);
+        AssertEquals("test", "test");
+        AssertEquals(1, 1);
+        AssertEquals("message", 1.0d, 1.0d, 0.0d);
+        AssertEquals("message", 1.0f, 1.0f, 0.0f);
+        AssertEquals("message", "test", "test");
+        AssertEquals("message", 1, 1);
+    }
 
-        [Test]
-        public void BaseClassAssertFail()
-        {
-            NUnit.Framework.Assert.Throws<AssertionException>(() => Fail());
-        }
+    [Test]
+    public void BaseClassAssertFail()
+    {
+        Framework.Assert.Throws<AssertionException>(Fail);
+    }
 
-        [Test]
-        public void BaseClassAssertFailMessage()
-        {
-            NUnit.Framework.Assert.Throws<AssertionException>(() => Fail("message"));
-        }
+    [Test]
+    public void BaseClassAssertFailMessage()
+    {
+        Framework.Assert.Throws<AssertionException>(() => Fail("message"));
+    }
 
-        [Test]
-        public void BaseClassAssertSame()
-        {
-            AssertSame("test", "test");
-            AssertSame("message", "test", "test");
-        }
+    [Test]
+    public void BaseClassAssertSame()
+    {
+        AssertSame("test", "test");
+        AssertSame("message", "test", "test");
     }
 }

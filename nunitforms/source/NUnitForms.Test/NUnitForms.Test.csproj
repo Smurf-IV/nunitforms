@@ -3,36 +3,54 @@
 		<TargetFramework>net462</TargetFramework>
 		<OutputType>Library</OutputType>
 		<RootNamespace>NUnit.Extensions.Forms.TestApplications</RootNamespace>
-		<LangVersion>latest</LangVersion>
-		<IsWebBootstrapper>false</IsWebBootstrapper>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<NoWarn>NU1605</NoWarn>
-		<PublishUrl>publish\</PublishUrl>
-		<Install>true</Install>
-		<InstallFrom>Disk</InstallFrom>
-		<UpdateEnabled>false</UpdateEnabled>
-		<UpdateMode>Foreground</UpdateMode>
-		<UpdateInterval>7</UpdateInterval>
-		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-		<UpdatePeriodically>false</UpdatePeriodically>
-		<UpdateRequired>false</UpdateRequired>
-		<MapFileExtensions>true</MapFileExtensions>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-		<UseApplicationTrust>false</UseApplicationTrust>
-		<BootstrapperEnabled>true</BootstrapperEnabled>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImortWindowsDesktopTargets>true</ImortWindowsDesktopTargets>
-		<DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
 		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>preview</LangVersion>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<IsTestProject>true</IsTestProject>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<WarningLevel>7</WarningLevel>
+		<NoWarn>$(NoWarn);CS8600;CS8602;CS8604</NoWarn>
+
+		<!-- .NET 8+ Performance Optimizations -->
+		<TieredCompilation>true</TieredCompilation>
+		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops>
+		<TieredPGO>true</TieredPGO>
+		<!-- NEW in .NET 9: Dynamic PGO gets better -->
+		<TieredCompilationDynamicPgo>true</TieredCompilationDynamicPgo>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<Title>NUnitForms.Test</Title>
+		<PackageId>NUnitForms.Test</PackageId>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>NUnitForms.Test Copyright ©  2003-2007, Luke T. Maxon : Then 2026-2026 © Smurf-IV</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
-			<SpecificVersion>False</SpecificVersion>
-			<HintPath>..\..\lib\NMock\NMock2.dll</HintPath>
-		</Reference>
+		<PackageReference Include="coverlet.collector" Version="10.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+		<PackageReference Include="NMock3" Version="3.5.44" />
+		<PackageReference Include="NUnit.Analyzers" Version="4.14.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="NUnit3TestAdapter" Version="6.2.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.11" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="TestForms\ButtonControl.cs">
@@ -46,8 +64,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NUnit.Runners" Version="2.6.4" />
-		<PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+	  <Compile Remove="Properties\**" />
+	  <EmbeddedResource Remove="Properties\**" />
+	  <None Remove="Properties\**" />
 	</ItemGroup>
 
 	<ItemGroup Label="Compile items now included by globbing that were not in the original project file">

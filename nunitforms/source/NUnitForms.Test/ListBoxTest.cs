@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,85 +27,90 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
-using NUnit.Framework;
 using System;
 using System.Collections.Specialized;
-using System.Reflection;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Framework;
+
+using ListBoxTester = NUnit.Extensions.Forms.Testers.ListBoxTester;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class ListBoxTest : NUnitFormTest
 {
-    [TestFixture]
-    public class ListBoxTest : NUnitFormTest
+    public override void Setup()
     {
-        public override void Setup()
+        new ListBoxTestForm().Show();
+    }
+
+    private readonly string[] rainbowArray = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"];
+
+    [Test]
+    public void ListBoxMultiSelection()
+    {
+        var myListBox = new ListBoxTester("myListBox");
+
+        string[] alternateColors = ["Red", "Yellow", "Blue", "Violet"];
+        var alternates = new StringCollection();
+        alternates.AddRange(alternateColors);
+
+        myListBox.ClearSelected();
+
+        foreach (string color in alternates)
         {
-            new ListBoxTestForm().Show();
+            myListBox.SetSelected(color, true);
         }
 
-        private string[] rainbowArray = new string[] {"Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"};
+        Assert.AreEqual(4, myListBox.Properties.SelectedItems.Count);
 
-        [Test]
-        public void ListBoxMultiSelection()
+        foreach (object selectedItem in myListBox.Properties.SelectedItems)
         {
-            ListBoxTester myListBox = new ListBoxTester("myListBox");
-
-            string[] alternateColors = new string[] {"Red", "Yellow", "Blue", "Violet"};
-            StringCollection alternates = new StringCollection();
-            alternates.AddRange(alternateColors);
-
-            myListBox.ClearSelected();
-
-            foreach (string color in alternates)
-            {
-                myListBox.SetSelected(color, true);
-            }
-
-            Assert.AreEqual(4, myListBox.Properties.SelectedItems.Count);
-
-            foreach (object selectedItem in myListBox.Properties.SelectedItems)
-            {
-                Assert.IsTrue(alternates.Contains(Convert.ToString(selectedItem)));
-            }
+            Assert.IsTrue(alternates.Contains(Convert.ToString(selectedItem)));
         }
+    }
 
-        [Test]
-        public void ListBoxPropertyAsserts()
-        {
-            ListBoxTester myListBox = new ListBoxTester("myListBox");
-            Assert.AreEqual(true, myListBox.Properties.Visible);
-            Assert.IsNull(myListBox.Properties.SelectedItem);
-            Assert.AreEqual(SelectionMode.MultiExtended, myListBox.Properties.SelectionMode);
-        }
+    [Test]
+    public void ListBoxPropertyAsserts()
+    {
+        var myListBox = new ListBoxTester("myListBox");
+        Assert.AreEqual(true, myListBox.Properties.Visible);
+        Assert.IsNull(myListBox.Properties.SelectedItem);
+        Assert.AreEqual(SelectionMode.MultiExtended, myListBox.Properties.SelectionMode);
+    }
 
-        [Test]
-        public void ListBoxSelection()
-        {
-            LabelTester myLabel = new LabelTester("myLabel");
-            ListBoxTester myListBox = new ListBoxTester("myListBox");
+    [Test]
+    public void ListBoxSelection()
+    {
+        var myLabel = new LabelTester("myLabel");
+        var myListBox = new ListBoxTester("myListBox");
 
-            myListBox.ClearSelected();
+        myListBox.ClearSelected();
 
-            myListBox.Select(rainbowArray[0]);
-            Assert.AreEqual(rainbowArray[0], myLabel.Text);
-        }
+        myListBox.Select(rainbowArray[0]);
+        Assert.AreEqual(rainbowArray[0], myLabel.Text);
+    }
 
-        [Test]
-        public void ListBoxSelectionBad()
-        {
-            var ex = Assert.Throws<FormsTestAssertionException>(() => { new ListBoxTester("myListBox").Select("NotFound"); });
-            Assert.That(ex.Message, Does.Contain("Could not find text 'NotFound' in ComboBox 'myListBox'"));
-        }
+    [Test]
+    public void ListBoxSelectionBad()
+    {
+        var ex = Assert.Throws<FormsTestAssertionException>(() => { new ListBoxTester("myListBox").Select("NotFound"); });
+        Assert.That(ex.Message, Does.Contain("Could not find text 'NotFound' in ComboBox 'myListBox'"));
+    }
 
-        [Test]
-        public void SelectDoesNotExist()
-        {
-            ListBoxTester myListBox = new ListBoxTester("myListBox");
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => myListBox.SetSelected("blah", true));
-        }
+    [Test]
+    public void SelectDoesNotExist()
+    {
+        var myListBox = new ListBoxTester("myListBox");
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => myListBox.SetSelected("blah", true));
     }
 }

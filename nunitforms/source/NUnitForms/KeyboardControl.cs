@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,29 +27,29 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Generic_Testers;
 
-namespace NUnit.Extensions.Forms
+namespace NUnit.Extensions.Forms;
+
+internal class KeyboardControl
 {
-    internal class KeyboardControl
+    private readonly ReflectionTester tester;
+
+    internal KeyboardControl(ReflectionTester tester)
     {
-        private readonly ReflectionTester tester;
+        this.tester = tester;
+    }
 
-        internal KeyboardControl(ReflectionTester tester)
-        {
-            this.tester = tester;
-        }
-
-        internal void Focus()
-        {
-            Control c = tester.TheObject as Control;
-            FormsAssert.IsTrue(c != null, "Keyboard control requires tester of Control");
-            c.FindForm().Activate();
-            c.Focus();
-        }
+    internal void Focus()
+    {
+        var c = tester.TheObject as Control;
+        FormsAssert.IsTrue(c != null, "Keyboard control requires tester of Control");
+        c.FindForm().Activate();
+        c.Focus();
     }
 }

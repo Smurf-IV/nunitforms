@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,36 +27,36 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+public partial class ToolStripDropDownButtonTestForm : Form
 {
-    public partial class ToolStripDropDownButtonTestForm : Form
+    public ToolStripDropDownButtonTestForm()
     {
-        public ToolStripDropDownButtonTestForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void toolStripDropDownButton1_Click(object sender, EventArgs e)
-        {
-            textBox1.Text = "toolStripDropDownButton1 clicked";
-        }
+    private void toolStripDropDownButton1_Click(object sender, EventArgs e)
+    {
+        textBox1.Text = "toolStripDropDownButton1 clicked";
+    }
 
-        private void oneToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            textBox1.Text = "oneToolStripMenuItem clicked";
-        }
+    private void oneToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        textBox1.Text = "oneToolStripMenuItem clicked";
+    }
 
-        private void toolStripDropDownButton1_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            ToolStripItem item = e.ClickedItem;
-            textBox1.Text = item.Name + " clicked";
-        }
+    private void toolStripDropDownButton1_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+    {
+        ToolStripItem item = e.ClickedItem;
+        textBox1.Text = item.Name + " clicked";
     }
 }

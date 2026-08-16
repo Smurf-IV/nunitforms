@@ -1,8 +1,9 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,7 +27,7 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
@@ -34,87 +35,86 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for TextBoxTestForm.
+/// </summary>
+public class TextBoxTestForm : Form
 {
+    private TextBox anotherTextBox;
+
     /// <summary>
-    /// Summary description for TextBoxTestForm.
+    /// Required designer variable.
     /// </summary>
-    public class TextBoxTestForm : Form
+    private readonly Container? components = null;
+
+    private TextBox myTextBox;
+
+    public TextBoxTestForm()
     {
-        private TextBox anotherTextBox;
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
 
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private Container components = null;
-
-        private TextBox myTextBox;
-
-        public TextBoxTestForm()
-        {
-            //
-            // Required for Windows Form Designer support
-            //
-            InitializeComponent();
-
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            this.myTextBox = new TextBox();
-            this.anotherTextBox = new TextBox();
-            this.SuspendLayout();
-            // 
-            // myTextBox
-            // 
-            this.myTextBox.Location = new Point(32, 40);
-            this.myTextBox.Name = "myTextBox";
-            this.myTextBox.Size = new Size(208, 20);
-            this.myTextBox.TabIndex = 0;
-            this.myTextBox.Text = "default";
-            // 
-            // anotherTextBox
-            // 
-            this.anotherTextBox.Location = new Point(136, 184);
-            this.anotherTextBox.Name = "anotherTextBox";
-            this.anotherTextBox.TabIndex = 1;
-            this.anotherTextBox.Text = "";
-            // 
-            // TextBoxTestForm
-            // 
-            this.AutoScaleDimensions = new SizeF(5, 13);
-            this.ClientSize = new Size(292, 273);
-            this.Controls.Add(this.anotherTextBox);
-            this.Controls.Add(this.myTextBox);
-            this.Name = "TextBoxTestForm";
-            this.Text = "TextBoxTestForm";
-            this.ResumeLayout(false);
-        }
-
-        #endregion
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
     }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myTextBox = new TextBox();
+        anotherTextBox = new TextBox();
+        SuspendLayout();
+        // 
+        // myTextBox
+        // 
+        myTextBox.Location = new Point(32, 40);
+        myTextBox.Name = "myTextBox";
+        myTextBox.Size = new Size(208, 20);
+        myTextBox.TabIndex = 0;
+        myTextBox.Text = "default";
+        // 
+        // anotherTextBox
+        // 
+        anotherTextBox.Location = new Point(136, 184);
+        anotherTextBox.Name = "anotherTextBox";
+        anotherTextBox.TabIndex = 1;
+        anotherTextBox.Text = "";
+        // 
+        // TextBoxTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(292, 273);
+        Controls.Add(anotherTextBox);
+        Controls.Add(myTextBox);
+        Name = "TextBoxTestForm";
+        Text = "TextBoxTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
 }

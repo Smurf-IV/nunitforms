@@ -1,8 +1,9 @@
-#region Copyright (c) 2006-2007, Luke T. Maxon (Authored by Anders Lillrank)
+#region Copyright (c) 2006-2007, Luke T. Maxon : (Authored by Anders Lillrank) : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
 ' Copyright (c) 2006-2007, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -26,38 +27,38 @@
 ' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 ' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '
-'*******************************************************************************************************************/
+' ******************************************************************************************************************/
 
 #endregion
 
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications
-{
-    [TestFixture]
-    public class ToolStripDropDownButtonTest : NUnitFormTest
-    {
-        [Test]
-        public void ClickDropDownItem()
-        {
-            Form form = new ToolStripDropDownButtonTestForm();
-            form.Show();
-            TextBoxTester textbox = new TextBoxTester("textBox1", form);
-            ToolStripDropDownButtonTester tester = new ToolStripDropDownButtonTester("toolStripDropDownButton1", form);
-            tester.ClickDropDownItem(1);
-            Assert.IsTrue(textbox.Text == "twoToolStripMenuItem clicked");
-        }
+namespace NUnit.Extensions.Forms.TestApplications;
 
-        [Test]
-        public void MainToolbar()
-        {
-            Form form = new ToolStripDropDownButtonTestForm();
-            form.Show();
-            TextBoxTester textbox = new TextBoxTester("textBox1", form);
-            ToolStripDropDownButtonTester tester = new ToolStripDropDownButtonTester("toolStripDropDownButton1", form);
-            tester.Click();
-            Assert.IsTrue(textbox.Text == "toolStripDropDownButton1 clicked");
-        }
+[TestFixture]
+public class ToolStripDropDownButtonTest : NUnitFormTest
+{
+    [Test]
+    public void ClickDropDownItem()
+    {
+        Form form = new TestForms.ToolStripDropDownButtonTestForm();
+        form.Show();
+        var textbox = new TextBoxTester("textBox1", form);
+        var tester = new ToolStripDropDownButtonTester("toolStripDropDownButton1", form);
+        tester.ClickDropDownItem(1);
+        Assert.IsTrue(textbox.Text == "twoToolStripMenuItem clicked");
+    }
+
+    [Test]
+    public void MainToolbar()
+    {
+        Form form = new TestForms.ToolStripDropDownButtonTestForm();
+        form.Show();
+        var textbox = new TextBoxTester("textBox1", form);
+        var tester = new ToolStripDropDownButtonTester("toolStripDropDownButton1", form);
+        tester.Click();
+        Assert.IsTrue(textbox.Text == "toolStripDropDownButton1 clicked");
     }
 }
