@@ -46,15 +46,13 @@ public partial class AppForm
 
     private TextBox textBox;
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
     private MainMenu mainMenu1;
-
     private MenuItem menuItem1;
-
-    private ComboBox combo;
-
     private MenuItem NewMenuItem;
-
     private MenuItem LoadMenuItem;
+#endif
+    private ComboBox combo;
     private GroupBox groupBox1;
     private Button button1;
     private PictureBox pictureBox1;
@@ -86,10 +84,12 @@ public partial class AppForm
     {
         this.components = new System.ComponentModel.Container();
         this.textBox = new System.Windows.Forms.TextBox();
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
         this.menuItem1 = new System.Windows.Forms.MenuItem();
         this.NewMenuItem = new System.Windows.Forms.MenuItem();
         this.LoadMenuItem = new System.Windows.Forms.MenuItem();
+#endif
         this.combo = new System.Windows.Forms.ComboBox();
         this.groupBox1 = new System.Windows.Forms.GroupBox();
         this.button1 = new System.Windows.Forms.Button();
@@ -111,6 +111,7 @@ public partial class AppForm
         this.textBox.Size = new System.Drawing.Size(701, 550);
         this.textBox.TabIndex = 0;
         // 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         // mainMenu1
         // 
         this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -136,6 +137,7 @@ public partial class AppForm
         this.LoadMenuItem.Text = "Load";
         this.LoadMenuItem.Click += new System.EventHandler(this.Load_Click);
         // 
+#endif
         // combo
         // 
         this.combo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -182,7 +184,9 @@ public partial class AppForm
         this.Controls.Add(this.groupBox1);
         this.Controls.Add(this.combo);
         this.Controls.Add(this.textBox);
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         this.Menu = this.mainMenu1;
+#endif
         this.Name = "AppForm";
         this.Text = "NUnitForms Recorder";
         this.Load += new System.EventHandler(this.AppForm_Load);
@@ -193,5 +197,5 @@ public partial class AppForm
 
     }
 
-    #endregion
+#endregion
 }

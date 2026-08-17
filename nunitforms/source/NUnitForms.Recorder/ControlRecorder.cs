@@ -43,6 +43,7 @@ public abstract class ControlRecorder : Recorder
     {
     }
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
     public void PropertyAssert(object sender, EventArgs args)
     {
         Control source = ((MenuItem) sender).GetContextMenu().SourceControl;
@@ -50,7 +51,7 @@ public abstract class ControlRecorder : Recorder
         object propertyValue = GetPropertyValue(source, propertyName);
         Listener.FireEvent(TesterType, source, new PropertyAssertAction(propertyName, propertyValue));
     }
-
+#endif
     private object GetPropertyValue(Control source, string propertyName)
     {
         PropertyInfo info = source.GetType().GetProperty(propertyName);

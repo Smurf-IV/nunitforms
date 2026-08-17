@@ -31,6 +31,8 @@
 
 #endregion
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -214,3 +216,4 @@ public class ContextMenuTestForm : Form
 
     #endregion
 }
+#endif

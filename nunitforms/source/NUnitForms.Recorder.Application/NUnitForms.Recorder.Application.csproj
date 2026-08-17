@@ -1,16 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
-		<OutputType>WinExe</OutputType>
-		<UseWindowsForms>true</UseWindowsForms>
+		<TargetFrameworks>net462;net48;net6.0-windows</TargetFrameworks>
+		<!-- Set the CheckEolTargetFramework property as false to fix the warning -->
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputType>WinExe</OutputType>
 		<DocumentationFile>NUnitForms.Recorder.Application.xml</DocumentationFile>
 
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<IsTrimmable>True</IsTrimmable>
 		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-		<WarningLevel>8</WarningLevel>
+		<WarningLevel>9999</WarningLevel>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>preview</LangVersion>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>

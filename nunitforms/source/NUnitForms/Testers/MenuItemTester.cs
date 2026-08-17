@@ -31,6 +31,8 @@
 
 #endregion
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+
 using System;
 using System.Reflection;
 using System.Windows.Forms;
@@ -39,6 +41,7 @@ using NUnit.Extensions.Forms.Finders;
 
 
 namespace NUnit.Extensions.Forms.Testers;
+
 
 /// <summary>
 /// A ControlTester for MenuItems.
@@ -128,3 +131,4 @@ public class MenuItemTester
         FireEvent("Popup");
     }
 }
+#endif

@@ -31,6 +31,7 @@
 
 #endregion
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 namespace NUnit.Extensions.Forms.Testers;
 
 /// <summary>
@@ -68,3 +69,4 @@ public partial class ToolBarTester
         return new ToolBarButtonTester(Properties.Buttons[index], this);
     }
 }
+#endif

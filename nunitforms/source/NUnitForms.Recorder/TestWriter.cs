@@ -211,7 +211,9 @@ public class TestWriter
     {
         string findName = name.Replace("_", ".");
         Control? control = null;
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         MenuItem? menuItem = null;
+#endif
         try
         {
             control = new Finder<Control>(findName, form).Find();
@@ -219,6 +221,8 @@ public class TestWriter
         catch (NoSuchControlException)
         {
         }
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+
         try
         {
             menuItem = new Finder<MenuItem>(findName, form).Find();
@@ -226,7 +230,12 @@ public class TestWriter
         catch (NoSuchControlException)
         {
         }
-        if ((control != null) && (menuItem != null))
+#endif
+        if ((control != null)
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+            && (menuItem != null)
+#endif
+            )
         {
             throw new AmbiguousNameException(name);
         }
@@ -267,11 +276,12 @@ public class TestWriter
             }
         } while (!foundGoodName);
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         if (name.StartsWith("_") && control is MenuItem item)
         {
             name = GetName(item.GetContextMenu().SourceControl, null) + name;
         }
-
+#endif
         return name;
     }
 

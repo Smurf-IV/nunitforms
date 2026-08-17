@@ -31,6 +31,8 @@
 
 #endregion
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+
 using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
@@ -72,3 +74,4 @@ public void Test()
             writer.Test);
     }
 }
+#endif

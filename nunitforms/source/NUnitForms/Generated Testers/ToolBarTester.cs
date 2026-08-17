@@ -31,6 +31,8 @@
 
 #endregion
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+
 using System.Windows.Forms;
 using NUnit.Extensions.Forms.Generic_Testers;
 
@@ -61,3 +63,4 @@ public partial class ToolBarTester : ControlTester<ToolBar, ToolBarTester>
     {
     }
 }
+#endif

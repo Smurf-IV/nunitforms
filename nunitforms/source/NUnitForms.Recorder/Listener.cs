@@ -91,8 +91,9 @@ public class Listener
         {
             AddEventListeners(control);
         }
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         ListenTo(control.ContextMenu);
-
+#endif
         if (control is ToolStrip toolstrip)
         {
             if (toolstrip.ContextMenuStrip != null)
@@ -116,10 +117,12 @@ public class Listener
             }
         }
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         if (!string.IsNullOrEmpty(control.Name))
         {
             AddPropertyAssertListeners(control);
         }
+#endif
         control.ControlAdded += ControlAdded;
 
 
@@ -148,6 +151,7 @@ public class Listener
         }
     }
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
     private void ListenTo(Menu? menu)
     {
         if (menu == null)
@@ -160,7 +164,6 @@ public class Listener
             ListenTo(item);
         }
     }
-
     private void AddPropertyAssertListeners(Control control)
     {
         PropertyInfo[] properties = control.GetType().GetProperties();
@@ -182,7 +185,7 @@ public class Listener
             }
         }
     }
-
+#endif
     private void AddEventListeners(object control)
     {
         EventInfo[] events = control.GetType().GetEvents();
@@ -222,6 +225,7 @@ public class Listener
         handlers[key] = Delegate.Combine(recorder, handlers[key]);
     }
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
     private void AddAssertMenuItem(Control control, string name, EventHandler handler)
     {
         ContextMenu menu = control.ContextMenu;
@@ -232,6 +236,7 @@ public class Listener
         }
         menu.MenuItems.Add(new MenuItem(name, handler));
     }
+#endif
 
     public void FireEvent(Type testerType, object control, string name, params object[] args)
     {

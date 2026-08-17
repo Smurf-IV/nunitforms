@@ -35,6 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+
 using NUnit.Extensions.Forms.Exceptions;
 
 namespace NUnit.Extensions.Forms.Finders;
@@ -80,7 +81,7 @@ public class Finder<T>
         this.name = name;
     }
 
-    public int Count => FindAll(typeof (T)).Count;
+    public int Count => FindAll(typeof(T)).Count;
 
     private List<Form> FormCollection
     {
@@ -110,7 +111,7 @@ public class Finder<T>
 
     public T Find(int index)
     {
-        return (T) Find(index, typeof (T));
+        return (T)Find(index, typeof(T));
     }
 
     private List<object> FindAll()
@@ -170,10 +171,14 @@ public class Finder<T>
         if (obj is Form form)
         {
             var f = form;
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
             if (f.Menu != null)
             {
                 results.AddRange(Find(name, f.Menu, f));
             }
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         if (obj is ToolStrip strip)
@@ -198,10 +203,14 @@ public class Finder<T>
             {
                 results.AddRange(Find(name, c2, null));
             }
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
             if (control.ContextMenu != null)
             {
                 results.AddRange(Find(name, control.ContextMenu, control));
             }
+#else
+            throw new NotImplementedException();
+#endif
             if (control.ContextMenuStrip != null)
             {
                 foreach (ToolStripItem item in control.ContextMenuStrip.Items)
@@ -211,6 +220,7 @@ public class Finder<T>
             }
         }
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         if (obj is Menu menu)
         {
             foreach (MenuItem m2 in menu.MenuItems)
@@ -218,6 +228,9 @@ public class Finder<T>
                 results.AddRange(Find(name, m2, src));
             }
         }
+#else
+        throw new NotImplementedException();
+#endif
         return results;
     }
 
@@ -245,7 +258,9 @@ public class Finder<T>
         return o switch
         {
             Control control => control.Parent,
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
             MenuItem item => item.Parent,
+#endif
             Component component => component.Container,
             _ => null
         };
@@ -258,9 +273,11 @@ public class Finder<T>
             ToolStripControlHost host => host.Name,
             ToolStripItem item => item.Name,
             Control control => control.Name,
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
             MenuItem menuItem => menuItem.Text.Replace("&", string.Empty).Replace(".", string.Empty),
             MainMenu => "MainMenu",
             ContextMenu => "ContextMenu",
+#endif
             Component component => component.Site.Name,
             _ => throw new Exception("Object name not defined")
         };
