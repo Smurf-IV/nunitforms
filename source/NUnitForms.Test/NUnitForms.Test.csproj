@@ -1,0 +1,113 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<TargetFrameworks>net462;net48;net6.0-windows</TargetFrameworks>
+		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
+		<IsTestProject>true</IsTestProject>
+		<!-- Instructs MSBuild to deploy full runtime test dependencies locally -->
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!-- Set the CheckEolTargetFramework property as false to fix the warning -->
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputType>Library</OutputType>
+		<RootNamespace>NUnit.Extensions.Forms.TestApplications</RootNamespace>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+
+		<WarningLevel>7</WarningLevel>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>preview</LangVersion>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- Force consistent architecture for multi-targeting -->
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<Prefer32Bit>false</Prefer32Bit>
+
+		<!-- .NET 8+ Performance Optimizations -->
+		<TieredCompilation>true</TieredCompilation>
+		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops>
+		<TieredPGO>true</TieredPGO>
+		<!-- NEW in .NET 9: Dynamic PGO gets better -->
+		<TieredCompilationDynamicPgo>true</TieredCompilationDynamicPgo>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<Title>NUnitForms.Test</Title>
+		<PackageId>NUnitForms.Test</PackageId>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>NUnitForms.Test Copyright ©  2003-2007, Luke T. Maxon : Then 2026-2026 © Smurf-IV</Copyright>
+	</PropertyGroup>
+
+	<ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0'))">
+		<!-- Use the newer SDK for all that are not .NET 6.0 -->
+		<PackageReference Include="FakeItEasy" Version="9.0.1" />
+		<!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="6.2.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>-->
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+		<!-- Fallback to the supported version for .NET 6.0 -->
+		<PackageReference Include="FakeItEasy" Version="8.3.0" />
+		<!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
+		<PackageReference Include="NUnit3TestAdapter" Version="5.2.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>-->
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Provides the missing testhost.exe / testhost.dll platforms -->
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+
+		<!-- The primary unit testing framework -->
+		<PackageReference Include="NUnit" Version="4.6.1" />
+
+		<!-- Resolves the "does not reference any .NET NuGet adapter" error -->
+		<PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="10.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="FakeItEasy.Analyzer.CSharp" Version="6.1.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="NUnit.Analyzers" Version="4.14.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="TestForms\ButtonControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NUnitForms.Recorder\NUnitForms.Recorder.csproj" />
+		<ProjectReference Include="..\NUnitForms\NUnitForms.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Properties\**" />
+	  <EmbeddedResource Remove="Properties\**" />
+	  <None Remove="Properties\**" />
+	</ItemGroup>
+
+	<ItemGroup Label="Compile items now included by globbing that were not in the original project file">
+		<Compile Remove="TestForms\ToolStripTestForm.cs" />
+		<Compile Remove="ModalFormsTestOld.cs" />
+	</ItemGroup>
+</Project>

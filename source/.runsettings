@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <!-- Restrict discovery only to files ending with Tests.dll or Test.dll -->
+    <TestCaseFilterByFileName>true</TestCaseFilterByFileName>
+    <!-- Adjust this regex match to fit the exact naming convention of your actual test projects -->
+    <TestProjectSearchPattern>.*\.Test?\.dll$</TestProjectSearchPattern>
+  </RunConfiguration>
+</RunSettings>

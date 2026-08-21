@@ -1,0 +1,133 @@
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
+
+/********************************************************************************************************************
+'
+' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
+' All rights reserved.
+' 
+' Redistribution and use in source and binary forms, with or without modification, are permitted provided
+' that the following conditions are met:
+' 
+' * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+' 	following disclaimer.
+' 
+' * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+' 	the following disclaimer in the documentation and/or other materials provided with the distribution.
+' 
+' * Neither the name of the author nor the names of its contributors may be used to endorse or 
+' 	promote products derived from this software without specific prior written permission.
+' 
+' THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+' WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+' PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+' ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+' LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+' INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+'
+' ******************************************************************************************************************/
+
+#endregion
+
+using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Testers;
+using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.Framework;
+
+
+namespace NUnit.Extensions.Forms.TestApplications;
+
+[TestFixture]
+public class DynamicControlsTest : NUnitFormTest
+{
+    public override void Setup()
+    {
+        new DynamicControlsTestForm().Show();
+    }
+
+    [Test]
+    public void DynamicButtonClick()
+    {
+        var addButton = new ButtonTester("addButton");
+        addButton.Click();
+        var dynamicButton = new ButtonTester("button0");
+        dynamicButton.Click();
+        Assert.AreEqual("1", dynamicButton.Text);
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameCount()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        Assert.AreEqual(3, duplicate.Count);
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameEnumerator()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        foreach (ButtonTester button in duplicate)
+        {
+            button.Click();
+        }
+
+        foreach (ButtonTester button in duplicate)
+        {
+            Assert.AreEqual("1", button.Text);
+        }
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameIsAmbiguous()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        Assert.Throws<AmbiguousNameException>(duplicate.Click);
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameNotFound()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        duplicate[0].Click();
+        duplicate[1].Click();
+        var ex = Assert.Throws<NoSuchControlException>(() => duplicate[2].Click());
+        Assert.That(ex.Message, Does.Contain("duplicate[2]"));
+    }
+
+    [Test]
+    public void DynamicControlsWithDuplicateNameWorksByIndex()
+    {
+        var addDuplicateButton = new ButtonTester("btnAddDuplicate");
+        var duplicate = new ButtonTester("duplicate");
+
+        addDuplicateButton.Click();
+        addDuplicateButton.Click();
+
+        duplicate[0].Click();
+        duplicate[1].Click();
+    }
+}

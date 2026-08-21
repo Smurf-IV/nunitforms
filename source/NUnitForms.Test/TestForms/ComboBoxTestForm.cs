@@ -1,0 +1,128 @@
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
+
+/********************************************************************************************************************
+'
+' Copyright (c) 2003-2005, Luke T. Maxon
+' Modernisation 2026-2026 Smurf.IV
+' All rights reserved.
+' 
+' Redistribution and use in source and binary forms, with or without modification, are permitted provided
+' that the following conditions are met:
+' 
+' * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+' 	following disclaimer.
+' 
+' * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+' 	the following disclaimer in the documentation and/or other materials provided with the distribution.
+' 
+' * Neither the name of the author nor the names of its contributors may be used to endorse or 
+' 	promote products derived from this software without specific prior written permission.
+' 
+' THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+' WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+' PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+' ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+' LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+' INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+' OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+' IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+'
+' ******************************************************************************************************************/
+
+#endregion
+
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+
+/// <summary>
+/// Summary description for ComboBoxTestForm.
+/// </summary>
+public class ComboBoxTestForm : Form
+{
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private readonly Container? components = null;
+
+    private ComboBox myComboBox;
+
+    private Label myLabel;
+
+    public ComboBoxTestForm()
+    {
+        //
+        // Required for Windows Form Designer support
+        //
+        InitializeComponent();
+
+        //
+        // TODO: Add any constructor code after InitializeComponent call
+        //
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
+    }
+
+    private void ComboBox_TextChanged(object sender, EventArgs e)
+    {
+        myLabel.Text = ((ComboBox) sender).Text;
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        myComboBox = new ComboBox();
+        myLabel = new Label();
+        SuspendLayout();
+        // 
+        // myComboBox
+        // 
+        myComboBox.Items.AddRange(new object[] {"one", "two", "three", "four", "five"});
+        myComboBox.Location = new Point(72, 32);
+        myComboBox.Name = "myComboBox";
+        myComboBox.Size = new Size(121, 21);
+        myComboBox.TabIndex = 0;
+        myComboBox.Text = "None";
+        myComboBox.TextChanged += new EventHandler(ComboBox_TextChanged);
+        // 
+        // myLabel
+        // 
+        myLabel.Location = new Point(104, 120);
+        myLabel.Name = "myLabel";
+        myLabel.TabIndex = 1;
+        myLabel.Text = "label1";
+        // 
+        // ComboBoxTestForm
+        // 
+        AutoScaleDimensions = new SizeF(5, 13);
+        ClientSize = new Size(292, 273);
+        Controls.Add(myLabel);
+        Controls.Add(myComboBox);
+        Name = "ComboBoxTestForm";
+        Text = "ComboBoxTestForm";
+        ResumeLayout(false);
+    }
+
+    #endregion
+}

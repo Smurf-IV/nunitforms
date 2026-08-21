@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<TargetFrameworks>net462;net48;net6.0-windows</TargetFrameworks>
+		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+		<IsTestProject>false</IsTestProject>
+		<IsTestExecutionHost>false</IsTestExecutionHost>
+		<!-- Set the CheckEolTargetFramework property as false to fix the warning -->
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<UseWindowsForms>true</UseWindowsForms>
+		<IsPublishable>True</IsPublishable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<RootNamespace>NUnit.Extensions.Forms</RootNamespace>
+
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<IsTrimmable>True</IsTrimmable>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<WarningLevel>9999</WarningLevel>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>preview</LangVersion>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+
+		<!-- Force consistent architecture for multi-targeting -->
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<Prefer32Bit>false</Prefer32Bit>
+
+		<!-- .NET 8+ Performance Optimizations -->
+		<TieredCompilation>true</TieredCompilation>
+		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops>
+		<TieredPGO>true</TieredPGO>
+		<!-- NEW in .NET 9: Dynamic PGO gets better -->
+		<TieredCompilationDynamicPgo>true</TieredCompilationDynamicPgo>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Title>NUnitForms</Title>
+		<PackageId>NUnitForms</PackageId>
+		<RepositoryType>git</RepositoryType>
+		<Copyright>NUnitForms Copyright ©  2003-2007, Luke T. Maxon : Then 2026-2026 © Smurf-IV</Copyright>
+		<PackageLicenseExpression>BSD3</PackageLicenseExpression>
+		<VersionPrefix>3.$([System.DateTime]::UtcNow.ToString(yyMM)).$([System.DateTime]::UtcNow.ToString(dd))</VersionPrefix>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="NUnit" Version="4.6.1" />
+	</ItemGroup>
+</Project>

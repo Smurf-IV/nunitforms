@@ -27,19 +27,26 @@
 ## Version 3 - POC: Alpha
 
 - ✅ Create Fork and add information to the README.md
+- ✅ Restructure the layout of the directories within GitHub
 - [-] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
-    - ✅ net 4.8
-    - ✅ net6.0 (Will be dropped in NUnit 5)
+    - [-] net 4.8 (_Identify obsoleted types and replace_)
+    - [-] net6.0 (Will be dropped in NUnit 5)
     - [ ] net8.0
     - [ ] net10.0
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
+    - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - [-] net 4.6.2
-    - [-] net 4.8
-    - [ ] Remove `NMock3` and replace with `Moq` or `NSubstitute` (or any other mocking framework)
+    - [-] net 4.8 (_Identify obsoleted types and replace_)
     - [ ] net6.0 (Will be dropped in NUnit 5)
     - [ ] net8.0
     - [ ] net10.0
+- [ ] Add missing tests for:
+    - [ ] `CheckedListBoxTester`
+    - [ ] `ComponentTester`
+    - [ ] `ListViewTester`
+    - [ ] `PanelTester`
+
 - [-] Non supported winform controls will be gaurded (For backward compatibility)
     - [ ] Fix the recorder project to use the new `ToolStripTester` instead of `ToolBarTester` etc.
     - [ ] Replace tests:
