@@ -168,7 +168,7 @@ public class Finder<T>
         {
             results.Add(obj);
         }
-
+        
         if (obj is Form form)
         {
             Form f = form;
@@ -177,9 +177,15 @@ public class Finder<T>
             {
                 results.AddRange(Find(name, f.Menu, f));
             }
-#else
-            throw new NotImplementedException();
 #endif
+            // .NET (Core/5+) replacement: use MainMenuStrip instead of the removed Form.Menu
+            if (f.MainMenuStrip != null)
+            {
+                foreach (ToolStripItem item in f.MainMenuStrip.Items)
+                {
+                    results.AddRange(Find(name, item, f));
+                }
+            }
         }
 
         if (obj is ToolStrip strip)
@@ -202,6 +208,11 @@ public class Finder<T>
         {
             foreach (Control c2 in control.Controls)
             {
+                // Avoid enumerating the same main menu twice: it's already handled via Form.MainMenuStrip above
+                if (control is Form ff && c2 is MenuStrip ms && ff.MainMenuStrip == ms)
+                {
+                    continue;
+                }
                 results.AddRange(Find(name, c2, null));
             }
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
@@ -210,7 +221,7 @@ public class Finder<T>
                 results.AddRange(Find(name, control.ContextMenu, control));
             }
 #else
-            throw new NotImplementedException();
+            // In .NET (Core/5+) use ContextMenuStrip instead. Handled below if present.
 #endif
             if (control.ContextMenuStrip != null)
             {
@@ -230,7 +241,7 @@ public class Finder<T>
             }
         }
 #else
-        throw new NotImplementedException();
+        // Menu class is not available in .NET (Core/5+); menu traversal handled via ToolStrip items above.
 #endif
         return results;
     }

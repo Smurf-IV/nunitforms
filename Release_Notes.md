@@ -2,9 +2,9 @@
 
 ## ⛓️‍💥 **Breaking Change(s)**
 
-- Remove `VirtualKeyCodes`
-- Remove `WindowSpecificSendKeyboardInput`
-- Remove `SimpleAPIKeyboardWithEmulation`
+- Removed `VirtualKeyCodes`
+- Removed `WindowSpecificSendKeyboardInput`
+- Removed `SimpleAPIKeyboardWithEmulation`
 
 ## Current Changes (So Far)
 

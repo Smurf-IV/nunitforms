@@ -76,6 +76,7 @@ internal class Win32
 
     public const uint WM_KEYDOWN = 0x0100;
     public const uint WM_KEYUP = 0x0101;
+    public const uint WM_CHAR = 0x0102;
     public const uint WM_SYSKEYDOWN = 0x104;
     public const uint WM_SYSKEYUP = 0x105;
 

@@ -9,8 +9,8 @@
 ## Why
 
 - I wanted a way to be able to test standalone controls (Actually for wizard pages),
- but could not find a way to do this withut having to perform reflection on the `Focus_Lost` events, because of the way Dev-Ops runners work (i.e. headless)
-- I found this (I had used it on 2006 for a couple of projects) and thought it would be a good idea to modernize it and make it work with the latest NUnit TFM(s) and also fix / add some new features.
+ but could not find a way to do this without having to perform reflection on the `Focus_Lost` events, because of the way Dev-Ops runners work (i.e. headless)
+- I found this (I had used it in 2006 for a couple of projects) and thought it would be a good idea to modernize it and make it work with the latest NUnit TFM(s) and also fix / add some new features.
 
 -----
 
@@ -49,7 +49,7 @@
 
 - [-] Non supported winform controls will be gaurded (For backward compatibility)
     - [ ] Fix the recorder project to use the new `ToolStripTester` instead of `ToolBarTester` etc.
-    - [ ] Replace tests:
+    - [-] Create class and add tests to cover deprecated/removed controls:
         - [ ] `ContextMenuTestForm`
         - [ ] `MainMenuTestForm`
         - [ ] `ToolbarTestForm`

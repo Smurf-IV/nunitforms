@@ -129,13 +129,57 @@ public class SendKeysParser : ISendKeysParser
             Group escapedKeyGroup = match[0].Groups["escapedKey"];
             if (escapedKeyGroup.Success)
             {
+                // First try direct map (e.g., {BACKSPACE})
                 if (!_keyValueMap.TryGetValue(escapedKeyGroup.Value, out keyCode))
                 {
-                    keyCode = Keys.None;
-                    if (escapedKeyGroup.Value.Length == 3)
+                    // Handle repeats like: {x n} or {KEY n}
+                    // Extract inner token and count
+                    var value = escapedKeyGroup.Value; // includes braces
+                    var m = Regex.Match(value, @"^\{\s*(.+?)\s+(\d+)\s*\}$");
+                    if (m.Success)
                     {
-                        // escaped character
-                        bodyText = escapedKeyGroup.Value.Substring(1, 1);
+                        string token = m.Groups[1].Value;
+                        int count = int.Parse(m.Groups[2].Value);
+
+                        if (token.Length == 1)
+                        {
+                            // Simple character repeated N times
+                            bodyText = new string(token[0], count);
+                            keyCode = Keys.None;
+                        }
+                        else
+                        {
+                            // Try to resolve the token as a named key and expand into N groups
+                            string lookup = "{" + token.ToUpperInvariant() + "}";
+                            if (_keyValueMap.TryGetValue(lookup, out var repeatedKey))
+                            {
+                                for (int i = 0; i < count; i++)
+                                {
+                                    _groupModifiers.Add(modifierCharacters);
+                                    _escapedKeyCodes.Add(repeatedKey);
+                                    _bodyTexts.Add(string.Empty);
+                                    _groups.Add(new SendKeysParserGroup(modifierCharacters, string.Empty, repeatedKey));
+                                }
+
+                                // We've already appended expanded groups; return to avoid adding another below.
+                                return;
+                            }
+                            else
+                            {
+                                // Fallback: treat as literal text repeated
+                                bodyText = string.Concat(Enumerable.Repeat(token, count));
+                                keyCode = Keys.None;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        keyCode = Keys.None;
+                        if (escapedKeyGroup.Value.Length == 3)
+                        {
+                            // escaped character like {+}
+                            bodyText = escapedKeyGroup.Value.Substring(1, 1);
+                        }
                     }
                 }
             }

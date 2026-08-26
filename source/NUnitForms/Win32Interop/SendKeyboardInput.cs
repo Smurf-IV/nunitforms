@@ -39,26 +39,39 @@ namespace NUnit.Extensions.Forms.Win32Interop;
 
 public class SendKeyboardInput : ISendKeyboardInput
 {
-    private Win32.KBINPUT keyboardInput;
-
-    public SendKeyboardInput()
-    {
-        keyboardInput.ki.dwExtraInfo = Win32.GetMessageExtraInfo();
-    }
-
     public void SendInput(IntPtr window, Keys keys, SendInputFlags flags)
     {
-        var keyValue = (byte)keys;
-        Win32.KeyBdEvent(keyValue, 0, (int)flags, UIntPtr.Zero);
+        // Targeted alternative to deprecated/global keybd_event: send to the provided hwnd
+        var vk = (uint)((int)keys & 0xFF);
 
-        //keyboardInput.ki.dwFlags = (uint)flags;
-        //keyboardInput.ki.wVk = (UInt16)keyCodes;
+        // Compute scan code for lParam construction
+        var hkl = Win32.GetKeyboardLayout(Win32.GetCurrentThreadId());
+        uint scanCode = Win32.MapVirtualKeyEx(vk, 0, hkl) & 0xFF;
 
-        //if (Win32.SendKeyboardInput(1, ref keyboardInput, Marshal.SizeOf(keyboardInput)) == 0)
-        //{
-        //    throw new Win32Exception();
-        //}
+        // Build lParam per MSDN: repeat(0-15)=1, scan(16-23), extended(24)=0, context(29)=0,
+        // previous state(30) and transition(31) depend on up/down
+        uint lParam = 1u | (scanCode << 16);
+        if (flags == SendInputFlags.KeyUp)
+        {
+            lParam |= (1u << 30) | (1u << 31);
+        }
 
+        // Choose message; use SYSKEY for Alt/Menu to match system semantics
+        uint msg = flags == SendInputFlags.KeyDown
+            ? ((keys & Keys.Alt) == Keys.Alt || keys == Keys.Menu ? Win32.WM_SYSKEYDOWN : Win32.WM_KEYDOWN)
+            : ((keys & Keys.Alt) == Keys.Alt || keys == Keys.Menu ? Win32.WM_SYSKEYUP : Win32.WM_KEYUP);
+
+        // Post to the specific window/control
+        Win32.PostMessage(window, msg, (IntPtr)vk, (IntPtr)lParam);
+
+        Application.DoEvents();
+    }
+
+    public void SendChar(IntPtr window, char ch)
+    {
+        // Send a character directly to the target control; this bypasses the need for TranslateMessage
+        // wParam = UTF-16 code unit of the character; lParam repeat count = 1
+        Win32.PostMessage(window, Win32.WM_CHAR, (IntPtr)ch, (IntPtr)1);
         Application.DoEvents();
     }
 }

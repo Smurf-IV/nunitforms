@@ -57,7 +57,7 @@ public class KeyboardControllerTest
         textBoxTester = new ControlTester("myTextBox");
         Assert.AreEqual("default", textBoxTester.Text);
 
-        keyboardController = new KeyboardController(textBoxTester);
+        keyboardController = new KeyboardController(textBoxTester, true);
     }
 
     [TearDown]

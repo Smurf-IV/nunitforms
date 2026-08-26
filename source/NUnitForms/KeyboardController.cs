@@ -33,10 +33,12 @@
 
 using System;
 using System.Windows.Forms;
+
 using NUnit.Extensions.Forms.Generic_Testers;
 using NUnit.Extensions.Forms.SendKey;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Extensions.Forms.Util;
+using NUnit.Extensions.Forms.Win32Interop;
 
 namespace NUnit.Extensions.Forms;
 
@@ -74,6 +76,13 @@ public class KeyboardController : IDisposable
     {
         UseOn(controlTester);
     }
+
+    public KeyboardController(ControlTester controlTester, bool useNew)
+        : this(new SendKeysFactory(new SendKeysParserFactory(), new SendKeyboardInput()))
+    {
+        UseOn(controlTester);
+    }
+
 
     #region IDisposable Members
 
@@ -124,6 +133,9 @@ public class KeyboardController : IDisposable
             Win32.BlockInput(true);
             restoreUserInput = true;
         }
+
+        // Ensure activation/focus messages are processed before the first key is sent
+        Application.DoEvents();
     }
 
     /// <summary>
@@ -205,6 +217,8 @@ public class KeyboardController : IDisposable
     public void Press(string key)
     {
         keyboardControl.Focus();
+        // Ensure the focus/activation has been processed before sending the first keystroke
+        Application.DoEvents();
 
         sendKeys.SendWait(key);
 

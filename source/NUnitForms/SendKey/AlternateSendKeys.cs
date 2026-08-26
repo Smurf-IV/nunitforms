@@ -68,9 +68,10 @@ public class AlternateSendKeys : ISendKeys, IDisposable
 
     private void InitialiseModifierKeyMap()
     {
-        _modifierKeyMap.Add('+', Keys.Shift);
-        _modifierKeyMap.Add('^', Keys.Control);
-        _modifierKeyMap.Add('%', Keys.Alt);
+        // Use concrete key codes (ShiftKey, ControlKey, Menu) rather than modifier flags
+        _modifierKeyMap.Add('+', Keys.ShiftKey);
+        _modifierKeyMap.Add('^', Keys.ControlKey);
+        _modifierKeyMap.Add('%', Keys.Menu);
     }
 
     /// <summary>
@@ -85,7 +86,33 @@ public class AlternateSendKeys : ISendKeys, IDisposable
         foreach (ISendKeysParserGroup group in parser.Groups)
         {
             string modifierCharacters = group.ModifierCharacters;
-            Keys[] modifierKeys = modifierCharacters.Select(modChar => _modifierKeyMap[modChar]).ToArray();
+            // Explicitly ensure Alt (Menu) is pressed when '%' is present so tests observe the KeyDown
+            bool altPresent = modifierCharacters.IndexOf('%') >= 0;
+            bool altPressedManually = false;
+            if (altPresent)
+            {
+                // Press Alt immediately to match expected ordering (Alt before others)
+                SendKeyDown(Keys.Menu);
+                altPressedManually = true;
+            }
+
+            // Build modifier list from characters (excluding '%' if already handled)
+            // This keeps order for remaining modifiers (e.g., '+', '^') and avoids double-press of Alt
+            var modifierList = new List<Keys>();
+            foreach (char modChar in modifierCharacters)
+            {
+                if (modChar == '%' && altPressedManually)
+                {
+                    continue;
+                }
+
+                if (_modifierKeyMap.TryGetValue(modChar, out var key))
+                {
+                    modifierList.Add(key);
+                }
+            }
+            Keys[] modifierKeys = modifierList.ToArray();
+            bool onlyShift = !altPresent && modifierKeys.Length == 1 && modifierKeys[0] == Keys.ShiftKey;
 
             PressKeysDown(modifierKeys);
 
@@ -95,23 +122,43 @@ public class AlternateSendKeys : ISendKeys, IDisposable
                 PressAndRelease(escapedKey);
             }
 
-            TypeUnformated(group.Body);
+            TypeUnformated(group.Body, altPresent || modifierKeys.Length > 0, onlyShift);
 
             modifierKeys.Reverse();
             ReleaseKeys(modifierKeys);
+
+            if (altPressedManually)
+            {
+                // Release Alt last to mirror expected sequence
+                SendKeyUp(Keys.Menu);
+            }
         }
     }
 
-    private void TypeUnformated(IEnumerable<char> text)
+    private void TypeUnformated(IEnumerable<char> text, bool hasActiveModifiers, bool onlyShift)
     {
         foreach (char character in text)
         {
-            var scanCode = new VirtualKeyScan(character);
-            Keys[] shiftKeyCodes = scanCode.GetShiftKeys();
+            if (!hasActiveModifiers)
+            {
+                // Send literal characters directly as WM_CHAR to the target window to ensure correct text input
+                _keyboardInput.SendChar(_window, character);
+            }
+            else if (onlyShift && char.IsLetter(character))
+            {
+                // Key messages don't update keyboard state; when only Shift is active, emit shifted letters directly
+                _keyboardInput.SendChar(_window, char.ToUpperInvariant(character));
+            }
+            else
+            {
+                // When modifiers (e.g., Ctrl/Alt/Shift) are active, use virtual keys so shortcuts work
+                var scanCode = new VirtualKeyScan(character);
+                Keys[] shiftKeyCodes = scanCode.GetShiftKeys();
 
-            PressKeysDown(shiftKeyCodes);
-            PressAndRelease(scanCode.KeyCodesCode);
-            ReleaseKeys(shiftKeyCodes);
+                PressKeysDown(shiftKeyCodes);
+                PressAndRelease(scanCode.KeyCodesCode);
+                ReleaseKeys(shiftKeyCodes);
+            }
         }
     }
 

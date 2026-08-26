@@ -1,8 +1,8 @@
-#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
+#region Copyright (c) 2006-2007, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
-' Copyright (c) 2003-2005, Luke T. Maxon
+' Copyright (c) 2006-2007, Luke T. Maxon
 ' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
@@ -31,15 +31,42 @@
 
 #endregion
 
-using System;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Generic_Testers;
 
 
-namespace NUnit.Extensions.Forms.Win32Interop;
+#pragma warning disable IDE0130
+namespace NUnit.Extensions.Forms.Testers;
 
-public interface ISendKeyboardInput
+
+public class ContextMenuStripTester : ControlTester<ContextMenuStrip, ContextMenuStripTester>
 {
-    void SendInput(IntPtr window, Keys keyCodes, SendInputFlags flags);
+    public ContextMenuStripTester()
+    {
+    }
 
-    void SendChar(IntPtr window, char ch);
+    public ContextMenuStripTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ContextMenuStripTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ContextMenuStripTester(string name)
+        : base(name)
+    {
+    }
+
+    public ContextMenuStripTester(ContextMenuStripTester tester, int index)
+        : base(tester, index)
+    {
+    }
+
+    public ToolStripMenuItemTester GetMenuItem(string itemName)
+    {
+        return new ToolStripMenuItemTester(itemName, Properties.FindForm());
+    }
 }
