@@ -5,6 +5,7 @@
 - Removed `VirtualKeyCodes`
 - Removed `WindowSpecificSendKeyboardInput`
 - Removed `SimpleAPIKeyboardWithEmulation`
+- Removed `OldSendKeys`
 
 ## Current Changes (So Far)
 

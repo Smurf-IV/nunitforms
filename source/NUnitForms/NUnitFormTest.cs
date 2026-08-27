@@ -63,8 +63,11 @@ namespace NUnit.Extensions.Forms;
 /// </remarks>
 public class NUnitFormTest
 {
-    private static readonly FieldInfo isUserInteractive =
-        typeof (SystemInformation).GetField("isUserInteractive", BindingFlags.Static | BindingFlags.NonPublic);
+    // In newer WinForms (e.g., .NET 10), the backing field for UserInteractive may be renamed/removed.
+    // Probe known internal names and fall back gracefully if none are present.
+    private static readonly FieldInfo? isUserInteractive =
+        typeof(SystemInformation).GetField("isUserInteractive", BindingFlags.Static | BindingFlags.NonPublic)
+        ?? typeof(SystemInformation).GetField("s_isUserInteractive", BindingFlags.Static | BindingFlags.NonPublic);
 
     private KeyboardController? keyboard;
     private ModalFormTester modal;
@@ -171,7 +174,7 @@ public class NUnitFormTest
         verified = false;
 
 
-        if (!SystemInformation.UserInteractive)
+        if (!SystemInformation.UserInteractive && isUserInteractive != null)
         {
             isUserInteractive.SetValue(null, true);
         }
@@ -183,7 +186,9 @@ public class NUnitFormTest
 
         modal = new ModalFormTester();
         mouse = new MouseController();
-        keyboard = new KeyboardController(new OldSendKeysFactory());
+        // Use the hwnd-targeted implementation across all target frameworks
+        // System.Windows.Forms.SendKeys can be unreliable (especially on hidden desktops)
+        keyboard = new KeyboardController(new SendKeysFactory(new SendKeysParserFactory(), new SendKeyboardInput()));
         GetMessageHook.InstallHook();
         Setup();
     }

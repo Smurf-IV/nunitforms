@@ -32,11 +32,16 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+
 using FakeItEasy;
+
 using NUnit.Extensions.Forms.SendKey;
 using NUnit.Extensions.Forms.Win32Interop;
 using NUnit.Framework;
+
 
 namespace NUnit.Extensions.Forms.TestApplications;
 
@@ -71,9 +76,9 @@ public class SendKeysTests : MockingTestFixture
     {
         StubFormatter("b", "b", "", Keys.None);
 
-        ExpectKeyDownAndRelease(Keys.B);
-
         keyboardSendKeys.SendWait("b");
+
+        ExpectDirectSend("b");
     }
 
     [Test]
@@ -81,11 +86,9 @@ public class SendKeysTests : MockingTestFixture
     {
         StubFormatter("B", "B", "", Keys.None);
 
-        ExpectKeyDown(Keys.ShiftKey);
-        ExpectKeyDownAndRelease(Keys.B);
-        ExpectKeyUp(Keys.ShiftKey);
-
         keyboardSendKeys.SendWait("B");
+
+        ExpectDirectSend("B");
     }
 
     [Test]
@@ -93,12 +96,12 @@ public class SendKeysTests : MockingTestFixture
     {
         StubFormatter("+(ab)", "ab", "+", Keys.None);
 
+        keyboardSendKeys.SendWait("+(ab)");
+
         ExpectKeyDown(Keys.ShiftKey);
         ExpectKeyDownAndRelease(Keys.A);
         ExpectKeyDownAndRelease(Keys.B);
         ExpectKeyUp(Keys.ShiftKey);
-
-        keyboardSendKeys.SendWait("+(ab)");
     }
 
     [Test]
@@ -106,12 +109,12 @@ public class SendKeysTests : MockingTestFixture
     {
         StubFormatter("^(ab)", "ab", "^", Keys.None);
 
+        keyboardSendKeys.SendWait("^(ab)");
+
         ExpectKeyDown(Keys.ControlKey);
         ExpectKeyDownAndRelease(Keys.A);
         ExpectKeyDownAndRelease(Keys.B);
         ExpectKeyUp(Keys.ControlKey);
-
-        keyboardSendKeys.SendWait("^(ab)");
     }
 
     [Test]
@@ -119,18 +122,20 @@ public class SendKeysTests : MockingTestFixture
     {
         StubFormatter("%(ab)", "ab", "%", Keys.None);
 
+        keyboardSendKeys.SendWait("%(ab)");
+
         ExpectKeyDown(Keys.Menu);
         ExpectKeyDownAndRelease(Keys.A);
         ExpectKeyDownAndRelease(Keys.B);
         ExpectKeyUp(Keys.Menu);
-
-        keyboardSendKeys.SendWait("%(ab)");
     }
 
     [Test]
     public void SendWait_AltShiftControlFormatted()
     {
         StubFormatter("%+^(ab)", "ab", "%+^", Keys.None);
+
+        keyboardSendKeys.SendWait("%+^(ab)");
 
         ExpectKeyDown(Keys.Menu);
         ExpectKeyDown(Keys.ControlKey);
@@ -142,8 +147,6 @@ public class SendKeysTests : MockingTestFixture
         ExpectKeyUp(Keys.ShiftKey);
         ExpectKeyUp(Keys.ControlKey);
         ExpectKeyUp(Keys.Menu);
-
-        keyboardSendKeys.SendWait("%+^(ab)");
     }
 
     [Test]
@@ -151,6 +154,8 @@ public class SendKeysTests : MockingTestFixture
     public void SendWait_SimpleText()
     {
         StubFormatter("aA {{}1.", "aA {1.", "", Keys.None);
+
+        keyboardSendKeys.SendWait("aA {{}1.");
 
         ExpectKeyDownAndRelease(Keys.A);
 
@@ -167,8 +172,6 @@ public class SendKeysTests : MockingTestFixture
 
         ExpectKeyDownAndRelease(Keys.NumPad1);
         ExpectKeyDownAndRelease(Keys.OemPeriod);
-
-        keyboardSendKeys.SendWait("aA {{}1.");
     }
 
     private void ExpectKeyDown(Keys keyCode)
@@ -181,10 +184,15 @@ public class SendKeysTests : MockingTestFixture
         A.CallTo(() => keyboardInput.SendInput(window, keyCode, SendInputFlags.KeyUp)).MustHaveHappenedOnceExactly();
     }
 
+    private void ExpectDirectSend(IEnumerable<char> text)
+    {
+        A.CallTo(() => keyboardInput.SendChar(window, text.First())).MustHaveHappenedOnceExactly();
+    }
+
     private void ExpectKeyDownAndRelease(Keys keyCode)
     {
-        A.CallTo(() => keyboardInput.SendInput(window, keyCode, SendInputFlags.KeyDown)).MustHaveHappenedOnceExactly();
         A.CallTo(() => keyboardInput.SendInput(window, keyCode, SendInputFlags.KeyUp)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => keyboardInput.SendInput(window, keyCode, SendInputFlags.KeyDown)).MustHaveHappenedOnceExactly();
     }
 
     private void StubFormatter(string rawText, string body, string modifiers, Keys escapedKeys)

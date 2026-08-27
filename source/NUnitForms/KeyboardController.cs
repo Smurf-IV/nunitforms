@@ -72,7 +72,7 @@ public class KeyboardController : IDisposable
     /// </summary>
     /// <param name="controlTester">The ControlTester to use the keyboard
     /// on.</param>
-    public KeyboardController(ControlTester controlTester) : this(new OldSendKeysFactory())
+    public KeyboardController(ControlTester controlTester) : this(new SendKeysFactory(new SendKeysParserFactory(), new SendKeyboardInput()))
     {
         UseOn(controlTester);
     }

@@ -38,6 +38,7 @@
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - [-] net 4.6.2
     - [-] net 4.8 (_Identify obsoleted types and replace_)
+    - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
     - [ ] net6.0 (Will be dropped in NUnit 5)
     - [ ] net8.0
     - [ ] net10.0

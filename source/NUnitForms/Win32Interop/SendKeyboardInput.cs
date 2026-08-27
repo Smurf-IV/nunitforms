@@ -39,6 +39,12 @@ namespace NUnit.Extensions.Forms.Win32Interop;
 
 public class SendKeyboardInput : ISendKeyboardInput
 {
+    // Track simple modifier state so we can synthesize correct character input
+    // when using targeted key messages (PostMessage) that do not affect thread keyboard state.
+    private bool _shiftActive;
+    private bool _ctrlActive;
+    private bool _altActive;
+
     public void SendInput(IntPtr window, Keys keys, SendInputFlags flags)
     {
         // Targeted alternative to deprecated/global keybd_event: send to the provided hwnd
@@ -56,13 +62,44 @@ public class SendKeyboardInput : ISendKeyboardInput
             lParam |= (1u << 30) | (1u << 31);
         }
 
-        // Choose message; use SYSKEY for Alt/Menu to match system semantics
+        // Choose message
+        // - Use SYSKEY for Alt/Menu to match system semantics
+        // - When ONLY Shift is active and a letter key is pressed, also use SYSKEY variants to avoid
+        //   TranslateMessage generating a second (lowercase) WM_CHAR from our posted KEYDOWN.
+        bool onlyShiftActive = _shiftActive && !_ctrlActive && !_altActive;
+        bool isLetterKey = vk >= 'A' && vk <= 'Z';
+        bool useSysKey = ((keys & Keys.Alt) == Keys.Alt) || keys == Keys.Menu || (onlyShiftActive && isLetterKey);
         uint msg = flags == SendInputFlags.KeyDown
-            ? ((keys & Keys.Alt) == Keys.Alt || keys == Keys.Menu ? Win32.WM_SYSKEYDOWN : Win32.WM_KEYDOWN)
-            : ((keys & Keys.Alt) == Keys.Alt || keys == Keys.Menu ? Win32.WM_SYSKEYUP : Win32.WM_KEYUP);
+            ? (useSysKey ? Win32.WM_SYSKEYDOWN : Win32.WM_KEYDOWN)
+            : (useSysKey ? Win32.WM_SYSKEYUP : Win32.WM_KEYUP);
 
         // Post to the specific window/control
         Win32.PostMessage(window, msg, (IntPtr)vk, (IntPtr)lParam);
+
+        // Maintain simple modifier state based on the virtual key pressed/released
+        if (keys == Keys.ShiftKey)
+        {
+            _shiftActive = flags == SendInputFlags.KeyDown;
+        }
+        else if (keys == Keys.ControlKey)
+        {
+            _ctrlActive = flags == SendInputFlags.KeyDown;
+        }
+        else if (keys == Keys.Menu)
+        {
+            _altActive = flags == SendInputFlags.KeyDown;
+        }
+
+        // When ONLY Shift is active, emulate translated character generation for letters
+        // because PostMessage of key events does not update keyboard state used by TranslateMessage.
+        // Emit a corresponding WM_CHAR for letter keydowns so text controls receive uppercased input.
+        if (flags == SendInputFlags.KeyDown
+            && _shiftActive && !_ctrlActive && !_altActive
+            && vk >= 'A' && vk <= 'Z')
+        {
+            // Uppercase letter as character
+            Win32.PostMessage(window, Win32.WM_CHAR, (IntPtr)vk, (IntPtr)1);
+        }
 
         Application.DoEvents();
     }

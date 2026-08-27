@@ -88,7 +88,7 @@ public class AlternateSendKeys : ISendKeys, IDisposable
             string modifierCharacters = group.ModifierCharacters;
             // Explicitly ensure Alt (Menu) is pressed when '%' is present so tests observe the KeyDown
             bool altPresent = modifierCharacters.IndexOf('%') >= 0;
-            bool altPressedManually = false;
+            var altPressedManually = false;
             if (altPresent)
             {
                 // Press Alt immediately to match expected ordering (Alt before others)
@@ -99,22 +99,18 @@ public class AlternateSendKeys : ISendKeys, IDisposable
             // Build modifier list from characters (excluding '%' if already handled)
             // This keeps order for remaining modifiers (e.g., '+', '^') and avoids double-press of Alt
             var modifierList = new List<Keys>();
-            foreach (char modChar in modifierCharacters)
+            foreach (char modChar in modifierCharacters.Where(modChar => modChar != '%' || !altPressedManually))
             {
-                if (modChar == '%' && altPressedManually)
-                {
-                    continue;
-                }
-
                 if (_modifierKeyMap.TryGetValue(modChar, out var key))
                 {
                     modifierList.Add(key);
                 }
             }
             Keys[] modifierKeys = modifierList.ToArray();
-            bool onlyShift = !altPresent && modifierKeys.Length == 1 && modifierKeys[0] == Keys.ShiftKey;
-
-            PressKeysDown(modifierKeys);
+            if (modifierKeys.Any())
+            {
+                PressKeysDown(modifierKeys);
+            }
 
             Keys escapedKey = group.EscapedKey;
             if (escapedKey != Keys.None)
@@ -122,10 +118,13 @@ public class AlternateSendKeys : ISendKeys, IDisposable
                 PressAndRelease(escapedKey);
             }
 
-            TypeUnformated(group.Body, altPresent || modifierKeys.Length > 0, onlyShift);
+            TypeUnformated(group.Body, altPresent || modifierKeys.Length > 0);
 
-            modifierKeys.Reverse();
-            ReleaseKeys(modifierKeys);
+            if (modifierKeys.Any())
+            {
+                modifierKeys.Reverse();
+                ReleaseKeys(modifierKeys);
+            }
 
             if (altPressedManually)
             {
@@ -135,7 +134,7 @@ public class AlternateSendKeys : ISendKeys, IDisposable
         }
     }
 
-    private void TypeUnformated(IEnumerable<char> text, bool hasActiveModifiers, bool onlyShift)
+    private void TypeUnformated(IEnumerable<char> text, bool hasActiveModifiers)
     {
         foreach (char character in text)
         {
@@ -143,11 +142,6 @@ public class AlternateSendKeys : ISendKeys, IDisposable
             {
                 // Send literal characters directly as WM_CHAR to the target window to ensure correct text input
                 _keyboardInput.SendChar(_window, character);
-            }
-            else if (onlyShift && char.IsLetter(character))
-            {
-                // Key messages don't update keyboard state; when only Shift is active, emit shifted letters directly
-                _keyboardInput.SendChar(_window, char.ToUpperInvariant(character));
             }
             else
             {
