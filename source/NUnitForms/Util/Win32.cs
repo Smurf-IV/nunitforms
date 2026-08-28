@@ -79,6 +79,18 @@ internal class Win32
     public const uint WM_CHAR = 0x0102;
     public const uint WM_SYSKEYDOWN = 0x104;
     public const uint WM_SYSKEYUP = 0x105;
+    public const uint WM_LBUTTONDOWN = 0x0201;
+    public const uint WM_LBUTTONUP = 0x0202;
+    public const uint WM_MOUSEMOVE = 0x0200;
+    public const int MK_LBUTTON = 0x0001;
+    public const uint WM_MOUSEACTIVATE = 0x0021;
+    public const int HTCLIENT = 1;
+    public const int MA_ACTIVATE = 1;
+    public const uint WM_ACTIVATE = 0x0006;
+    public const int WA_INACTIVE = 0;
+    public const int WA_ACTIVE = 1;
+    public const int WA_CLICKACTIVE = 2;
+    public const uint WM_SETFOCUS = 0x0007;
 
     [DllImport("user32.dll", SetLastError = true)]
     public static extern IntPtr OpenInputDesktop(uint dwFlags, bool fInherit, uint dwDesiredAccess);
@@ -483,6 +495,27 @@ internal class Win32
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)] //
     public static extern int RegisterWindowMessage(string lpstring);
+
+
+    // Bring a window to the foreground/top of Z-order
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    public static extern bool BringWindowToTop(IntPtr hWnd);
+
+    // Release any current mouse capture so subsequent clicks go to the intended control
+    [DllImport("user32.dll")]
+    public static extern bool ReleaseCapture();
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+    [DllImport("user32.dll")]
+    public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
 
 }

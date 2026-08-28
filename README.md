@@ -28,6 +28,7 @@
 
 - ✅ Create Fork and add information to the README.md
 - ✅ Restructure the layout of the directories within GitHub
+- ✅ Fix `SendKeysParser` (Removed `SendKeys`)
 - [-] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
     - [-] net 4.8 (_Identify obsoleted types and replace_)
@@ -36,8 +37,10 @@
     - [ ] net10.0
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
-    - [-] net 4.6.2
-    - [-] net 4.8 (_Identify obsoleted types and replace_)
+    - ✅ net 4.6.2
+    - ✅ net 4.8
+    - [-] Fix mouse event usage in tests
+    - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
     - [ ] net6.0 (Will be dropped in NUnit 5)
     - [ ] net8.0
@@ -58,9 +61,7 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- [ ] Fix `SendKeysParser` (Or remove)
 - [ ] Add `ThrowHelper` and use it in the codebase
-- [ ] Fix mouse event usage in tests
 - [ ] Other stuff to be added later...
 
 ### ⛓️‍💥Breaking Changes
@@ -68,6 +69,9 @@
 - Remove `VirtualKeyCodes`
 - Remove `WindowSpecificSendKeyboardInput`
 - Remove `SimpleAPIKeyboardWithEmulation`
+- Removed `VirtualKeyCodes`
+- Removed `OldSendKeys`
+- Removed `SendKeys`
 - Non supported winform controls will be gaurded (For backward compatibility)
     - `ToolBarTester` -> Replaced by `ToolStripTester`
     - `MenuItemTester`

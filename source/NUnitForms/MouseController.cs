@@ -165,16 +165,8 @@ public class MouseController : IDisposable
 
         PositionUnit = GraphicsUnit.Pixel;
 
-        // Block any user input while we are active.
-        if (!restoreUserInput)
-        {
-            if (!Win32.BlockInput(true))
-            {
-                //throw new Win32Exception();
-            }
-
-            restoreUserInput = true;
-        }
+        // Do not block user input globally; it can interfere with activation/click delivery between sequential tests
+        // and after modal dialogs. Rely on targeted positioning and focus instead.
     }
 
     /// <summary>
@@ -249,15 +241,7 @@ public class MouseController : IDisposable
                 // Restore the mouse position
                 Win32.SetCursorPos(originalPosition.x, originalPosition.y);
 
-                // Enable user input.
-                if (restoreUserInput)
-                {
-                    if (!Win32.BlockInput(false))
-                    {
-                        //throw new Win32Exception();
-                    }
-                    restoreUserInput = false;
-                }
+                // No global input blocking to undo; leave system input state unchanged
             }
         }
     }
@@ -581,11 +565,46 @@ public class MouseController : IDisposable
     /// </exception>
     public void Press(MouseButtons buttons, PointF point)
     {
-        var input = new Win32.MSINPUT(0);
+        // Ensure no other window/control holds mouse capture (e.g., after a modal dialog)
+        try { Win32.ReleaseCapture(); } catch { /* ignore */ }
+
+        // Always ensure cursor is over the control
+        Position = point;
+
+        // Prefer targeted client messages for left-button to avoid foreground/focus issues after modals
         if ((buttons & MouseButtons.Left) != 0)
         {
-            input.mi.dwFlags |= Win32.MOUSEEVENTF_LEFTDOWN;
+            int lParam = mouseControl.MakeLParam(point, scale);
+            // If the form isn't active, emulate mouse-activate handshake so the child can receive the click
+            IntPtr formHandle = mouseControl.FormHandle;
+            try
+            {
+                // Best-effort: send WM_MOUSEACTIVATE to the top-level window
+                if (formHandle != IntPtr.Zero)
+                {
+                    int actParam = ((int)Win32.WM_LBUTTONDOWN << 16) | (Win32.HTCLIENT & 0xFFFF);
+                    Win32.SendMessage(formHandle, Win32.WM_MOUSEACTIVATE, mouseControl.Handle, (IntPtr)actParam);
+                    // Indicate activation due to mouse click
+                    Win32.SendMessage(formHandle, Win32.WM_ACTIVATE, (IntPtr)Win32.WA_CLICKACTIVE, mouseControl.Handle);
+                    // Ensure the control has focus before clicking
+                    Win32.SendMessage(mouseControl.Handle, Win32.WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+                }
+            }
+            catch { /* ignore */ }
+            Win32.SendMessage(mouseControl.Handle, Win32.WM_MOUSEMOVE, IntPtr.Zero, (IntPtr)lParam);
+            Win32.SendMessage(mouseControl.Handle, Win32.WM_LBUTTONDOWN, (IntPtr)Win32.MK_LBUTTON, (IntPtr)lParam);
+            Application.DoEvents();
+            return;
         }
+
+        // Fallback to SendInput for other buttons
+        var input = new Win32.MSINPUT(0)
+        {
+            mi =
+            {
+                dwFlags = 0
+            }
+        };
         if ((buttons & MouseButtons.Right) != 0)
         {
             input.mi.dwFlags |= Win32.MOUSEEVENTF_RIGHTDOWN;
@@ -613,7 +632,6 @@ public class MouseController : IDisposable
             input.mi.mouseData |= Win32.XBUTTON2;
         }
 
-        Position = point;
         if (input.mi.dwFlags != 0)
         {
             if (0 == Win32.SendMouseInput(1, ref input, Marshal.SizeOf(input)))
@@ -783,11 +801,18 @@ public class MouseController : IDisposable
     /// </exception>
     public void Release(MouseButtons buttons, PointF point)
     {
-        var input = new Win32.MSINPUT(0);
+        // Ensure cursor remains over the control
+        Position = point;
+
         if ((buttons & MouseButtons.Left) != 0)
         {
-            input.mi.dwFlags |= Win32.MOUSEEVENTF_LEFTUP;
+            int lParam = mouseControl.MakeLParam(point, scale);
+            Win32.SendMessage(mouseControl.Handle, Win32.WM_LBUTTONUP, IntPtr.Zero, (IntPtr)lParam);
+            Application.DoEvents();
+            return;
         }
+
+        var input = new Win32.MSINPUT(0);
         if ((buttons & MouseButtons.Right) != 0)
         {
             input.mi.dwFlags |= Win32.MOUSEEVENTF_RIGHTUP;
@@ -817,7 +842,6 @@ public class MouseController : IDisposable
 
         if (input.mi.dwFlags != 0)
         {
-            Position = point;
             if (0 == Win32.SendMouseInput(1, ref input, Marshal.SizeOf(input)))
             {
                 throw new Win32Exception();

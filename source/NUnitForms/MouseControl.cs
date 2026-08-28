@@ -75,7 +75,64 @@ internal class MouseControl
 
     internal void Focus()
     {
-        Control.FindForm().Activate();
+        var control = Control;
+        var form = control.FindForm();
+        if (form != null)
+        {
+            try
+            {
+                // Try to force the test form to the foreground to avoid residual focus from prior modals
+                // If another thread owns the foreground window, temporarily attach input queues to allow activation.
+                IntPtr fg = Win32.GetForegroundWindow();
+                uint fgThread = 0;
+                if (fg != IntPtr.Zero)
+                {
+                    fgThread = Win32.GetWindowThreadProcessId(fg, out _);
+                }
+                uint thisThread = (uint)AppDomain.GetCurrentThreadId();
+                uint formThread = Win32.GetWindowThreadProcessId(form.Handle, out _);
+                bool attached = false;
+                try
+                {
+                    if (fgThread != 0 && fgThread != formThread)
+                    {
+                        attached = Win32.AttachThreadInput(formThread, fgThread, true);
+                    }
+                    Win32.SetForegroundWindow(form.Handle);
+                    Win32.BringWindowToTop(form.Handle);
+                }
+                finally
+                {
+                    if (attached)
+                    {
+                        Win32.AttachThreadInput(formThread, fgThread, false);
+                    }
+                }
+            }
+            catch
+            {
+                // Fallback to Activate if direct foreground fails (e.g., desktop restrictions)
+                form.Activate();
+            }
+
+            // Give the form a brief moment to become the active foreground window
+            for (int i = 0; i < 10 && Form.ActiveForm != form; i++)
+            {
+                Application.DoEvents();
+                try { Win32.BringWindowToTop(form.Handle); } catch { }
+            }
+        }
+
+        // Ensure the specific control has input focus before moving/clicking
+        control.Focus();
+        Application.DoEvents();
+
+        // Wait briefly until the control reports focused to avoid missing the first click after modals
+        for (int i = 0; i < 10 && !control.Focused; i++)
+        {
+            control.Focus();
+            Application.DoEvents();
+        }
     }
 
     /// <summary>
@@ -103,5 +160,16 @@ internal class MouseControl
     {
         Point client = Control.PointToClient(new Point(screen.x, screen.y));
         return new PointF(client.X / scale.X, client.Y / scale.Y);
+    }
+
+    internal IntPtr Handle => Control.Handle;
+
+    internal IntPtr FormHandle => Control.FindForm()?.Handle ?? IntPtr.Zero;
+
+    internal int MakeLParam(PointF p, PointF scale)
+    {
+        int x = (int)Math.Round(p.X * scale.X);
+        int y = (int)Math.Round(p.Y * scale.Y);
+        return (y << 16) | (x & 0xFFFF);
     }
 }

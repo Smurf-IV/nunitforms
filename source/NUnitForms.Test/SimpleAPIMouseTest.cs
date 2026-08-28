@@ -66,13 +66,13 @@ public class SimpleAPIMouseTest : NUnitFormTest
         ++click2;
     }
 
-    //this is correct.  we are testing a text box here.  does it fire events
-    //when it is supposed to?  (unusual that we would unit test two controls
-    //at the same time.. maybe I don't need this functionality?
+    // This is correct.  we are testing a text box here.
+    // Does it fire events when it is supposed to?
     [Test]
     public void CanClickMultipleControls()
     {
-        new TextBoxTestForm().Show();
+        using var frm = new TextBoxTestForm();
+        frm.Show();
         new TextBoxTester("myTextBox").Properties.Click += OnClick;
         new TextBoxTester("anotherTextBox").Properties.Click += OnClick2;
 
@@ -95,7 +95,8 @@ public class SimpleAPIMouseTest : NUnitFormTest
     [Test]
     public void CorrectMouseClicking()
     {
-        new TextBoxTestForm().Show();
+        using var frm = new TextBoxTestForm();
+        frm.Show();
 
         var textBox = new TextBoxTester("myTextBox");
 
@@ -114,7 +115,8 @@ public class SimpleAPIMouseTest : NUnitFormTest
     [Test]
     public void IncorrectMouseClicking()
     {
-        new ButtonTestForm().Show();
+        using var frm = new ButtonTestForm();
+        frm.Show();
         var button = new ButtonTester("myButton");
         var label = new LabelTester("myLabel");
         Mouse.UseOn(button);
@@ -128,7 +130,8 @@ public class SimpleAPIMouseTest : NUnitFormTest
     [Test]
     public void IncorrectMouseClickingSimplifiedAPI()
     {
-        new ButtonTestForm().Show();
+        using var frm = new ButtonTestForm();
+        frm.Show();
 
         Mouse.UseOn("myButton");
         Mouse.Click(3, 1);
