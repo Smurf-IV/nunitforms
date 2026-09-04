@@ -47,7 +47,7 @@ public class ToolStripComboBoxTest : NUnitFormTest
     [Test]
     public void MainToolbar()
     {
-        Form form = new TestForms.ToolStripComboBoxTestForm();
+        using var form = new TestForms.ToolStripComboBoxTestForm();
         form.Show();
         var tester = new ToolStripComboBoxTester("toolStripComboBox1", form);
         tester.Select(1);

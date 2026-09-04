@@ -46,7 +46,7 @@ public class SupportFormSpecificationTest : NUnitFormTest
     [Test]
     public void ButtonClick()
     {
-        Form form = new ButtonTestForm();
+        using var form = new ButtonTestForm();
         form.Show();
         var button = new ButtonTester("myButton", form);
         var label = new LabelTester("myLabel", form);

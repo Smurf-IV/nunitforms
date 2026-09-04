@@ -141,7 +141,7 @@ public class MultiForm : Form
         btnClose.Name = "btnClose";
         btnClose.TabIndex = 3;
         btnClose.Text = "Close";
-        btnClose.Click += new EventHandler(btnClose_Click);
+        btnClose.Click += btnClose_Click;
         // 
         // MultiForm
         // 

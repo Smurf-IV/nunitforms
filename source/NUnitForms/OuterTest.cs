@@ -45,7 +45,7 @@ public class OuterTest : NUnitFormTest, IDisposable
 {
     public OuterTest()
     {
-        init();
+        Init();
     }
 
     public void Dispose()

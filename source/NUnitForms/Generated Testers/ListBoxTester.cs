@@ -61,7 +61,7 @@ public partial class ListBoxTester : ControlTester<ListBox, ListBoxTester>
     }
 
     public ListBoxTester(ListBoxTester tester, int index)
-        : base((ControlTester<ListBox, ListBoxTester>)tester, index)
+        : base(tester, index)
     {
     }
 }

@@ -47,7 +47,7 @@ public class ToolStripSplitButtonTest : NUnitFormTest
     [Test]
     public void MainToolbar()
     {
-        Form form = new TestForms.ToolStripSplitButtonTestForm();
+        using var form = new TestForms.ToolStripSplitButtonTestForm();
         form.Show();
         var label = new LabelTester("label1", form);
 

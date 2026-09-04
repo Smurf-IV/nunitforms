@@ -31,9 +31,9 @@
 
 #endregion
 
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-
 using ToolStripTextBoxTester = NUnit.Extensions.Forms.Testers.ToolStripTextBoxTester;
 
 
@@ -50,7 +50,7 @@ public class ToolStripTextBoxTest : NUnitFormTest
     ///</summary>
     public override void Setup()
     {
-        new TestForms.ToolStripTextBoxForm().Show();
+        new ToolStripTextBoxForm().Show();
     }
 
     /// <summary>

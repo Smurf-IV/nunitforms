@@ -372,6 +372,15 @@
             <param name="name">The name of the event.</param>
             <returns>A <see cref="T:System.Reflection.FieldInfo"/> object representing the event key for the named event.</returns>
         </member>
+        <member name="T:NUnitForms.Recorder.SelectCollapsingProcessor">
+            <summary>
+            Collapses consecutive identical Select(index) actions on the same control into a single Select.
+            Helps avoid duplicate selections observed on newer WinForms when editing ComboBox text.
+            </summary>
+        </member>
+        <member name="M:NUnitForms.Recorder.SelectCollapsingProcessor.CanCollapse(NUnitForms.Recorder.EventAction,NUnitForms.Recorder.EventAction)">
+            <inheritdoc />
+        </member>
         <member name="T:NUnitForms.Recorder.TestWriter">
             <summary>
              This class creates a C# unit test for a form 

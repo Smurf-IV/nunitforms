@@ -225,20 +225,13 @@ public class ModalFormTester : IDisposable
             // Some controls sends an HCBT_ACTIVATE when changed for example tabPages. We do not 
             // want our handler to be called when a tabPage is changed. This is a problem in Modal
             // modal windows.
-            var b = true;
-            if (hwndList.Contains(wParam))
-            {
-                b = false;
-            }
-
-            if (b)
+            if (!hwndList.Contains(wParam))
             {
                 hwndList.Add(wParam);
                 FindWindowNameAndInvokeHandler(wParam);
             }
-
         }
-        if (code == HCBT_DESTROYWND)
+        else if (code == HCBT_DESTROYWND)
         {
             // Need to remove the handle when the window is destroyed.
 
@@ -408,11 +401,11 @@ public class ModalFormTester : IDisposable
             {
                 if (handler is ModalFormActivated)
                 {
-                    handler.DynamicInvoke(new object[] { });
+                    handler.DynamicInvoke();
                 }
                 else if (handler is ModalFormActivatedHwnd)
                 {
-                    handler.DynamicInvoke(new object[] { hWnd });
+                    handler.DynamicInvoke(hWnd);
                 }
             }
             catch (TargetInvocationException ex)

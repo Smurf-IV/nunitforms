@@ -67,7 +67,7 @@ public class SendKeyboardInput : ISendKeyboardInput
         // - When ONLY Shift is active and a letter key is pressed, also use SYSKEY variants to avoid
         //   TranslateMessage generating a second (lowercase) WM_CHAR from our posted KEYDOWN.
         bool onlyShiftActive = _shiftActive && !_ctrlActive && !_altActive;
-        bool isLetterKey = vk >= 'A' && vk <= 'Z';
+        bool isLetterKey = vk is >= 'A' and <= 'Z';
         bool useSysKey = ((keys & Keys.Alt) == Keys.Alt) || keys == Keys.Menu || (onlyShiftActive && isLetterKey);
         uint msg = flags == SendInputFlags.KeyDown
             ? (useSysKey ? Win32.WM_SYSKEYDOWN : Win32.WM_KEYDOWN)
@@ -95,7 +95,7 @@ public class SendKeyboardInput : ISendKeyboardInput
         // Emit a corresponding WM_CHAR for letter keydowns so text controls receive uppercased input.
         if (flags == SendInputFlags.KeyDown
             && _shiftActive && !_ctrlActive && !_altActive
-            && vk >= 'A' && vk <= 'Z')
+            && vk is >= 'A' and <= 'Z')
         {
             // Uppercase letter as character
             Win32.PostMessage(window, Win32.WM_CHAR, (IntPtr)vk, (IntPtr)1);

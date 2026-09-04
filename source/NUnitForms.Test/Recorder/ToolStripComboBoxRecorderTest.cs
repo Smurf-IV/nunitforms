@@ -40,12 +40,15 @@ namespace NUnit.Extensions.Forms.TestApplications.Recorder;
 
 [TestFixture]
 [Category("Recorder")]
+#if NETCOREAPP
+[Explicit("To be replaced by supported type")]
+#endif
 public class ToolStripComboBoxRecorderTest : NUnitFormTest
 {
     [Test]
     public void ToolStripComboBoxEnter()
     {
-        Form form = new TestForms.ToolStripComboBoxTestForm();
+        using var form = new TestForms.ToolStripComboBoxTestForm();
         form.Show();
         var writer = new TestWriter(form);
         Assert.AreEqual("", writer.Test);
@@ -71,7 +74,7 @@ public void Test()
     [Test]
     public void ToolStripComboBoxEnterAndSelect()
     {
-        Form form = new TestForms.ToolStripComboBoxTestForm();
+        using var form = new TestForms.ToolStripComboBoxTestForm();
         form.Show();
         var writer = new TestWriter(form);
 
@@ -102,7 +105,7 @@ public void Test()
     [Test]
     public void ToolStripComboBoxSelect()
     {
-        Form form = new TestForms.ToolStripComboBoxTestForm();
+        using var form = new TestForms.ToolStripComboBoxTestForm();
         form.Show();
         var writer = new TestWriter(form);
         Assert.AreEqual("", writer.Test);

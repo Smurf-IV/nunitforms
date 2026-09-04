@@ -117,12 +117,12 @@ public class Listener
             }
         }
 
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+        //#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         if (!string.IsNullOrEmpty(control.Name))
         {
             AddPropertyAssertListeners(control);
         }
-#endif
+        //#endif
         control.ControlAdded += ControlAdded;
 
 
@@ -151,6 +151,15 @@ public class Listener
         }
     }
 
+    private void AddPropertyAssertListeners(Control control)
+    {
+        PropertyInfo[] properties = control.GetType().GetProperties();
+        foreach (PropertyInfo propertyInfo in properties)
+        {
+            AddAssertMenuItem(propertyInfo, control);
+        }
+    }
+
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
     private void ListenTo(Menu? menu)
     {
@@ -164,14 +173,7 @@ public class Listener
             ListenTo(item);
         }
     }
-    private void AddPropertyAssertListeners(Control control)
-    {
-        PropertyInfo[] properties = control.GetType().GetProperties();
-        foreach (PropertyInfo propertyInfo in properties)
-        {
-            AddAssertMenuItem(propertyInfo, control);
-        }
-    }
+#endif
 
     private void AddAssertMenuItem(PropertyInfo propertyInfo, Control control)
     {
@@ -181,11 +183,14 @@ public class Listener
             EventHandler recorder = registry.PropertyAssertHandler(control.GetType());
             if (recorder != null)
             {
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
                 AddAssertMenuItem(control, propertyName, recorder);
+#else
+                throw new NotSupportedException("AddAssertMenuItem is not supported in this framework.");
+#endif
             }
         }
     }
-#endif
     private void AddEventListeners(object control)
     {
         EventInfo[] events = control.GetType().GetEvents();
@@ -196,33 +201,245 @@ public class Listener
             MulticastDelegate recorder = registry.EventHandler(control.GetType(), eventName);
             if (recorder != null)
             {
+                // TODO: Work out why adding it twice works ??
                 eventInfo.AddEventHandler(control, recorder);
-                AddEventHandlerAtStartOfChain(eventInfo, control, recorder);
+                /*
+                 Your Code  ──>  EventInfo.AddEventHandler()
+                              │
+                              ▼
+                     WinForms Control
+                              │
+               ┌──────────────┴──────────────┐
+               ▼                             ▼
+        .NET Framework 4.x                .NET 6+
+        Legacy EventHandlerList       Modernised EventHandlerList
+        (LIFO Traversal)              (FIFO Traversal)
+                 */
+                AddEventHandlerAtStartOfChain(control, eventName, recorder);
             }
         }
     }
 
-    private void AddEventHandlerAtStartOfChain(EventInfo eventInfo, object control, MulticastDelegate recorder)
+    private void AddEventHandlerAtStartOfChain(object control, string eventName, MulticastDelegate recorder)
     {
-        //this will not work for all events as they are not implemented consistently
-        //TODO: there will be more special cases here eventually.
-        PropertyInfo eventsProp =
-            control.GetType().GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
-        var handlers = (EventHandlerList)eventsProp.GetValue(control, null);
+        if (control == null) throw new ArgumentNullException(nameof(control));
+        if (recorder == null) throw new ArgumentNullException(nameof(recorder));
 
-        var rec = (Recorder)recorder.Target;
-        FieldInfo? eventKey = rec.EventKey(eventInfo.Name);
+        Type baseType = control.GetType();
 
+        // 1. Retrieve the official metadata for the specific target event
+        EventInfo? eventInfo = baseType.GetEvent(eventName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (eventInfo == null)
+        {
+            throw new NotSupportedException($"The event '{eventName}' does not exist on type {baseType.FullName}");
+        }
+
+        // 2. Locate the private backing field if it's a standard C# class event (Pattern B)
+        FieldInfo? backingField = null;
+        Type? currentType = baseType;
+        while (currentType != null)
+        {
+            backingField = currentType.GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (backingField != null) break;
+            currentType = currentType.BaseType;
+        }
+
+        if (backingField != null)
+        {
+            // PATTERN B: Pure C# Backing Field Event (e.g., 'SuperClick')
+            Delegate currentDelegate = (Delegate)backingField.GetValue(control);
+            Delegate updatedDelegate = Delegate.Combine(recorder, currentDelegate);
+            backingField.SetValue(control, updatedDelegate);
+            return;
+        }
+
+        // 3. PATTERN A: Core WinForms Property Event (EventHandlerList shared slots)
+        // To cleanly circumvent the InvalidCastException on shared slots like TabControl,
+        // we use the official EventInfo to securely hook our delegate natively into the control first.
+        Type requiredType = eventInfo.EventHandlerType ?? typeof(EventHandler);
+        Delegate typedRecorder = recorder.GetType() == requiredType
+            ? recorder
+            : Delegate.CreateDelegate(requiredType, recorder.Target, recorder.Method);
+
+        // Let the framework handle the subscription and type coercion into the shared slot natively
+        eventInfo.AddEventHandler(control, typedRecorder);
+
+        // 4. Force LIFO Ordering securely without corrupting the slot signature
+        PropertyInfo eventsProp = typeof(Component).GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (eventsProp != null)
+        {
+            var handlers = (EventHandlerList)eventsProp.GetValue(control, null);
+            object? eventKey = null;
+
+            // Trace the correct internal WinForms Key Token
+            var typesToScan = new List<Type> { baseType };
+            if (eventInfo.DeclaringType != null && !typesToScan.Contains(eventInfo.DeclaringType))
+            {
+                typesToScan.Add(eventInfo.DeclaringType);
+            }
+
+            string cleanTargetName = eventName.Replace("_", "").ToUpperInvariant();
+            bool foundKey = false;
+
+            foreach (Type scanType in typesToScan)
+            {
+                Type? targetType = scanType;
+                while (targetType != null)
+                {
+                    FieldInfo[] staticFields = targetType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                    foreach (FieldInfo field in staticFields)
+                    {
+                        string cleanFieldName = field.Name.Replace("_", "").ToUpperInvariant();
+                        if (cleanFieldName.Equals($"EVENT{cleanTargetName}") ||
+                            cleanFieldName.Equals($"S{cleanTargetName}EVENT") ||
+                            cleanFieldName.Equals(cleanTargetName) ||
+                            (cleanFieldName.StartsWith("EVENT") && (cleanFieldName.Contains(cleanTargetName) || cleanTargetName.Contains(cleanFieldName.Replace("EVENT", "")))))
+                        {
+                            eventKey = field.GetValue(null);
+                            if (eventKey != null) { foundKey = true; break; }
+                        }
+                    }
+                    if (foundKey) break;
+                    targetType = targetType.BaseType;
+                }
+                if (foundKey) break;
+            }
+
+            // Specific absolute fallbacks for irregular controls if loops skip them
+            if (eventKey == null && control is TabControl)
+            {
+                FieldInfo? tabKeyField = typeof(TabControl).GetField("EVENT_SELECTEDINDEX", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                if (tabKeyField != null) eventKey = tabKeyField.GetValue(null);
+            }
+
+            if (eventKey != null)
+            {
+                Delegate masterDelegate = handlers[eventKey];
+                if (masterDelegate != null)
+                {
+                    Delegate[] invocationList = masterDelegate.GetInvocationList();
+
+                    // Locate where the framework added our typedRecorder inside the collection chain
+                    int registeredIndex = Array.IndexOf(invocationList, typedRecorder);
+
+                    if (registeredIndex > 0)
+                    {
+                        // Reassemble the chain manually to move our recorder to index 0 (Head/LIFO priority)
+                        Delegate? reorderedChain = typedRecorder;
+
+                        for (int i = 0; i < invocationList.Length; i++)
+                        {
+                            if (i == registeredIndex) continue; // Skip since we placed it at the head
+                            reorderedChain = Delegate.Combine(reorderedChain, invocationList[i]);
+                        }
+
+                        // Save the correctly-sorted, type-safe multicast array back to the slot
+                        handlers[eventKey] = reorderedChain;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void AddEventHandlerAtStartOfChain1(object control, EventInfo eventInfo, Delegate newHandler)
+    {
+        // --- STEP 1: Route Known Anomalous Composite Control Overrides First ---
+        object? eventKey = null;
+
+        // ComboBox uses a shared external reference key for TextChanged that breaks standard loop extraction
+        if (control is ComboBox && string.Equals(eventInfo.Name, "TextChanged", StringComparison.OrdinalIgnoreCase))
+        {
+            FieldInfo ctrlTextChangedField = typeof(Control).GetField("s_textChangedEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                           ?? typeof(Control).GetField("EventTextChanged", BindingFlags.Static | BindingFlags.NonPublic);
+            if (ctrlTextChangedField != null)
+            {
+                eventKey = ctrlTextChangedField.GetValue(null);
+            }
+        }
+
+        // --- STEP 2: Standard Reflection Traversal (If not caught by anomalous check) ---
         if (eventKey == null)
         {
-            return;
-        } //actually this should probably allow the exception
-        //most of the time.. this could hide a problem!
-        //TODO: investigate.
+            Type currentType = control.GetType();
+            while (currentType != null)
+            {
+                FieldInfo[] staticFields = currentType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                foreach (var field in staticFields)
+                {
+                    if (string.Equals(field.Name, $"s_{eventInfo.Name}Event", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(field.Name, $"Event{eventInfo.Name}", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(field.Name, $"EVENT_{eventInfo.Name}", StringComparison.OrdinalIgnoreCase))
+                    {
+                        eventKey = field.GetValue(null);
+                        break;
+                    }
+                }
+                if (eventKey != null)
+                {
+                    break;
+                }
 
-        object key = eventKey.GetValue(control);
+                currentType = currentType.BaseType;
+            }
+        }
 
-        handlers[key] = Delegate.Combine(recorder, handlers[key]);
+        // --- STEP 3: Fallbacks & Execution Application ---
+        if (eventKey == null && string.Equals(eventInfo.Name, "Click", StringComparison.OrdinalIgnoreCase))
+        {
+            FieldInfo clickField = typeof(Control).GetField("s_clickEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                 ?? typeof(Control).GetField("EventClick", BindingFlags.Static | BindingFlags.NonPublic);
+            if (clickField != null)
+            {
+                eventKey = clickField.GetValue(null);
+            }
+        }
+
+        if (eventKey != null)
+        {
+            // PATTERN A: WinForms Control Property Event (Uses EventHandlerList)
+            PropertyInfo eventsProp = typeof(Component).GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (eventsProp == null)
+            {
+                throw new InvalidOperationException("Could not find internal 'Events' container.");
+            }
+
+            EventHandlerList eventHandlerList = (EventHandlerList)eventsProp.GetValue(control);
+            Delegate currentDelegate = eventHandlerList[eventKey];
+
+
+            // Modern .NET runs FIFO. We must prepend 'newHandler' to achieve LIFO.
+            Delegate updatedDelegate = Delegate.Combine(newHandler, currentDelegate);
+
+            // 5. Commit the re-ordered hook back to WinForms
+            eventHandlerList[eventKey] = updatedDelegate;
+        }
+        else
+        {
+            // PATTERN B: Custom / Standard C# Backing Field Event (e.g., 'SuperClick')
+            FieldInfo? backingField = null;
+            Type currentType = control.GetType();
+
+            while (currentType != null)
+            {
+                backingField = currentType.GetField(eventInfo.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                if (backingField != null)
+                {
+                    break;
+                }
+
+                currentType = currentType.BaseType;
+            }
+
+            if (backingField == null)
+            {
+                throw new InvalidOperationException($"Could not locate event tracking container nor instance backing field for event '{eventInfo.Name}' on type {control.GetType().FullName}.");
+            }
+
+            Delegate currentDelegate = (Delegate)backingField.GetValue(control);
+            Delegate updatedDelegate = Delegate.Combine(newHandler, currentDelegate);
+
+            backingField.SetValue(control, updatedDelegate);
+        }
     }
 
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols

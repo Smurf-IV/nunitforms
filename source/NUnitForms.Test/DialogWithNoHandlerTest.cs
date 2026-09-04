@@ -1,8 +1,7 @@
 using System.Windows.Forms;
-
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-
 
 namespace NUnit.Extensions.Forms.TestApplications;
 
@@ -22,7 +21,7 @@ public class DialogWithNoHandlerTest : NUnitFormTest
                 acceptButton = new ButtonTester("button1");
                 acceptButton.Click();
             };
-        var form = new TestForms.DialogWithNoHandlersForm();
+        using var form = new DialogWithNoHandlersForm();
         DialogResult result = form.ShowDialog();
         Assert.AreEqual(DialogResult.OK, result, "Wrong dialog result.");
         Assert.IsFalse(form.Visible, "Form was still visible.");
@@ -39,7 +38,7 @@ public class DialogWithNoHandlerTest : NUnitFormTest
                 rejectButton.Click();
             };
 
-        var form = new TestForms.DialogWithNoHandlersForm();
+        using var form = new DialogWithNoHandlersForm();
         DialogResult result = form.ShowDialog();
         Assert.AreEqual(DialogResult.Cancel, result, "Wrong dialog result.");
         Assert.IsFalse(form.Visible, "Form was still visible.");

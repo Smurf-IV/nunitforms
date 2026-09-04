@@ -46,7 +46,7 @@ public class NameResolverTest : NUnitFormTest
     [Test]
     public void AmbiguousButton()
     {
-        var form = new TestForms.AmbiguousNameForm();
+        using var form = new TestForms.AmbiguousNameForm();
         form.Show();
         Censor.Add("NunitFormsTestApplicationsCustomTesters");
         var writer = new TestWriter(form);
@@ -73,7 +73,7 @@ public void Test()
     [Test]
     public void UnderscoreButton()
     {
-        var form = new TestForms.UnderscoreNameForm();
+        using var form = new TestForms.UnderscoreNameForm();
         form.Show();
 
         var writer = new TestWriter(form);

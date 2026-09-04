@@ -1,8 +1,8 @@
-#region Copyright (c) 2003-2007, Luke T. Maxon : 2026-2026 Smurf.IV
+#region Copyright (c) 2003-2005, Luke T. Maxon : 2026-2026 Smurf.IV
 
 /********************************************************************************************************************
 '
-' Copyright (c) 2003-2007, Luke T. Maxon
+' Copyright (c) 2003-2005, Luke T. Maxon
 ' Modernisation 2026-2026 Smurf.IV
 ' All rights reserved.
 ' 
@@ -31,22 +31,35 @@
 
 #endregion
 
-
-using NUnit.Framework;
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnitForms.Recorder;
 
 /// <summary>
-/// Repeat existing SimpleAPIKeyboardTest tests using emulated SendKeys.
-/// Part of work in progress in replacing the dot Net SendKeys class.
+/// Collapses consecutive identical Select(index) actions on the same control into a single Select.
+/// Helps avoid duplicate selections observed on newer WinForms when editing ComboBox text.
 /// </summary>
-[TestFixture]
-[Explicit("They all fail on my systems. Planning to investigate.")]
-public class SimpleAPIKeyboardWithEmulationTest : SimpleAPIKeyboardTest
+public class SelectCollapsingProcessor : CollapsingProcessor
 {
-    public override void Setup()
+    private const string Select = "Select";
+
+    /// <inheritdoc />
+    public override bool CanCollapse(EventAction action1, EventAction action2)
     {
-        EmulateSendKeys();
-        base.Setup();
+        if (action1.Control != action2.Control)
+        {
+            return false;
+        }
+
+        if (action1.MethodName != Select || action2.MethodName != Select)
+        {
+            return false;
+        }
+
+        // Expect single integer index as first argument; collapse when equal
+        if (action1.Args.Length == 1 && action2.Args.Length == 1)
+        {
+            return Equals(action1.Args[0], action2.Args[0]);
+        }
+
+        return false;
     }
 }

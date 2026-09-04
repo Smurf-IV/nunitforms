@@ -32,10 +32,9 @@
 #endregion
 
 using System.Windows.Forms;
-
+using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-
 
 namespace NUnit.Extensions.Forms.TestApplications;
 
@@ -47,7 +46,7 @@ public class ToolStripMenuTest : NUnitFormTest
 
     public override void Setup()
     {
-        form = new TestForms.ToolStripMenuTestForm();
+        form = new ToolStripMenuTestForm();
         form.Show();
         label1 = new LabelTester("label1", form);
     }

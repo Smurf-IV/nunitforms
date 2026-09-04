@@ -31,8 +31,14 @@
 
 #endregion
 
+using System;
+using System.ComponentModel;
+using System.Reflection;
+using System.Windows.Forms;
 using NUnit.Extensions.Forms.Exceptions;
-
+#if NETCOREAPP
+using NUnit.Extensions.Forms.Util;
+#endif
 
 namespace NUnit.Extensions.Forms.Testers;
 
@@ -47,6 +53,7 @@ namespace NUnit.Extensions.Forms.Testers;
 /// </remarks>
 public partial class ComboBoxTester
 {
+    private bool checkedReady;
     /// <summary>
     /// Sets the text property of the ComboBox to the specified value.
     /// </summary>
@@ -56,20 +63,105 @@ public partial class ComboBoxTester
     /// <param name="text">The specified value for the text property.</param>
     public void Enter(string text)
     {
-        Properties.Text = text;
+        if (!checkedReady)
+        {
+            checkedReady = true;
+            EnsureHandleReady();
+        }
+        ComboBox comboBox = Properties;
+        if (comboBox.Text == text)
+        {
+            // Debounce
+            return;
+        }
+
+        comboBox.Text = text;
+#if NETCOREAPP
+        // If on .NET Core/.NET 6+, manually trigger the layout event to mirror .NET 4.8 behavior
+        // In .NET 6+: The underlying event pipelines were heavily optimized to strictly adhere to official API design specs.
+        // According to Microsoft's documentation guidelines, TextUpdate is only intended to occur when the control formats
+        // text in response to direct user manipulation. Programmatic updates directly modify the data layer and skip the
+        // interactive layout pass, meaning TextUpdate is no longer
+            MethodInfo? onTextUpdateMethod = typeof(ComboBox).GetMethod("OnTextUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
+            onTextUpdateMethod?.Invoke(comboBox, [EventArgs.Empty]);
+#endif
         EndCurrentEdit("Text");
     }
 
+//#if NETCOREAPP
+    private const int CB_SETCURSEL = 0x014E;
+    private const int WM_COMMAND = 0x0111;
+    private const int CBN_SELCHANGE = 1;
+//#endif
     /// <summary>
     /// Selects an entry in the ComboBox according to its index.
     /// </summary>
     /// <remarks>
     /// Sets the SelectedIndex property on the underlying control.
     /// </remarks>
-    /// <param name="i">The index of the ComboBox entry to select.</param>
-    public void Select(int i)
+    /// <param name="index">The index of the ComboBox entry to select.</param>
+    public void Select(int index)
     {
-        Properties.SelectedIndex = i;
+        if (!checkedReady)
+        {
+            checkedReady = true;
+            EnsureHandleReady();
+        }
+
+        ComboBox comboBox = Properties;
+        if (comboBox.SelectedIndex == index)
+        {
+            // Debounce
+            return;
+        }
+
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+        comboBox.SelectedIndex = index;
+#else
+        // Setting SelectedItem triggers a completely alternative internal code path inside the .NET 6 runtime that
+
+        // Ensure handle exists
+        IntPtr handle = comboBox.Handle;
+
+        // 1. EXTRACT THE WINFORMS EVENT LIST
+        PropertyInfo eventsProp = typeof(Component).GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
+        EventHandlerList eventHandlerList = (EventHandlerList)eventsProp.GetValue(comboBox);
+
+        // 2. LOCATE THE TEXTUPDATE TRACKING KEY
+        FieldInfo textUpdateField = typeof(ComboBox).GetField("s_textUpdateEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                    ?? typeof(ComboBox).GetField("EventTextUpdate", BindingFlags.Static | BindingFlags.NonPublic);
+
+        object? textUpdateKey = textUpdateField?.GetValue(null);
+        Delegate? savedTextUpdateHandlers = null;
+
+        if (textUpdateKey != null)
+        {
+            // Backup existing TextUpdate handlers and temporarily remove them to stop the feedback loop
+            savedTextUpdateHandlers = eventHandlerList[textUpdateKey];
+            eventHandlerList[textUpdateKey] = null;
+        }
+
+        try
+        {
+            // 3. EXECUTE THE NATIVE EVENT SEQUENCE (Fires SelectedIndexChanged exactly when needed)
+            Win32.SendMessage(handle, CB_SETCURSEL, (IntPtr)index, IntPtr.Zero);
+
+            IntPtr wParam = (IntPtr)(((int)handle & 0xFFFF) | (CBN_SELCHANGE << 16));
+            Win32.SendMessage(comboBox.Parent.Handle, WM_COMMAND, wParam, handle);
+
+            // 4. SETTLE THE LAYOUT OVERAGES IMMEDIATELY BEFORE RESTORING
+            // This flushes the layout-driven TextUpdate side-effects while the event is silenced
+            Application.DoEvents();
+        }
+        finally
+        {
+            // 5. RESTORE THE RECORDER HOOKS
+            if (textUpdateKey != null && savedTextUpdateHandlers != null)
+            {
+                eventHandlerList[textUpdateKey] = savedTextUpdateHandlers;
+            }
+        }
+#endif
     }
 
     /// <summary>

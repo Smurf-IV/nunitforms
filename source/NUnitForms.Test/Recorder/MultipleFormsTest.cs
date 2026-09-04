@@ -48,7 +48,7 @@ public class MultipleFormsTest : NUnitFormTest
     [Test]
     public void EventCausesAnother()
     {
-        var form = new MultiForm();
+        using var form = new MultiForm();
         form.Show();
         var writer = new TestWriter(form);
         var button = new ButtonTester("btnClose");
@@ -60,7 +60,7 @@ public class MultipleFormsTest : NUnitFormTest
         }
         catch (NoSuchControlException)
         {
-            //window is closed.. good.
+            //window is already closed -> good.
         }
 
         Assert.AreEqual(
@@ -79,7 +79,7 @@ public void Test()
     [Test]
     public void FormClose()
     {
-        var form = new MultiForm();
+        using var form = new MultiForm();
         form.Show();
         var writer = new TestWriter(form);
         var button = new ButtonTester("myButton");
@@ -88,9 +88,9 @@ public void Test()
         form0.Close();
 
         Assert.AreEqual(
-            $@"[Test]
+            @"[Test]
 public void Test()
-{{
+{
 
 	ButtonTester myButton = new ButtonTester(""myButton"");
 	FormTester Form-0 = new FormTester(""Form-0"");
@@ -98,14 +98,14 @@ public void Test()
 	myButton.Click();
 	Form-0.Close();
 
-}}",
+}",
             writer.Test);
     }
 
     [Test]
     public void MultipleForms()
     {
-        var form = new MultiForm();
+        using var form = new MultiForm();
         form.Show();
         var writer = new TestWriter(form);
         Assert.AreEqual("", writer.Test);
@@ -133,7 +133,7 @@ public void Test()
     [Test]
     public void NamesShouldAdapt()
     {
-        var form = new MultiForm();
+        using var form = new MultiForm();
         form.Show();
         var writer = new TestWriter(form);
         Assert.AreEqual("", writer.Test);

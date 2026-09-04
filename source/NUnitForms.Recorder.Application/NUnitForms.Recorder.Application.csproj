@@ -13,8 +13,6 @@
 
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<IsTrimmable>True</IsTrimmable>
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
 		<WarningLevel>9999</WarningLevel>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>preview</LangVersion>

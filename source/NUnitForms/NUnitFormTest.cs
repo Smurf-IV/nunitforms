@@ -106,11 +106,8 @@ public class NUnitFormTest
         get
         {
             string? useHiddenDesktop = Environment.GetEnvironmentVariable("UseHiddenDesktop");
-            if (useHiddenDesktop != null && useHiddenDesktop.ToUpper().Equals("TRUE"))
-            {
-                return true;
-            }
-            return false;
+            return useHiddenDesktop != null
+                   && useHiddenDesktop.ToUpper().Equals("TRUE");
         }
     }
 
@@ -169,7 +166,7 @@ public class NUnitFormTest
     /// You should not have anything to do with it.
     /// </summary>
     [SetUp]
-    public void init()
+    public void Init()
     {
         verified = false;
 
@@ -194,25 +191,12 @@ public class NUnitFormTest
     }
 
     /// <summary>
-    /// A patch method to allow migration to an alternative SendKeys class instead
-    /// of the dot Net SendKeys class. Once the new class is completed this method
-    /// will be replaced by a method to allow use of the dot Net class.
-    /// 
-    /// This method must only be called at the start of the test fixture's overriden
-    /// SetUp().
-    /// </summary>
-    protected void EmulateSendKeys()
-    {
-        keyboard =
-            new KeyboardController(new SendKeysFactory(new SendKeysParserFactory(), new SendKeyboardInput()));
-    }
-
-    /// <summary>
     /// Override this Setup method if you have custom behavior to execute before each test
     /// in your fixture.
     /// </summary>
     public virtual void Setup()
     {
+        // ??
     }
 
     /// <summary>
@@ -287,7 +271,7 @@ public class NUnitFormTest
     /// </summary>
     public virtual void TearDown()
     {
-
+        // ??
     }
 
     // Deprecated modal handling interface
@@ -297,73 +281,56 @@ public class NUnitFormTest
     /// </summary>
     [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectFileDialog(string modalHandler)
-    {
-        ExpectModal(FileDialogTester.InitialFileDialogName, modalHandler);
-    }
+        => ExpectModal(FileDialogTester.InitialFileDialogName, modalHandler);
 
     /// <summary>
     /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectFileDialog(string modalHandler, bool expected)
-    {
-        ExpectModal(FileDialogTester.InitialFileDialogName, modalHandler, expected);
-    }
+        => ExpectModal(FileDialogTester.InitialFileDialogName, modalHandler, expected);
 
     /// <summary>
     /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectFileDialog(ModalFormActivated handler)
-    {
-        modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
-    }
+        => modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
 
     /// <summary>
     /// Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectFileDialog(ModalFormActivated handler, bool expected)
-    {
-        modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
-    }
+        => modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
 
     /// <summary>
     /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectModal(string name, ModalFormActivated handler)
-    {
-        modal.ExpectModal(name, handler, true);
-    }
+        => modal.ExpectModal(name, handler, true);
 
     /// <summary>
     /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectModal(string name, ModalFormActivated handler, bool expected)
-    {
-        modal.ExpectModal(name, handler, expected);
-    }
+        => modal.ExpectModal(name, handler, expected);
 
     /// <summary>
     /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectModal(string name, string handlerName, bool expected)
-    {
-        ExpectModal(name,
+        => ExpectModal(name,
             (ModalFormActivated)Delegate.CreateDelegate(typeof(ModalFormActivated), this, handlerName),
             expected);
-    }
 
     /// <summary>
     /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.
     /// </summary>
     [Obsolete("Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectModal(string name, string handlerName)
-    {
-        ExpectModal(name, handlerName, true);
-    }
-
+        => ExpectModal(name, handlerName, true);
 }

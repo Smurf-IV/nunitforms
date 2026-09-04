@@ -67,7 +67,7 @@ public class TestWriter
         {
             var listener = new Listener();
             listener.ListenTo(form);
-            listener.Event += eventHappened;
+            listener.Event += EventHappened;
         }
         else
         {
@@ -144,7 +144,7 @@ public class TestWriter
         }
     }
 
-    private void eventHappened(Type testerType, object sender, Action action)
+    private void EventHappened(Type testerType, object sender, Action action)
     {
         action.Definition = FindOrCreateVariableNameForDefinition(sender, testerType);
         actions.Add(action);
@@ -209,19 +209,24 @@ public class TestWriter
     /// </exception>
     private static void Find(string name, Form? form)
     {
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         string findName = name.Replace("_", ".");
+#else
+        string findName = name;
+#endif
         Control? control = null;
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+        findName = name.Replace("_", ".");
         MenuItem? menuItem = null;
-#endif
         try
+#endif
         {
             control = new Finder<Control>(findName, form).Find();
         }
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         catch (NoSuchControlException)
         {
         }
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 
         try
         {
@@ -230,15 +235,14 @@ public class TestWriter
         catch (NoSuchControlException)
         {
         }
-#endif
+        // Now check if this got more than 1 item
         if ((control != null)
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
             && (menuItem != null)
-#endif
             )
         {
             throw new AmbiguousNameException(name);
         }
+#endif
     }
 
     /// <summary>

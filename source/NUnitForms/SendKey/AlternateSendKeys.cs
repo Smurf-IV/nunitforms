@@ -59,9 +59,9 @@ public class AlternateSendKeys : ISendKeys, IDisposable
 
     public AlternateSendKeys(ISendKeyboardInput keyboardInput, ISendKeysParserFactory parserFactory, IntPtr window)
     {
-        this._keyboardInput = keyboardInput;
-        this._parserFactory = parserFactory;
-        this._window = window;
+        _keyboardInput = keyboardInput;
+        _parserFactory = parserFactory;
+        _window = window;
 
         InitialiseModifierKeyMap();
     }

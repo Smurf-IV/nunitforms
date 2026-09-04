@@ -57,6 +57,11 @@ public class ComboBoxRecorder : ControlRecorder
         Listener.FireEvent(TesterType, sender, "Enter", ((ComboBox)sender).Text);
     }
 
+    public void TextUpdate(object sender, EventArgs e)
+    {
+        Listener.FireEvent(TesterType, sender, "Enter", ((ComboBox)sender).Text);
+    }
+
     public void SelectedIndexChanged(object sender, EventArgs e)
     {
         var action = new EventAction("Select", ((ComboBox)sender).SelectedIndex);

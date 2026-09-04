@@ -43,7 +43,7 @@ public class ToolStripDropDownButtonTest : NUnitFormTest
     [Test]
     public void ClickDropDownItem()
     {
-        Form form = new TestForms.ToolStripDropDownButtonTestForm();
+        using var form = new TestForms.ToolStripDropDownButtonTestForm();
         form.Show();
         var textbox = new TextBoxTester("textBox1", form);
         var tester = new ToolStripDropDownButtonTester("toolStripDropDownButton1", form);
@@ -54,7 +54,7 @@ public class ToolStripDropDownButtonTest : NUnitFormTest
     [Test]
     public void MainToolbar()
     {
-        Form form = new TestForms.ToolStripDropDownButtonTestForm();
+        using var form = new TestForms.ToolStripDropDownButtonTestForm();
         form.Show();
         var textbox = new TextBoxTester("textBox1", form);
         var tester = new ToolStripDropDownButtonTester("toolStripDropDownButton1", form);

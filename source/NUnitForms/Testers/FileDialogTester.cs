@@ -69,7 +69,7 @@ public class FileDialogTester
 
     public FileDialogTester(IntPtr hWnd)
     {
-        this._hWnd = hWnd;
+        _hWnd = hWnd;
     }
 
 
@@ -89,7 +89,7 @@ public class FileDialogTester
     private bool ClickCancelCB()
     {
         IntPtr cancel_btn = Win32.GetDlgItem(_hWnd, CancelButton);
-        Win32.PostMessage(cancel_btn, Win32.BM_CLICK, (IntPtr)0, IntPtr.Zero);
+        Win32.PostMessage(cancel_btn, Win32.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
         return true;
     }
 
@@ -109,7 +109,7 @@ public class FileDialogTester
     private bool ClickOpenSaveButtonCB()
     {
         IntPtr open_btn = Win32.GetDlgItem(_hWnd, OpenButton);
-        Win32.PostMessage(open_btn, Win32.BM_CLICK, (IntPtr)0, IntPtr.Zero);
+        Win32.PostMessage(open_btn, Win32.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
         return true;
     }
 
@@ -166,7 +166,7 @@ public class FileDialogTester
                 }
 
                 IntPtr open_btn = Win32.GetDlgItem(_hWnd, OpenButton);
-                Win32.PostMessage(open_btn, Win32.BM_CLICK, (IntPtr)0, IntPtr.Zero);
+                Win32.PostMessage(open_btn, Win32.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
 
                 return true;
             });
@@ -184,7 +184,7 @@ public class FileDialogTester
             }
 
             IntPtr open_btn = Win32.GetDlgItem(_hWnd, OpenButton);
-            Win32.PostMessage(open_btn, Win32.BM_CLICK, (IntPtr)0, IntPtr.Zero);
+            Win32.PostMessage(open_btn, Win32.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
             return true;
         }
 

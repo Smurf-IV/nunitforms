@@ -34,9 +34,7 @@
 using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-
 using NUnitForms.Recorder;
-
 
 namespace NUnit.Extensions.Forms.TestApplications.Recorder;
 

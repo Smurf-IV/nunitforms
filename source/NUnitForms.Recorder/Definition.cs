@@ -41,12 +41,12 @@ namespace NUnitForms.Recorder;
 ///</summary>
 public class Definition
 {
-    private string formName;
+    private string? formName;
 
     ///<summary>
     /// Constructs a new <see cref="Definition"/>.
     ///</summary>
-    public Definition(object control, string name, Type testerType, string formName)
+    public Definition(object control, string name, Type testerType, string? formName)
     {
         Control = control;
         Name = name;
@@ -62,7 +62,7 @@ public class Definition
     ///<summary>
     /// The control name to use.
     ///</summary>
-    public string Name
+    public string? Name
     {
         get;
         set => field = value;

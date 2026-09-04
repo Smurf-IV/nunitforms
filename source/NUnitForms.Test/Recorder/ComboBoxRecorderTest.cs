@@ -46,7 +46,7 @@ public class ComboBoxRecorderTest : NUnitFormTest
     [Test]
     public void ComboBoxEnter()
     {
-        Form f = new ComboBoxTestForm();
+        using Form f = new ComboBoxTestForm();
         f.Show();
 
         var writer = new TestWriter(f);
@@ -73,8 +73,10 @@ public void Test()
     [Test]
     public void ComboBoxEnterAndSelect()
     {
-        Form f = new ComboBoxTestForm();
+        using Form f = new ComboBoxTestForm();
         f.Show();
+        // Force the Win32 handle queue to completely instantiate child layout states within 
+        Application.DoEvents();
 
         var writer = new TestWriter(f);
         Assert.AreEqual("", writer.Test);
@@ -104,7 +106,7 @@ public void Test()
     [Test]
     public void ComboBoxSelect()
     {
-        Form f = new ComboBoxTestForm();
+        using Form f = new ComboBoxTestForm();
         f.Show();
 
         var writer = new TestWriter(f);

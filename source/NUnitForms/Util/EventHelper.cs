@@ -58,11 +58,16 @@ public static class EventHelper
     public static void RaiseEvent(object targetObject, string eventName)
     {
         MethodInfo? minfo = targetObject.GetType().GetMethod($"On{eventName}",
-            BindingFlags.Instance | BindingFlags.Public |
-            BindingFlags.NonPublic);
-        ParameterInfo[] param = minfo.GetParameters();
-        Type parameterType = param[0].ParameterType;
-        minfo.Invoke(targetObject, [Activator.CreateInstance(parameterType)]);
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (minfo == null)
+        {
+            throw new MissingMethodException(targetObject.GetType().ToString(), $"on{eventName}");
+        }
+
+        ParameterInfo[] paramArray = minfo.GetParameters();
+        Type parameterType = paramArray[0].ParameterType;
+        dynamic param = Activator.CreateInstance(parameterType);
+        minfo.Invoke(targetObject, [param]);
     }
 
     ///<summary>
@@ -83,8 +88,7 @@ public static class EventHelper
     public static void RaiseEvent(object targetObject, string eventName, object[] args)
     {
         MethodInfo? minfo = targetObject.GetType().GetMethod($"On{eventName}",
-            BindingFlags.Instance | BindingFlags.Public |
-            BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         ParameterInfo[] param = minfo.GetParameters();
         Type parameterType = param[0].ParameterType;
         minfo.Invoke(targetObject, [Activator.CreateInstance(parameterType, args)]);
@@ -108,8 +112,7 @@ public static class EventHelper
     public static void RaiseEvent(object targetObject, string eventName, EventArgs arg)
     {
         MethodInfo? minfo = targetObject.GetType().GetMethod($"On{eventName}",
-            BindingFlags.Instance | BindingFlags.Public |
-            BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         minfo.Invoke(targetObject, [arg]);
     }
 
@@ -124,8 +127,7 @@ public static class EventHelper
         {
             types[i] = args[i].GetType();
         }
-        MethodInfo? minfo =
-            targetObject.GetType().GetMethod(methodName,
+        MethodInfo? minfo = targetObject.GetType().GetMethod(methodName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null, types, null);
         return minfo.Invoke(targetObject, args);

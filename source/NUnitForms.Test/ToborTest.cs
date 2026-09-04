@@ -43,7 +43,7 @@ public class ToborTest
     [Test]
     public void Test1()
     {
-        var f = new ToborTestForm();
+        using var f = new ToborTestForm();
         f.Show();
 
         using var formTester = new FormTester(f.Name);

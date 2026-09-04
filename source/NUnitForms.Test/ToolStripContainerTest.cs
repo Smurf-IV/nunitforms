@@ -33,7 +33,6 @@
 
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-
 using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
 using ToolStripContainerTestForm = NUnit.Extensions.Forms.TestApplications.TestForms.ToolStripContainerTestForm;
 

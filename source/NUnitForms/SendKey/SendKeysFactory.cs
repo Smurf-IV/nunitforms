@@ -45,8 +45,8 @@ public class SendKeysFactory : ISendKeysFactory
 
     public SendKeysFactory(ISendKeysParserFactory parserFactory, ISendKeyboardInput keyboardInput)
     {
-        this._parserFactory = parserFactory;
-        this._keyboardInput = keyboardInput;
+        _parserFactory = parserFactory;
+        _keyboardInput = keyboardInput;
     }
 
     public ISendKeys Create(IntPtr window)

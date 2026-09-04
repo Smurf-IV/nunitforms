@@ -53,19 +53,19 @@ public class Tester<T, TThis> : ReflectionTester, IEnumerable<TThis>
 
     public Tester(string name, string formName)
     {
-        this._formName = formName;
-        this.Name = name;
+        _formName = formName;
+        Name = name;
     }
 
     public Tester(string name, Form form)
     {
-        this._form = form;
-        this.Name = name;
+        _form = form;
+        Name = name;
     }
 
     public Tester(string? name)
     {
-        this.Name = name;
+        Name = name;
     }
 
     public Tester(Tester<T, TThis> tester, int index)
@@ -78,6 +78,54 @@ public class Tester<T, TThis> : ReflectionTester, IEnumerable<TThis>
     ///</summary>
     protected Tester()
     {
+    }
+
+    /// <summary>
+    /// Synchronously blocks until the control's Win32 handle and layouts are fully initialized,
+    /// preventing missing events or layout race conditions across .NET 4.x and .NET 6+.
+    /// </summary>
+    /// <param name="timeoutMilliseconds">Max time to wait before forcing a fallback creation.</param>
+    public void EnsureHandleReady(int timeoutMilliseconds = 1000)
+    {
+        var control = TheObject as Control;
+        if (control == null)
+        {
+            throw new ArgumentNullException(nameof(control));
+        }
+
+        // 1. Ensure the handle exists first
+        if (control is { IsHandleCreated: false, IsDisposed: false })
+        {
+            IntPtr forceHandle = control.Handle;
+        }
+
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        // 2. CRITICAL FOR .NET 6+: Execute multiple message loops to clear 
+        // structural painting notifications (like theme painting and DPI adjustments)
+        for (int i = 0; i < 3; i++)
+        {
+            if (control.IsDisposed)
+            {
+                return;
+            }
+
+            Application.DoEvents();
+            System.Threading.Thread.Sleep(10); // Give the OS time to dispatch background paints
+        }
+        // 3. Fallback strategy: Force-pump the Win32 message loop until the handle is established
+        while (!control.IsHandleCreated && watch.ElapsedMilliseconds < timeoutMilliseconds)
+        {
+            if (control.IsDisposed)
+            {
+                return;
+            }
+
+            // Process underlying OS layout messages safely
+            Application.DoEvents();
+
+            // Give the CPU a tiny break between message cycles
+            System.Threading.Thread.Sleep(1);
+        }
     }
 
     public int Count => GetFinder().Count;

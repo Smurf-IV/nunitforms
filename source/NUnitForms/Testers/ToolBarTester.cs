@@ -31,9 +31,9 @@
 
 #endregion
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 using System.Windows.Forms;
 
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 namespace NUnit.Extensions.Forms.Testers;
 
 /// <summary>

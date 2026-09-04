@@ -29,6 +29,7 @@
 - ✅ Create Fork and add information to the README.md
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser` (Removed `SendKeys`)
+- ✅ Copy SourceForge issues etc into Github [Bug] / [Feature] issues types
 - [-] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
     - [-] net 4.8 (_Identify obsoleted types and replace_)
@@ -39,12 +40,12 @@
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - ✅ net 4.6.2
     - ✅ net 4.8
-    - [-] Fix mouse event usage in tests
+    - ✅ Fix mouse event usage in tests
+    - ✅ net6.0 (Will be dropped in NUnit 5)
+    - ✅ net8.0
+    - ✅ net10.0
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
-    - [ ] net6.0 (Will be dropped in NUnit 5)
-    - [ ] net8.0
-    - [ ] net10.0
 - [ ] Add missing tests for:
     - [ ] `CheckedListBoxTester`
     - [ ] `ComponentTester`
@@ -62,7 +63,10 @@
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
 - [ ] Add `ThrowHelper` and use it in the codebase
+- [ ] Add focused (Single file) PInvoke and LoadLibrary for Win32 API(s) and use it in the codebase
 - [ ] Other stuff to be added later...
+- [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
+
 
 ### ⛓️‍💥Breaking Changes
 

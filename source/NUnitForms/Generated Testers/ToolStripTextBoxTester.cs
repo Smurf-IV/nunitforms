@@ -34,7 +34,6 @@
 using System.Windows.Forms;
 using NUnit.Extensions.Forms.Generic_Testers;
 
-
 #pragma warning disable IDE0130
 namespace NUnit.Extensions.Forms.Testers;
 
