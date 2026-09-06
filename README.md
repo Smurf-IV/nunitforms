@@ -81,8 +81,8 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- [ ] Nuget package just for the tester
-- [ ] GitHub build scripts (For the badges etc)
+- [-] Nuget package just for the tester
+- [-] GitHub build scripts (For the badges etc)
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
 - [ ] Other stuff to be added later...
 

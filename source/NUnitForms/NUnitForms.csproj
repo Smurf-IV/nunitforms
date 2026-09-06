@@ -37,16 +37,64 @@
 		<TieredCompilationDynamicPgo>true</TieredCompilationDynamicPgo>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Condition="'$(TargetFramework)' == 'net4.62'" Include="Microsoft.SourceLink.GitHub" Version="8.0" PrivateAssets="all" />
+		<PackageReference Condition="'$(TargetFramework)' == 'net4.8'" Include="Microsoft.SourceLink.GitHub" Version="10.0.400" PrivateAssets="all" />
+		<PackageReference Condition="'$(TargetFramework)' == 'net8.0'" Include="Microsoft.SourceLink.GitHub" Version="10.0.400" PrivateAssets="all" />
+		<PackageReference Condition="'$(TargetFramework)' == 'net10.0'" Include="Microsoft.SourceLink.GitHub" Version="11.0.100-preview.7.26381.103">
+			<!-- Used for source code linking in NuGet packages.
+				Microsoft.SourceLink.GitHub/11.0.100-preview.2.26159.112
+				  ├── System.IO.Hashing/11.0.0-preview.2.26159.112  ← Pulled in here
+				  ├── Microsoft.Build.Tasks.Git/11.0.100-preview.2.26159.112
+				  │   └── System.IO.Hashing/11.0.0-preview.2.26159.112
+				  └── Microsoft.SourceLink.Common/11.0.100-preview.2.26159.112
+				  -->
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
 	<PropertyGroup>
 		<Title>NUnitForms</Title>
 		<PackageId>NUnitForms</PackageId>
 		<RepositoryType>git</RepositoryType>
 		<Copyright>NUnitForms Copyright ©  2003-2007, Luke T. Maxon : Then 2026-2026 © Smurf-IV</Copyright>
+		<PackageProjectUrl>https://github.com/Smurf-IV/Excel_PRIME</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Smurf-IV/Excel_PRIME</RepositoryUrl>
+		<PackageTags>csharp;xml;zip;excel;netcore;reader</PackageTags>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>BSD3</PackageLicenseExpression>
+		<Authors>Luke T. Maxon; Smurf-IV</Authors>
+		<Deterministic>False</Deterministic>
 		<VersionPrefix>3.$([System.DateTime]::UtcNow.ToString(yyMM)).$([System.DateTime]::UtcNow.ToString(dd))</VersionPrefix>
+		<!--<VersionSuffix>beta ... Do this is the yml file</VersionSuffix>-->
+		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../Release_Notes.md"))</PackageReleaseNotes>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PackageIcon>Excel.png</PackageIcon>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<PackageReadmeFile>Package_ReadMe.md</PackageReadmeFile>
 	</PropertyGroup>
-	
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="NUnit" Version="4.6.1" />
+		<None Include="Package_ReadMe.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<Target Name="PrepareReleaseNotes" BeforeTargets="GenerateNuspec">
+		<PropertyGroup>
+			<PackageDescription>$([System.IO.File]::ReadAllText("../../Release_Notes.md"))</PackageDescription>
+		</PropertyGroup>
+	</Target>
+
+	<ItemGroup>
+		<PackageReference Include="NUnit" Version="4.x" />
 	</ItemGroup>
 </Project>
