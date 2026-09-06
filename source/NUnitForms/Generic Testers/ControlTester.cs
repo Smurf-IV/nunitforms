@@ -33,7 +33,7 @@
 
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
 
 
 namespace NUnit.Extensions.Forms.Generic_Testers;
@@ -79,11 +79,11 @@ public class ControlTester<T, TThis> : Tester<T, TThis>
     {
         if (!Properties.Visible)
         {
-            throw new ControlNotVisibleException(Name);
+            ThrowHelper.ThrowControlNotVisibleException(Name);
         }
         if (!Properties.Enabled)
         {
-            throw new ControlNotEnabledException(Name);
+            ThrowHelper.ThrowControlNotEnabledException(Name);
         }
         FireEvent("Click");
     }
@@ -98,7 +98,7 @@ public class ControlTester<T, TThis> : Tester<T, TThis>
     {
         if (!Properties.Visible)
         {
-            throw new ControlNotVisibleException(Name);
+            ThrowHelper.ThrowControlNotVisibleException(Name);
         }
 
         FireEvent("DoubleClick");

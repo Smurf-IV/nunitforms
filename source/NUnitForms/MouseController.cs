@@ -156,10 +156,7 @@ public class MouseController : IDisposable
             Win32.GetCursorPos(out originalPosition);
         }
 
-        if (control == null!)
-        {
-            throw new ArgumentNullException(nameof(control));
-        }
+        ThrowHelper.ThrowIfNull(control, nameof(control));
 
         mouseControl = new MouseControl(control);
 
@@ -311,8 +308,8 @@ public class MouseController : IDisposable
                     GraphicsUnit.Display => new PointF(resolution.X / 75, resolution.Y / 75),
                     GraphicsUnit.Document => new PointF(resolution.X / 300, resolution.Y / 300),
                     GraphicsUnit.Millimeter => new PointF(resolution.X / 25.40F, resolution.Y / 25.40F),
-                    GraphicsUnit.World => throw new NotSupportedException("World units not supported."),
-                    _ => throw new InvalidEnumArgumentException(nameof(value), (int)value, typeof(GraphicsUnit))
+                    GraphicsUnit.World => ThrowHelper.ThrowNotSupportedException<PointF>("World units not supported."),
+                    _ => ThrowHelper.ThrowInvalidEnumArgumentException<PointF>(nameof(value), (int)value, typeof(GraphicsUnit))
                 };
             }
 
@@ -617,7 +614,7 @@ public class MouseController : IDisposable
         {
             if (SystemInformation.MouseButtons < 4)
             {
-                throw new NotSupportedException("A mouse with at least 4 buttons is required.");
+                ThrowHelper.ThrowNotSupportedException("A mouse with at least 4 buttons is required.");
             }
             input.mi.dwFlags |= Win32.MOUSEEVENTF_XDOWN;
             input.mi.mouseData |= Win32.XBUTTON1;
@@ -626,7 +623,7 @@ public class MouseController : IDisposable
         {
             if (SystemInformation.MouseButtons < 5)
             {
-                throw new NotSupportedException("A mouse with at least 5 buttons is required.");
+                ThrowHelper.ThrowNotSupportedException("A mouse with at least 5 buttons is required.");
             }
             input.mi.dwFlags |= Win32.MOUSEEVENTF_XDOWN;
             input.mi.mouseData |= Win32.XBUTTON2;
@@ -636,7 +633,7 @@ public class MouseController : IDisposable
         {
             if (0 == Win32.SendMouseInput(1, ref input, Marshal.SizeOf(input)))
             {
-                throw new Win32Exception();
+                ThrowHelper.ThrowWin32Exception();
             }
             Application.DoEvents();
         }
@@ -691,7 +688,7 @@ public class MouseController : IDisposable
     {
         if ((keys & ~(Keys.Alt | Keys.Shift | Keys.Control)) != 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(keys), "Only Alt, Shift and Control are currently handled.");
+            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(keys), "Only Alt, Shift and Control are currently handled.");
         }
         var keyValue = (byte)keys;
 
@@ -705,7 +702,7 @@ public class MouseController : IDisposable
         //    kbi.ki.wVk = Win32.VK_MENU;
         //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
         //    {
-        //        throw new Win32Exception();
+        //        ThrowHelper.ThrowWin32Exception();
         //    }
         //}
         //if ((keys & Keys.Control) == Keys.Control)
@@ -713,7 +710,7 @@ public class MouseController : IDisposable
         //    kbi.ki.wVk = Win32.VK_CONTROL;
         //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
         //    {
-        //        throw new Win32Exception();
+        //        ThrowHelper.ThrowWin32Exception();
         //    }
         //}
         //if ((keys & Keys.Shift) == Keys.Shift)
@@ -721,7 +718,7 @@ public class MouseController : IDisposable
         //    kbi.ki.wVk = Win32.VK_SHIFT;
         //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
         //    {
-        //        throw new Win32Exception();
+        //        ThrowHelper.ThrowWin32Exception();
         //    }
         //}
 
@@ -825,7 +822,7 @@ public class MouseController : IDisposable
         {
             if (SystemInformation.MouseButtons < 4)
             {
-                throw new NotSupportedException("A mouse with at least 4 buttons is required.");
+                ThrowHelper.ThrowNotSupportedException("A mouse with at least 4 buttons is required.");
             }
             input.mi.dwFlags |= Win32.MOUSEEVENTF_XUP;
             input.mi.mouseData = Win32.XBUTTON1;
@@ -834,7 +831,7 @@ public class MouseController : IDisposable
         {
             if (SystemInformation.MouseButtons < 5)
             {
-                throw new NotSupportedException("A mouse with at least 5 buttons is required.");
+                ThrowHelper.ThrowNotSupportedException("A mouse with at least 5 buttons is required.");
             }
             input.mi.dwFlags |= Win32.MOUSEEVENTF_XUP;
             input.mi.mouseData = Win32.XBUTTON2;
@@ -844,7 +841,7 @@ public class MouseController : IDisposable
         {
             if (0 == Win32.SendMouseInput(1, ref input, Marshal.SizeOf(input)))
             {
-                throw new Win32Exception();
+                ThrowHelper.ThrowWin32Exception();
             }
             Application.DoEvents();
         }
@@ -899,7 +896,7 @@ public class MouseController : IDisposable
     {
         if ((keys & ~(Keys.Alt | Keys.Shift | Keys.Control)) != 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(keys), "Only Alt, Shift and Control is allowed.");
+            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(keys), "Only Alt, Shift and Control is allowed.");
         }
         var keyValue = (byte)keys;
         Win32.KeyBdEvent(keyValue, 0, 0x02, UIntPtr.Zero); //key Up
@@ -914,7 +911,7 @@ public class MouseController : IDisposable
         //    kbi.ki.wVk = Win32.VK_MENU;
         //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
         //    {
-        //        throw new Win32Exception();
+        //        ThrowHelper.ThrowWin32Exception();
         //    }
         //}
         //if ((keys & Keys.Control) == Keys.Control)
@@ -922,7 +919,7 @@ public class MouseController : IDisposable
         //    kbi.ki.wVk = Win32.VK_CONTROL;
         //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
         //    {
-        //        throw new Win32Exception();
+        //        ThrowHelper.ThrowWin32Exception();
         //    }
         //}
         //if ((keys & Keys.Shift) == Keys.Shift)
@@ -930,7 +927,7 @@ public class MouseController : IDisposable
         //    kbi.ki.wVk = Win32.VK_SHIFT;
         //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
         //    {
-        //        throw new Win32Exception();
+        //        ThrowHelper.ThrowWin32Exception();
         //    }
         //}
 
@@ -971,11 +968,11 @@ public class MouseController : IDisposable
     {
         if (points == null!)
         {
-            throw new ArgumentNullException(nameof(points));
+            ThrowHelper.ThrowArgumentNullException(nameof(points));
         }
         if (points.Length < 1)
         {
-            throw new ArgumentException("At lease one point must be specified.", nameof(points));
+            ThrowHelper.ThrowArgumentException("At lease one point must be specified.", nameof(points));
         }
 
         Press(MouseButtons.Left, startPoint);
@@ -1024,15 +1021,15 @@ public class MouseController : IDisposable
     {
         if (points == null!)
         {
-            throw new ArgumentNullException(nameof(points));
+            ThrowHelper.ThrowArgumentNullException(nameof(points));
         }
         if (points.Length < 2)
         {
-            throw new ArgumentException("At lease one point must be specified.", nameof(points));
+            ThrowHelper.ThrowArgumentException("At lease one point must be specified.", nameof(points));
         }
         if ((points.Length & 1) != 0)
         {
-            throw new ArgumentException("Missing the final y-coordinate.", nameof(points));
+            ThrowHelper.ThrowArgumentException("Missing the final y-coordinate.", nameof(points));
         }
 
         Press(MouseButtons.Left, new PointF(startX, startY));

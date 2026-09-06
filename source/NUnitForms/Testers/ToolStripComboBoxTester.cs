@@ -32,6 +32,7 @@
 #endregion
 
 using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
 
 namespace NUnit.Extensions.Forms.Testers;
 
@@ -71,7 +72,7 @@ public partial class ToolStripComboBoxTester
         int index;
         if ((index = Properties.FindStringExact(text)) == -1)
         {
-            throw new FormsTestAssertionException($"Could not find text '{text}' in ToolStripComboBox '{Name}'");
+            ThrowHelper.ThrowFormsTestAssertionException($"Could not find text '{text}' in ToolStripComboBox '{Name}'");
         }
         Select(index);
     }

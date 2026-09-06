@@ -203,7 +203,7 @@ public class MessageBoxTester : Tester<MessageBox, MessageBoxTester>
 
         if (foundWindowHandle == IntPtr.Zero)
         {
-            throw new ControlNotVisibleException("Message Box not visible");
+            ThrowHelper.ThrowControlNotVisibleException("Message Box not visible");
         }
         return foundWindowHandle;
     }

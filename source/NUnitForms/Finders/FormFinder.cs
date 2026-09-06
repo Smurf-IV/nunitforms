@@ -95,18 +95,15 @@ public class FormFinder
         List<Form> list = FindAll(formName);
         return list.Count switch
         {
-            0 => throw new NoSuchControlException($"Could not find form with name '{formName}'"),
-            > 1 => throw new AmbiguousNameException($"Found too many forms with the name '{formName}'"),
+            0 => ThrowHelper.ThrowNoSuchControlException<Form>($"Could not find form with name '{formName}'"),
+            > 1 => ThrowHelper.ThrowAmbiguousNameException<Form>($"Found too many forms with the name '{formName}'"),
             _ => list[0]
         };
     }
 
     /// <summary>
-    /// Finds all of the forms.
+    /// Finds all the forms, regardless of name.
     /// </summary>
-    /// <returns>FormCollection with all of the forms regardless of name.</returns>
     public List<Form> FindAll()
-    {
-        return FindAll(null);
-    }
+        => FindAll(null);
 }

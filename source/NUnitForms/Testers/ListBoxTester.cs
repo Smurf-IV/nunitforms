@@ -32,6 +32,7 @@
 #endregion
 
 using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
 
 
 namespace NUnit.Extensions.Forms.Testers;
@@ -74,7 +75,7 @@ public partial class ListBoxTester
         }
         else
         {
-            throw new FormsTestAssertionException($"Could not find text '{text}' in ComboBox '{Name}'");
+            ThrowHelper.ThrowFormsTestAssertionException($"Could not find text '{text}' in ListBox '{Name}'");
         }
     }
 

@@ -35,10 +35,9 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Exceptions;
-#if NETCOREAPP
+
 using NUnit.Extensions.Forms.Util;
-#endif
+
 
 namespace NUnit.Extensions.Forms.Testers;
 
@@ -88,11 +87,11 @@ public partial class ComboBoxTester
         EndCurrentEdit("Text");
     }
 
-//#if NETCOREAPP
+#if NETCOREAPP
     private const int CB_SETCURSEL = 0x014E;
     private const int WM_COMMAND = 0x0111;
     private const int CBN_SELCHANGE = 1;
-//#endif
+#endif
     /// <summary>
     /// Selects an entry in the ComboBox according to its index.
     /// </summary>
@@ -177,7 +176,7 @@ public partial class ComboBoxTester
         int index;
         if ((index = Properties.FindStringExact(text)) == -1)
         {
-            throw new FormsTestAssertionException($"Could not find text '{text}' in ComboBox '{Name}'");
+            ThrowHelper.ThrowFormsTestAssertionException($"Could not find text '{text}' in ComboBox '{Name}'");
         }
         Select(index);
     }

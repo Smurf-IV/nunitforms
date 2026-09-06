@@ -35,8 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
 using NUnit.Extensions.Forms.Win32Interop;
 
 
@@ -118,12 +117,11 @@ public class AlternateSendKeys : ISendKeys, IDisposable
                 PressAndRelease(escapedKey);
             }
 
-            TypeUnformated(group.Body, altPresent || modifierKeys.Length > 0);
+            TypeUnformatted(group.Body, altPresent || modifierKeys.Length > 0);
 
             if (modifierKeys.Any())
             {
-                modifierKeys.Reverse();
-                ReleaseKeys(modifierKeys);
+                ReleaseKeysInReverse(modifierKeys);
             }
 
             if (altPressedManually)
@@ -134,7 +132,7 @@ public class AlternateSendKeys : ISendKeys, IDisposable
         }
     }
 
-    private void TypeUnformated(IEnumerable<char> text, bool hasActiveModifiers)
+    private void TypeUnformatted(IEnumerable<char> text, bool hasActiveModifiers)
     {
         foreach (char character in text)
         {
@@ -151,7 +149,7 @@ public class AlternateSendKeys : ISendKeys, IDisposable
 
                 PressKeysDown(shiftKeyCodes);
                 PressAndRelease(scanCode.KeyCodesCode);
-                ReleaseKeys(shiftKeyCodes);
+                ReleaseKeysInReverse(shiftKeyCodes);
             }
         }
     }
@@ -159,10 +157,10 @@ public class AlternateSendKeys : ISendKeys, IDisposable
     private void PressAndRelease(params Keys[] keyCodes)
     {
         PressKeysDown(keyCodes);
-        ReleaseKeys(keyCodes);
+        ReleaseKeysInReverse(keyCodes);
     }
 
-    private void ReleaseKeys(params Keys[] keyCodes)
+    private void ReleaseKeysInReverse(params Keys[] keyCodes)
     {
         for (int keyIndex = keyCodes.Length - 1; keyIndex >= 0; keyIndex--)
         {
@@ -184,7 +182,7 @@ public class AlternateSendKeys : ISendKeys, IDisposable
         {
             if (!_keysHeldDown.ContainsKey(keyCode))
             {
-                throw new KeyboardSequenceException();
+                ThrowHelper.ThrowKeyboardSequenceException();
             }
 
             _keysHeldDown[keyCode] -= 1;

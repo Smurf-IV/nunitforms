@@ -35,6 +35,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using NUnit.Extensions.Forms.Util;
+
 
 namespace NUnit.Extensions.Forms.ScreenCapture;
 
@@ -151,7 +153,7 @@ public class ScreenCapture
             }
             else
             {
-                throw new ArgumentException();
+                ThrowHelper.ThrowArgumentException(value);
             }
         }
     }

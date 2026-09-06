@@ -32,9 +32,10 @@
 #endregion
 
 
-using System;
 using System.Collections;
 using System.Windows.Forms;
+
+using NUnit.Extensions.Forms.Util;
 
 
 namespace NUnit.Extensions.Forms.Testers;
@@ -113,7 +114,7 @@ public partial class CheckedListBoxTester
 
         if (index == -1)
         {
-            throw new IndexOutOfRangeException($"{item} not in list");
+            ThrowHelper.ThrowIndexOutOfRangeException($"{item} not in list");
         }
 
         return index;

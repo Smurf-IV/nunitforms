@@ -152,7 +152,7 @@ public class FileDialogTester
 
             if (fnh == IntPtr.Zero)
             {
-                throw new Exception("NUnitForms fatal error: cannot find filename box");
+                ThrowHelper.ThrowNoSuchControlException("NUnitForms fatal error: cannot find filename box");
             }
 
             GetMessageHook.Record(delegate
@@ -262,7 +262,7 @@ public class FileDialogTester
             IntPtr.Zero);
         if (res == IntPtr.Zero)
         {
-            throw new ControlNotVisibleException("Open File Dialog is not visible");
+            ThrowHelper.ThrowControlNotVisibleException("Open File Dialog is not visible");
         }
         return res;
     }

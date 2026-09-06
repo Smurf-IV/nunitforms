@@ -61,7 +61,7 @@ public static class EventHelper
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         if (minfo == null)
         {
-            throw new MissingMethodException(targetObject.GetType().ToString(), $"on{eventName}");
+            ThrowHelper.ThrowMissingMethodException(targetObject.GetType().ToString(), $"on{eventName}");
         }
 
         ParameterInfo[] paramArray = minfo.GetParameters();

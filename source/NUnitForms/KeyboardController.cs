@@ -117,10 +117,7 @@ public class KeyboardController : IDisposable
     /// <param name="control">The ControlTester to use the keyboard on.</param>
     public void UseOn(ReflectionTester? control)
     {
-        if (control == null)
-        {
-            throw new ArgumentNullException(nameof(control));
-        }
+        ThrowHelper.ThrowIfNull(control,nameof(control));
 
         var c = control.TheObject as Control;
         FormsAssert.IsTrue(c != null, "Keyboard control requires tester of Control");

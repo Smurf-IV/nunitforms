@@ -36,6 +36,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms.Finders;
+using NUnit.Extensions.Forms.Util;
 
 namespace NUnit.Extensions.Forms.Generic_Testers;
 
@@ -88,10 +89,7 @@ public class Tester<T, TThis> : ReflectionTester, IEnumerable<TThis>
     public void EnsureHandleReady(int timeoutMilliseconds = 1000)
     {
         var control = TheObject as Control;
-        if (control == null)
-        {
-            throw new ArgumentNullException(nameof(control));
-        }
+        ThrowHelper.ThrowIfNull(control, nameof(control));
 
         // 1. Ensure the handle exists first
         if (control is { IsHandleCreated: false, IsDisposed: false })
@@ -176,7 +174,7 @@ public class Tester<T, TThis> : ReflectionTester, IEnumerable<TThis>
     {
         if (controlIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(controlIndex), controlIndex, @"Should not have index < 0");
+            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(controlIndex), controlIndex, @"Should not have index < 0");
         }
 
         _index = controlIndex;

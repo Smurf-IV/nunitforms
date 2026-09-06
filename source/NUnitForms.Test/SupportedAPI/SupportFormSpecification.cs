@@ -31,8 +31,6 @@
 
 #endregion
 
-using System.Windows.Forms;
-
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Extensions.Forms.TestApplications.TestForms;
 using NUnit.Framework;

@@ -32,6 +32,7 @@
 #endregion
 
 using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
 
 namespace NUnit.Extensions.Forms;
 
@@ -51,7 +52,7 @@ public class FormsAssert
     {
         if (!o.Equals(o2))
         {
-            throw new FormsTestAssertionException($"should be equal {o} : {o2} , {error}");
+            ThrowHelper.ThrowFormsTestAssertionException($"should be equal {o} : {o2} , {error}");
         }
     }
 
@@ -61,9 +62,7 @@ public class FormsAssert
     ///<param name="val"></param>
     ///<exception cref="FormsTestAssertionException"></exception>
     public static void IsTrue(bool val)
-    {
-        IsTrue(val, "was not true.");
-    }
+        => IsTrue(val, "was not true.");
 
     ///<summary>
     /// Asserts that the given value is true.
@@ -75,7 +74,7 @@ public class FormsAssert
     {
         if (!val)
         {
-            throw new FormsTestAssertionException(error);
+            ThrowHelper.ThrowFormsTestAssertionException(error);
         }
     }
 }

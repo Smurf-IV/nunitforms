@@ -33,15 +33,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Exceptions;
+
 using NUnit.Extensions.Forms.Finders;
 using NUnit.Extensions.Forms.SendKey;
 using NUnit.Extensions.Forms.Testers;
 using NUnit.Extensions.Forms.Util;
 using NUnit.Extensions.Forms.Win32Interop;
 using NUnit.Framework;
+
 
 namespace NUnit.Extensions.Forms;
 
@@ -153,7 +155,7 @@ public class NUnitFormTest
                 ModalFormHandler = null;
                 return;
             }
-            ModalFormHandler = delegate(string name, IntPtr hWnd, Form form)
+            ModalFormHandler = delegate (string name, IntPtr hWnd, Form form)
             {
                 value(name, hWnd);
             };
@@ -229,24 +231,20 @@ public class NUnitFormTest
                 verified = true;
                 List<Form> allForms = new FormFinder().FindAll();
 
-                foreach (Form form in allForms)
+                foreach (Form form in allForms.Where(form => !KeepAlive.ShouldKeepAlive(form)))
                 {
-                    if (!KeepAlive.ShouldKeepAlive(form))
-                    {
-                        form.Dispose();
-                        form.Hide();
-                    }
+                    form.Dispose();
+                    form.Hide();
                 }
 
-                var errors = new string[0];
                 ModalFormTester.Result modalResult = modal.Verify();
                 if (!modalResult.AllModalsShown)
                 {
-                    throw new FormsTestAssertionException("Expected Modal Form did not show");
+                    ThrowHelper.ThrowFormsTestAssertionException("Expected Modal Form did not show");
                 }
                 if (modalResult.UnexpectedModalWasShown)
                 {
-                    throw new FormsTestAssertionException(string.Join(", ", modalResult.UnexpectedModals));
+                    ThrowHelper.ThrowFormsTestAssertionException(string.Join(", ", modalResult.UnexpectedModals));
                 }
 
                 modal.Dispose();

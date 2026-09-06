@@ -2,11 +2,13 @@
 
 ## ⛓️‍💥 **Breaking Change(s)**
 
+- Recording application "Does Not Work"
 - Removed `WindowSpecificSendKeyboardInput`
 - Removed `SimpleAPIKeyboardWithEmulation`
 - Removed `VirtualKeyCodes`
 - Removed `OldSendKeys`
 - Removed `SendKeys`
+- `Finder<T>().Name("xx")` now returns a `KeyNotFoundException` rather than a generic `Exception` when the element is not found
 
 
 ## Current Changes (So Far)
@@ -27,3 +29,4 @@
     - ✅ net6.0 (Will be dropped in NUnit 5)
     - ✅ net8.0
     - ✅ net10.0
+- ✅ Add `ThrowHelper` and use it in the codebase

@@ -125,7 +125,6 @@ public class ModalFormTester : IDisposable
         Dispose();
     }
 
-
     public class Result
     {
         private readonly bool allModalsShown;
@@ -418,17 +417,13 @@ public class ModalFormTester : IDisposable
             }
         }
 
-
         public string GetError()
         {
             if (Verify())
             {
-                throw new InvalidOperationException("Don't call GetError when there are not errors");
+                ThrowHelper.ThrowInvalidOperationException("Don't call GetError when there are no errors");
             }
-            return
-                $"expected {expectedCount} invocations of modal, but was invoked {invokedCount} times";
+            return $"expected {expectedCount} invocations of modal, but was invoked {invokedCount} times";
         }
     }
-
-
 }

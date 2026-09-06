@@ -26,6 +26,22 @@
 
 ## Version 3 - POC: Alpha
 
+### ⛓️‍💥Breaking Changes
+
+- Recording application "Does Not Work"
+- Remove `VirtualKeyCodes`
+- Remove `WindowSpecificSendKeyboardInput`
+- Remove `SimpleAPIKeyboardWithEmulation`
+- Removed `VirtualKeyCodes`
+- Removed `OldSendKeys`
+- Removed `SendKeys`
+- `Finder<T>().Name("xx")` now returns a `KeyNotFoundException` rather than a generic `Exception` when the element is not found
+- Non supported winform controls will be gaurded (For backward compatibility)
+    - `ToolBarTester`
+    - `MenuItemTester`
+    - `ToolBarButtonTester`
+
+### Work in Progress (So Far)
 - ✅ Create Fork and add information to the README.md
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser` (Removed `SendKeys`)
@@ -33,9 +49,10 @@
 - [-] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
     - [-] net 4.8 (_Identify obsoleted types and replace_)
+        - [ ] `NumericUpDownTester` #15
     - [-] net6.0 (Will be dropped in NUnit 5)
-    - [ ] net8.0
-    - [ ] net10.0
+    - [-] net8.0
+    - [-] net10.0
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - ✅ net 4.6.2
@@ -46,15 +63,16 @@
     - ✅ net10.0
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
+- ✅ Add `ThrowHelper` and use it in the codebase
 - [ ] Add missing tests for:
     - [ ] `CheckedListBoxTester`
     - [ ] `ComponentTester`
     - [ ] `ListViewTester`
     - [ ] `PanelTester`
 
-- [-] Non supported winform controls will be gaurded (For backward compatibility)
+- [-] Non supported winform controls will be guarded (For backward compatibility)
     - [ ] Fix the recorder project to use the new `ToolStripTester` instead of `ToolBarTester` etc.
-    - [-] Create class and add tests to cover deprecated/removed controls:
+    - [ ] Create class and add tests to cover deprecated/removed controls:
         - [ ] `ContextMenuTestForm`
         - [ ] `MainMenuTestForm`
         - [ ] `ToolbarTestForm`
@@ -62,25 +80,14 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- [ ] Add `ThrowHelper` and use it in the codebase
 - [ ] Add focused (Single file) PInvoke and LoadLibrary for Win32 API(s) and use it in the codebase
-- [ ] Other stuff to be added later...
+- [ ] Nuget package just for the tester
+- [ ] GitHub build scripts (For the badges etc)
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
+- [ ] Other stuff to be added later...
 
-
-### ⛓️‍💥Breaking Changes
-
-- Remove `VirtualKeyCodes`
-- Remove `WindowSpecificSendKeyboardInput`
-- Remove `SimpleAPIKeyboardWithEmulation`
-- Removed `VirtualKeyCodes`
-- Removed `OldSendKeys`
-- Removed `SendKeys`
-- Non supported winform controls will be gaurded (For backward compatibility)
-    - `ToolBarTester` -> Replaced by `ToolStripTester`
-    - `MenuItemTester`
-    - `ToolBarButtonTester`
 
 # Version x - ideas 💡
 
+- [ ] Investigate "Recorder Application" and see if it can be fixed (Or if it is even worth fixing)
 - [ ] More ideas to be added later, Please suggest... ;-)

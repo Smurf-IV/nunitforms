@@ -104,7 +104,7 @@ public class ListBoxTest : NUnitFormTest
     public void ListBoxSelectionBad()
     {
         var ex = Assert.Throws<FormsTestAssertionException>(() => { new ListBoxTester("myListBox").Select("NotFound"); });
-        Assert.That(ex.Message, Does.Contain("Could not find text 'NotFound' in ComboBox 'myListBox'"));
+        Assert.That(ex.Message, Does.Contain("Could not find text 'NotFound' in ListBox 'myListBox'"));
     }
 
     [Test]

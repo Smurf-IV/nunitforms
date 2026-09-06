@@ -74,7 +74,7 @@ public class FormFinderTest : NUnitFormTest
     [Test]
     public void FinderWithBadObjectHasNoName()
     {
-        var ex = Assert.Throws<Exception>(() => { new Finder<Control>().Name("a"); });
+        var ex = Assert.Throws<KeyNotFoundException>(() => { new Finder<Control>().Name("a"); });
         Assert.That(ex.Message, Does.Contain("Object name not defined"));
     }
 

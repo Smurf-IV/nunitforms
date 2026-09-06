@@ -35,8 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
+using NUnit.Extensions.Forms.Util;
 
 
 namespace NUnit.Extensions.Forms.Finders;
@@ -147,8 +146,8 @@ public class Finder<T>
             return found.Count switch
             {
                 1 => found[0],
-                0 => throw new NoSuchControlException(_name),
-                _ => throw new AmbiguousNameException(_name)
+                0 => ThrowHelper.ThrowNoSuchControlException<object>(_name),
+                _ => ThrowHelper.ThrowAmbiguousNameException<object>(_name)
             };
         }
 
@@ -157,7 +156,7 @@ public class Finder<T>
             return found[index];
         }
 
-        throw new NoSuchControlException($"{_name}[{index}]");
+        return ThrowHelper.ThrowNoSuchControlException<object>($"{_name}[{index}]");
     }
 
     private List<object> Find(string? name, object obj, object? src)
@@ -291,7 +290,7 @@ public class Finder<T>
             ContextMenu => @"ContextMenu",
 #endif
             Component component => component.Site.Name,
-            _ => throw new Exception("Object name not defined")
+            _ => ThrowHelper.KeyNotFoundException<string>("Object name not defined")
         };
     }
 }

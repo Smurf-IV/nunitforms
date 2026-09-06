@@ -32,7 +32,10 @@
 #endregion
 
 using System;
+using System.Runtime.CompilerServices;
 using NUnit.Extensions.Forms.Util;
+
+[assembly: InternalsVisibleTo("NUnitForms.Test")]
 
 namespace NUnit.Extensions.Forms;
 
@@ -118,7 +121,7 @@ namespace NUnit.Extensions.Forms;
 /// <summary>
 /// Do not use directly.  Just use base test class and it takes care of it.
 /// </summary>
-public class Desktop : IDisposable
+internal class Desktop : IDisposable
 {
     private readonly IntPtr realDesktopHandle;
     private readonly bool shouldDisplayDesktop;
@@ -127,7 +130,8 @@ public class Desktop : IDisposable
     ///<summary>
     /// Creates a new desktop for testing using the default settings.
     ///</summary>
-    public Desktop() : this("NUnitForms Test Desktop")
+    public Desktop()
+        : this("NUnitForms Test Desktop")
     {
     }
 
@@ -135,7 +139,8 @@ public class Desktop : IDisposable
     /// Creates a new hidden desktop for testing with the given name.
     /// </summary>
     /// <param name="name"></param>
-    public Desktop(string name) : this(name, false)
+    public Desktop(string name)
+        : this(name, false)
     {
     }
 
