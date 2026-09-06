@@ -36,8 +36,17 @@ using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.SendKey;
 
+/// <summary>
+/// Represents a parsed group of send keys with modifiers and body.
+/// </summary>
 public class SendKeysParserGroup : ISendKeysParserGroup
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SendKeysParserGroup"/> class.
+    /// </summary>
+    /// <param name="modifierCharacters">The modifier characters (e.g., "+", "^", "%").</param>
+    /// <param name="body">The body of the key sequence.</param>
+    /// <param name="escapedKey">The escaped key value.</param>
     public SendKeysParserGroup(string modifierCharacters, string body, Keys escapedKey)
     {
         ModifierCharacters = modifierCharacters;
@@ -45,9 +54,18 @@ public class SendKeysParserGroup : ISendKeysParserGroup
         EscapedKey = escapedKey;
     }
 
+    /// <summary>
+    /// Gets the modifier characters.
+    /// </summary>
     public string ModifierCharacters { get; }
 
+    /// <summary>
+    /// Gets the body of the key sequence.
+    /// </summary>
     public string Body { get; }
 
+    /// <summary>
+    /// Gets the escaped key value.
+    /// </summary>
     public Keys EscapedKey { get; }
 }

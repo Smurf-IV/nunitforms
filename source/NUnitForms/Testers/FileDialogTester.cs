@@ -64,9 +64,16 @@ public class FileDialogTester
     protected const int OpenButton = 1;
 
     private IntPtr _hWnd;
+
+    /// <summary>
+    /// Gets the window handle of the file dialog.
+    /// </summary>
     public IntPtr Handle => _hWnd;
 
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileDialogTester"/> class with the specified window handle.
+    /// </summary>
+    /// <param name="hWnd">The window handle of the file dialog.</param>
     public FileDialogTester(IntPtr hWnd)
     {
         _hWnd = hWnd;
@@ -228,6 +235,10 @@ public class FileDialogTester
 
 
     [Obsolete]
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileDialogTester"/> class with the specified title. This constructor is obsolete.
+    /// </summary>
+    /// <param name="title">The title of the file dialog.</param>
     public FileDialogTester(string title)
     {
         // disregard the given title, since at the time it is called, it will always be InitialFileDialogName
@@ -236,8 +247,10 @@ public class FileDialogTester
 
 
     /// <summary>
+    /// <summary>
     /// Finds the OpenFileDialog.
     /// </summary>
+    /// <returns>The window handle of the file dialog, or <see cref="IntPtr.Zero"/> if not found.</returns>
     protected static IntPtr FindFileDialog()
     {
         IntPtr desktop = Win32.GetDesktopWindow();

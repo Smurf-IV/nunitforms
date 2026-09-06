@@ -36,6 +36,9 @@ using System;
 
 namespace NUnit.Extensions.Forms.Exceptions;
 
+/// <summary>
+/// Exception is thrown when there is an error in the keyboard sequence.
+/// </summary>
 public class KeyboardSequenceException
     : Exception
 {

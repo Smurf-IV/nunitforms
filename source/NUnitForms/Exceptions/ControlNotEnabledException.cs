@@ -42,6 +42,10 @@ namespace NUnit.Extensions.Forms.Exceptions;
 /// </summary>
 public class ControlNotEnabledException : Exception
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ControlNotEnabledException"/> class with a specified error message.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
     public ControlNotEnabledException(string? message)
         : base(message)
     {

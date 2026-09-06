@@ -50,6 +50,10 @@ namespace NUnit.Extensions.Forms.Util;
 /// </summary>
 public class GetMessageHook
 {
+    /// <summary>
+    /// Represents a callback that can be executed by the message hook.
+    /// </summary>
+    /// <returns>true if the callback has been handled and can be discarded; false otherwise.</returns>
     public delegate bool Callback();
 
     private static int s_msgId;
@@ -57,6 +61,9 @@ public class GetMessageHook
     private static IntPtr s_handleToHook = IntPtr.Zero;
     private static List<Callback> s_callbacks = [];
 
+    /// <summary>
+    /// Installs the message hook.
+    /// </summary>
     public static void InstallHook()
     {
         s_msgId = Win32.RegisterWindowMessage("NUnitForms Callback");
@@ -65,6 +72,9 @@ public class GetMessageHook
         s_handleToHook = Win32.SetWindowsHookEx(3, s_callback, IntPtr.Zero, Win32.GetCurrentThreadId());
     }
 
+    /// <summary>
+    /// Removes the message hook.
+    /// </summary>
     public static void RemoveHook()
     {
         if (s_handleToHook != IntPtr.Zero)
@@ -75,6 +85,10 @@ public class GetMessageHook
         }
     }
 
+    /// <summary>
+    /// Records a callback to be executed by the message hook.
+    /// </summary>
+    /// <param name="c">The callback to record.</param>
     public static void Record(Callback c)
     {
         bool wasEmpty = s_callbacks.Count == 0;
@@ -85,6 +99,9 @@ public class GetMessageHook
         }
     }
 
+    /// <summary>
+    /// Posts a message to trigger callbacks.
+    /// </summary>
     private static void Post()
     {
         Win32.PostThreadMessage(Win32.GetCurrentThreadId(), (uint)s_msgId, UIntPtr.Zero, IntPtr.Zero);

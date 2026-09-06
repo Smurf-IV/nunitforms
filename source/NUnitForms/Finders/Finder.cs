@@ -54,6 +54,9 @@ public class Finder<T>
     private readonly List<Form>? _forms;
     private readonly string? _name;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Finder{T}"/> class.
+    /// </summary>
     public Finder()
     {
     }
@@ -81,6 +84,9 @@ public class Finder<T>
         this._name = name;
     }
 
+    /// <summary>
+    /// Gets the count of found items.
+    /// </summary>
     public int Count => FindAll(typeof(T)).Count;
 
     private List<Form> FormCollection
@@ -109,6 +115,11 @@ public class Finder<T>
         return Find(-1);
     }
 
+    /// <summary>
+    /// Finds a control by index.
+    /// </summary>
+    /// <param name="index">The zero-based index of the control to find.</param>
+    /// <returns>The control at the specified index.</returns>
     public T Find(int index)
     {
         return (T)Find(index, typeof(T));
@@ -264,6 +275,11 @@ public class Finder<T>
         return true;
     }
 
+    /// <summary>
+    /// Gets the parent of the specified object.
+    /// </summary>
+    /// <param name="o">The object whose parent is to be retrieved.</param>
+    /// <returns>The parent of the object, or null if no parent exists.</returns>
     public object? Parent(object? o)
     {
         return o switch
@@ -277,6 +293,11 @@ public class Finder<T>
         };
     }
 
+    /// <summary>
+    /// Gets the name of the specified object.
+    /// </summary>
+    /// <param name="o">The object whose name is to be retrieved.</param>
+    /// <returns>The name of the object.</returns>
     public string Name(object? o)
     {
         return o switch

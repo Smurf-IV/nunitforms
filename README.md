@@ -70,7 +70,7 @@
     - [ ] `ComponentTester`
     - [ ] `ListViewTester`
     - [ ] `PanelTester`
-
+- [ ] Got through the `obsolete`s and fix (i.e. `OpenFileDialogTester.OpenFileDialogTester(string)`)
 - [-] Non supported winform controls will be guarded (For backward compatibility)
     - [ ] Fix the recorder project to use the new `ToolStripTester` instead of `ToolBarTester` etc.
     - [ ] Create class and add tests to cover deprecated/removed controls:

@@ -54,6 +54,9 @@ public delegate void ModalFormHandler(string name, IntPtr hWnd, Form form);
 /// </summary>
 public delegate void DialogBoxHandler(string name, IntPtr hWnd);
 
+/// <summary>
+/// A delegate for modal form activation events. This delegate is obsolete.
+/// </summary>
 [Obsolete]
 public delegate void ModalFormActivated();
 
@@ -74,6 +77,9 @@ public class ModalFormTester : IDisposable
     // ReSharper restore InconsistentNaming
 
 
+    /// <summary>
+    /// Gets or sets the handler for modal form events.
+    /// </summary>
     public ModalFormHandler? FormHandler { get; set; }
 
     private Win32.CBTCallback? callback;
@@ -89,6 +95,9 @@ public class ModalFormTester : IDisposable
     /// </summary>
     private bool listening;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ModalFormTester"/> class.
+    /// </summary>
     public ModalFormTester()
     {
         hwndList = [];
@@ -113,6 +122,9 @@ public class ModalFormTester : IDisposable
 
     #endregion
 
+    /// <summary>
+    /// Clears the list of open windows. Should be called from Setup to ensure no windows are in the list when starting a new test case.
+    /// </summary>
     public void ClearWindowList()
     {
         // Clear the list of open windows. Should be called from Setup to make sure no windows is in the list 
@@ -125,16 +137,35 @@ public class ModalFormTester : IDisposable
         Dispose();
     }
 
+    /// <summary>
+    /// Result information from a modal form test verification.
+    /// </summary>
     public class Result
     {
         private readonly bool allModalsShown;
+
+        /// <summary>
+        /// Gets a value indicating whether all expected modal forms were shown.
+        /// </summary>
         public bool AllModalsShown => allModalsShown;
 
         private readonly List<string> unexpectedModals;
+
+        /// <summary>
+        /// Gets the list of unexpected modal forms that were shown.
+        /// </summary>
         public IEnumerable<string> UnexpectedModals => unexpectedModals;
 
+        /// <summary>
+        /// Gets a value indicating whether any unexpected modal form was shown.
+        /// </summary>
         public bool UnexpectedModalWasShown => unexpectedModals.Count > 0;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Result"/> class.
+        /// </summary>
+        /// <param name="allShown">Whether all expected modals were shown.</param>
+        /// <param name="unexpected">The list of unexpected modal form names.</param>
         public Result(bool allShown, List<string> unexpected)
         {
             allModalsShown = allShown;

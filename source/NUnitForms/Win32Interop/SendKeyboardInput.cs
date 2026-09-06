@@ -37,6 +37,9 @@ using NUnit.Extensions.Forms.Util;
 
 namespace NUnit.Extensions.Forms.Win32Interop;
 
+/// <summary>
+/// Provides keyboard input sending functionality for Windows forms.
+/// </summary>
 public class SendKeyboardInput : ISendKeyboardInput
 {
     // Track simple modifier state so we can synthesize correct character input
@@ -45,6 +48,12 @@ public class SendKeyboardInput : ISendKeyboardInput
     private bool _ctrlActive;
     private bool _altActive;
 
+    /// <summary>
+    /// Sends keyboard input to the specified window.
+    /// </summary>
+    /// <param name="window">The window handle to send input to.</param>
+    /// <param name="keys">The keys to send.</param>
+    /// <param name="flags">Flags indicating key state (up or down).</param>
     public void SendInput(IntPtr window, Keys keys, SendInputFlags flags)
     {
         // Targeted alternative to deprecated/global keybd_event: send to the provided hwnd

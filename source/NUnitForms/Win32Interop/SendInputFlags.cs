@@ -37,8 +37,17 @@ using System;
 namespace NUnit.Extensions.Forms.Win32Interop;
 
 [Flags]
+/// <summary>
+/// Flags for keyboard input state.
+/// </summary>
 public enum SendInputFlags : uint
 {
+    /// <summary>
+    /// Represents a key up event.
+    /// </summary>
     KeyUp = 0x0002,
+    /// <summary>
+    /// Represents a key down event.
+    /// </summary>
     KeyDown = 0x0000,
 }

@@ -115,6 +115,9 @@ public class MessageBoxTester : Tester<MessageBox, MessageBoxTester>
 
     private readonly IntPtr _handle = new(0);
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MessageBoxTester"/> class.
+    /// </summary>
     public MessageBoxTester()
     {
     }

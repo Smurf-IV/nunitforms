@@ -55,18 +55,32 @@ public class MenuItemTester
 
     protected string Name;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MenuItemTester"/> class with the specified menu item name and form.
+    /// </summary>
+    /// <param name="name">The name of the menu item.</param>
+    /// <param name="form">The form containing the menu item.</param>
     public MenuItemTester(string name, Form form)
     {
         this._form = form;
         this.Name = name;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MenuItemTester"/> class with the specified menu item name and form name.
+    /// </summary>
+    /// <param name="name">The name of the menu item.</param>
+    /// <param name="formName">The name of the form containing the menu item.</param>
     public MenuItemTester(string name, string formName)
     {
         this._formName = formName;
         this.Name = name;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MenuItemTester"/> class with the specified menu item name.
+    /// </summary>
+    /// <param name="name">The name of the menu item.</param>
     public MenuItemTester(string name)
     {
         this.Name = name;
@@ -97,12 +111,16 @@ public class MenuItemTester
     public string Text => MenuItem.Text;
 
     /// <summary>
-    /// Allows you to access any properties of this MenuItem.
+    /// Gets the MenuItem property accessor. Allows you to access any properties of this MenuItem.
     /// </summary>
     public MenuItem Properties => MenuItem;
 
     #region EventFiring
 
+    /// <summary>
+    /// Fires an event on the menu item.
+    /// </summary>
+    /// <param name="eventName">The name of the event to fire.</param>
     protected void FireEvent(string eventName)
     {
         MethodInfo? mInfo = MenuItem.GetType().GetMethod($"On{eventName}",

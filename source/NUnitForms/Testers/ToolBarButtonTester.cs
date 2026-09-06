@@ -37,10 +37,18 @@ using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.Testers;
 
+/// <summary>
+/// A tester for toolbar buttons.
+/// </summary>
 public class ToolBarButtonTester
 {
     private readonly ToolBarTester bar;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ToolBarButtonTester"/> class with the specified toolbar button and toolbar tester.
+    /// </summary>
+    /// <param name="button">The toolbar button to test.</param>
+    /// <param name="bar">The toolbar tester that contains this button.</param>
     public ToolBarButtonTester(ToolBarButton button, ToolBarTester bar)
     {
         this.bar = bar;

@@ -1,2 +1,5 @@
 [*.cs]
 dotnet_diagnostic.IDE0028.severity = none
+
+[Generated Testers/*.cs]
+dotnet_diagnostic.CS1591.severity = none

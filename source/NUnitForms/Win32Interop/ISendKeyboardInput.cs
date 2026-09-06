@@ -37,9 +37,23 @@ using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.Win32Interop;
 
+/// <summary>
+/// Interface for sending keyboard input to windows.
+/// </summary>
 public interface ISendKeyboardInput
 {
+    /// <summary>
+    /// Sends keyboard input to the specified window.
+    /// </summary>
+    /// <param name="window">The window handle to send input to.</param>
+    /// <param name="keyCodes">The keys to send.</param>
+    /// <param name="flags">Flags indicating key state (up or down).</param>
     void SendInput(IntPtr window, Keys keyCodes, SendInputFlags flags);
 
+    /// <summary>
+    /// Sends a character to the specified window.
+    /// </summary>
+    /// <param name="window">The window handle to send input to.</param>
+    /// <param name="ch">The character to send.</param>
     void SendChar(IntPtr window, char ch);
 }

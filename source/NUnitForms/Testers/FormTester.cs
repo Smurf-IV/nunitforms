@@ -51,10 +51,17 @@ public class FormTester : ControlTester<Form, FormTester>, IDisposable
 {
     private bool _explicitlyClosed;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FormTester"/> class.
+    /// </summary>
     public FormTester()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FormTester"/> class with the specified form name.
+    /// </summary>
+    /// <param name="name">The name of the form to test.</param>
     public FormTester(string name) : base(name)
     {
     }

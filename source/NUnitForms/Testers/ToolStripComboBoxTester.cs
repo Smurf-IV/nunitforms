@@ -41,6 +41,10 @@ namespace NUnit.Extensions.Forms.Testers;
 /// </summary>
 public partial class ToolStripComboBoxTester
 {
+    /// <summary>
+    /// Selects the item at the specified index.
+    /// </summary>
+    /// <param name="index">The zero-based index of the item to select.</param>
     public void Select(int index)
     {
         Properties.SelectedIndex = index;
