@@ -36,40 +36,25 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
+
 namespace NUnit.Extensions.Forms.Util;
 
-internal class Win32
+internal partial class Win32
 {
-    #region Delegates
-
-    public delegate bool EnumDesktopsDelegate(string desktop, IntPtr lParam);
-
-    public delegate bool EnumThreadDelegate(IntPtr hwnd, IntPtr lParam);
-
-    #endregion
+    /// <summary>User library - provides window management and user interface functions</summary>
+    public const string User32 = "user32.dll";
 
     internal const int BM_CLICK = 0x00F5; //Button
     public const int GENERIC_ALL = 0x10000000;
-    internal const int INPUT_KEYBOARD = 1;
     internal const int INPUT_MOUSE = 0;
-    internal const int MOUSEEVENTF_MOVE = 0x0001;
-    internal const int KEYEVENTF_KEYUP = 0x0002;
-    internal const int MOUSEEVENTF_ABSOLUTE = 0x8000;
-    internal const int MOUSEEVENTF_LEFTDOWN = 0x0002;
-    internal const int MOUSEEVENTF_LEFTUP = 0x0004;
     internal const int MOUSEEVENTF_RIGHTDOWN = 0x0008;
     internal const int MOUSEEVENTF_RIGHTUP = 0x0010;
 
     internal const int MOUSEEVENTF_MIDDLEDOWN = 0x0020;
     internal const int MOUSEEVENTF_MIDDLEUP = 0x0040;
-    //internal const int MOUSEEVENTF_WHEEL = 0x80;
-    internal const int MOUSEEVENTF_WHEEL = 0x0800;
-    //internal const int MOUSEEVENTF_XDOWN = 0x100;
     internal const int MOUSEEVENTF_XDOWN = 0x0080;
     internal const int MOUSEEVENTF_XUP = 0x0100;
     internal const int SPI_GETMOUSEHOVERTIME = 102;
-    internal const int WHEEL_DELTA = 120;
-    private const uint WM_CLOSE = 0x0010;
     internal const int XBUTTON1 = 0x1;
     //internal const int XBUTTON1 = 8388608;
     internal const int XBUTTON2 = 0x2; //16777216
@@ -85,126 +70,163 @@ internal class Win32
     public const int MK_LBUTTON = 0x0001;
     public const uint WM_MOUSEACTIVATE = 0x0021;
     public const int HTCLIENT = 1;
-    public const int MA_ACTIVATE = 1;
     public const uint WM_ACTIVATE = 0x0006;
-    public const int WA_INACTIVE = 0;
-    public const int WA_ACTIVE = 1;
     public const int WA_CLICKACTIVE = 2;
     public const uint WM_SETFOCUS = 0x0007;
 
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr OpenInputDesktop(uint dwFlags, bool fInherit, uint dwDesiredAccess);
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    public static extern IntPtr OpenDesktop(string lpszDesktop, uint dwFlags, bool fInherit, uint dwDesiredAccess);
+    // The signature required for Windows message callbacks
+    public delegate IntPtr CBTCallback(int nCode, IntPtr wParam, IntPtr lParam);
 
-
-    public static bool EnumDesktopsCallback(string desktop, IntPtr lParam)
+    // Native Windows message memory layout 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MSG
     {
-        return lParam != IntPtr.Zero;
+        public IntPtr hwnd;
+        public uint message;
+        public IntPtr wParam;
+        public IntPtr lParam;
+        public uint time;
+        public int ptX;
+        public int ptY;
+        public uint lPrivate;
     }
 
-    [DllImport("user32.dll")]
-    public static extern bool EnumDesktops(IntPtr hwinsta, EnumDesktopsDelegate lpEnumFunc, IntPtr lParam);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport("user32.dll", EntryPoint="VkKeyScanW", StringMarshalling = StringMarshalling.Utf16)]
+    internal static partial short VkKeyScan([MarshalAs(UnmanagedType.U2)] char ch);
+#else
+    [DllImport(User32)]
+    internal static extern short VkKeyScan(char ch);
+#endif
 
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr GetProcessWindowStation();
-
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    public static extern IntPtr OpenWindowStation(string lpszWinSta, bool fInherit, uint dwDesiredAccess);
-
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    public static extern IntPtr CreateWindowStation(string pwinsta, uint dwReserved, uint dwDesiredAccess,
-        IntPtr lpsa);
-
-    [DllImport("user32.dll")]
-    public static extern bool SetProcessWindowStation(IntPtr hWinSta);
-
-    [DllImport("user32.dll")]
-    public static extern bool CloseWindowStation(IntPtr hWinSta);
-
-    public static bool EnumThreadCallback(IntPtr hWnd, IntPtr lParam)
-    {
-        // Close the enumerated window.
-        return PostMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
-    }
-
-    [DllImport("user32.dll", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true, EntryPoint = "PostMessageW")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-
-    [DllImport("user32.dll")]
-    public static extern bool EnumThreadWindows(uint dwThreadId, EnumThreadDelegate lpfn, IntPtr lParam);
-
-
-    [DllImport("kernel32")]
+    internal static partial bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+#else
+    [DllImport(User32, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool CloseHandle(IntPtr handle);
+    internal static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+#endif
 
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial IntPtr GetDesktopWindow();
+#else
+    [DllImport(User32)]
     internal static extern IntPtr GetDesktopWindow();
+#endif
 
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)] 
+    internal static partial bool EnumChildWindows(IntPtr hwnd, WindowEnumProc func, IntPtr lParam);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool EnumChildWindows(IntPtr hwnd, WindowEnumProc func, IntPtr lParam);
+#endif
 
-    internal static bool EnumWindowsProc(IntPtr hWnd, int lParam)
-    {
-        //StringBuilder title = new StringBuilder(255);
-        //int titleLength = GetWindowText(hWnd, title, title.Capacity + 1);
-        //title.Length = titleLength;
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    [DllImport(User32, EntryPoint = "GetWindowTextW", CharSet = CharSet.Unicode, SetLastError = true)]
+    //If the function succeeds, the return value is the length, in characters, of the copied string,
+    //not including the terminating null character. If the window has no title bar or text,
+    //if the title bar is empty, or if the window or control handle is invalid,
+    //the return value is zero. To get extended error information, call GetLastError.
+    internal static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
-        return true;
-    }
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial IntPtr GetDlgItem(IntPtr handleToWindow, int controlId);
+#else
+    [DllImport(User32)]
+    internal static extern IntPtr GetDlgItem(IntPtr handleToWindow, int controlId);
+#endif
 
-    [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows", ExactSpelling = false, CharSet = CharSet.Auto,
-        SetLastError = true)]
-    internal static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction,
-        IntPtr lParam);
-
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    internal static extern int GetWindowText(IntPtr handleToWindow, StringBuilder windowText, int maxTextLength);
-
-    [DllImport("user32.dll")]
-    internal static extern IntPtr GetDlgItem(IntPtr handleToWindow, int ControlId);
-
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    [DllImport(User32, CharSet = CharSet.Unicode)]
     internal static extern int GetClassName(IntPtr handleToWindow, StringBuilder className, int maxClassNameLength);
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "SetWindowsHookExW")]
+    internal static partial IntPtr SetWindowsHookEx(int code, CBTCallback callbackFunction, IntPtr handleToInstance, uint dwThreadId);
+#else
+    [DllImport(User32, CharSet = CharSet.Unicode)]
     internal static extern IntPtr SetWindowsHookEx(int code, CBTCallback callbackFunction, IntPtr handleToInstance, uint dwThreadId);
+#endif
 
-    [DllImport("user32.dll", EntryPoint = "SetWindowsHookEx")]
-    internal static extern IntPtr SetMSGWindowsHookEx(int code, MSGCallback callbackFunction, IntPtr handleToInstance, uint dwThreadId);
 
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool UnhookWindowsHookEx(IntPtr handleToHook);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool UnhookWindowsHookEx(IntPtr handleToHook);
+#endif
 
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "CallNextHookEx")]
+    internal static partial IntPtr CallNextHookEx(IntPtr handleToHook, int nCode, IntPtr wParam, IntPtr lParam);
+#else
+    [DllImport(User32, EntryPoint = "CallNextHookEx")]
     internal static extern IntPtr CallNextHookEx(IntPtr handleToHook, int nCode, IntPtr wParam, IntPtr lParam);
-    [DllImport("user32.dll", EntryPoint = "CallNextHookEx")]
+#endif
+
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+//#if NET7_0_OR_GREATER
+//    [LibraryImport(User32)]
+//    internal static partial IntPtr CallNextMSGHookEx(IntPtr handleToHook, int nCode, IntPtr wParam, IntPtr lParam);
+//#else
+    [DllImport(User32)]
     internal static extern IntPtr CallNextMSGHookEx(IntPtr handleToHook, int nCode, IntPtr wParam, ref Message lParam);
+//#endif
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SendMessage(IntPtr handleToWindow, uint Message, UIntPtr wParam, IntPtr lParam);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "SendMessageW", StringMarshalling = StringMarshalling.Utf16)]
+    internal static partial IntPtr SendMessage(IntPtr handleToWindow, uint message, UIntPtr wParam, IntPtr lParam);
+#else
+    [DllImport(User32, CharSet = CharSet.Unicode)]
+    internal static extern IntPtr SendMessage(IntPtr handleToWindow, uint message, UIntPtr wParam, IntPtr lParam);
+#endif
 
-    [DllImport("user32.Dll", CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SendDlgItemMessage(IntPtr handleToWindow, int dlgItem, uint message,
-        UIntPtr wParam, IntPtr lParam);
-
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial int GetCursorPos(out Point lpWinPoint);
+#else
+    [DllImport(User32)]
     internal static extern int GetCursorPos(out Point lpWinPoint);
+#endif
 
-    [DllImport("user32.dll")]
-    internal static extern bool ShowCursor(bool bShow);
-
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial int SetCursorPos(int x, int y);
+#else
+    [DllImport(User32)]
     internal static extern int SetCursorPos(int x, int y);
+#endif
 
-    [DllImport("user32.dll")]
-    internal static extern int GetSystemMetrics(int nIndex);
-
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    public static extern int SystemParametersInfo(int uAction, int uParam, out int lpvParam, int fuWinIni);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "SystemParametersInfoW")]
+    internal static partial int SystemParametersInfo(int uAction, int uParam, out int lpvParam, int fuWinIni);
+#else
+    [DllImport(User32, CharSet = CharSet.Unicode)]
+    internal static extern int SystemParametersInfo(int uAction, int uParam, out int lpvParam, int fuWinIni);
+#endif
 
     /// <summary>
     /// Specifies the function's purpose. If this parameter is TRUE, keyboard and mouse input events are 
@@ -225,103 +247,158 @@ internal class Win32
     /// Windows 2000/XP: The user presses CTRL+ALT+DEL or the system invokes the Hard System Error modal message
     /// box (for example, when a program faults or a device fails). 
     /// </remarks>
-    [DllImport("user32.dll", SetLastError = true)]
-    internal static extern bool BlockInput(bool blockIt);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool BlockInput([MarshalAs(UnmanagedType.Bool)] bool blockIt);
+#else
+    [DllImport(User32, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool BlockInput([MarshalAs(UnmanagedType.Bool)] bool blockIt);
+#endif
 
-    [DllImport("user32.dll", EntryPoint = "SendInput", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "SendInput", SetLastError = true)]
+    internal static partial int SendMouseInput(int cInputs, ref MSINPUT pInputs, int cbSize);
+#else
+    [DllImport(User32, EntryPoint = "SendInput", SetLastError = true)]
     internal static extern int SendMouseInput(int cInputs, ref MSINPUT pInputs, int cbSize);
+#endif
 
-    [DllImport("user32.dll", EntryPoint = "keybd_event", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "keybd_event", SetLastError = true)]
+    internal static partial void KeyBdEvent(byte bVk, byte bScan, int dwFlags, UIntPtr dwExtraInfo);
+#else
+    [DllImport(User32, EntryPoint = "keybd_event", SetLastError = true)]
     internal static extern void KeyBdEvent(byte bVk, byte bScan, int dwFlags, UIntPtr dwExtraInfo);
+#endif
 
-    //[DllImport("user32.dll", EntryPoint = "SendInput", SetLastError = true)]
-    //internal static extern int SendKeyboardInput(int cInputs, ref KBINPUT pInputs, int cbSize);
+    //// Native structure configuration for Windows security settings
+    //[StructLayout(LayoutKind.Sequential)]
+    //public struct SECURITY_ATTRIBUTES
+    //{
+    //    public uint nLength;
+    //    public IntPtr lpSecurityDescriptor;
+    //    [MarshalAs(UnmanagedType.Bool)]
+    //    public bool bInheritHandle;
+    //}
+//    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+//#if NET7_0_OR_GREATER
+//    // StringMarshalling.Unicode ensures the string maps perfectly to a native wide-string.
+//    [LibraryImport("user32.dll", EntryPoint = "CreateDesktopW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+//    internal static unsafe partial IntPtr CreateDesktop(
+//        string lpszDesktop,
+//        IntPtr lpszDevice,        // Always pass IntPtr.Zero / null
+//        IntPtr pDevmode,          // Always pass IntPtr.Zero / null
+//        uint dwFlags,             // Desktop control flags
+//        uint dwDesiredAccess,     // Access rights (e.g., DESKTOP_CREATEWINDOW)
+//        SECURITY_ATTRIBUTES* lpSA // Unsafe pointer avoids complex runtime marshalling rules
+//    );
+//#else
+//    [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
+//    internal static extern IntPtr CreateDesktop(string lpszDesktop, IntPtr lpszDevice, IntPtr pDevmode, int dwFlags,
+//        int dwDesiredAccess, 
+//        SECURITY_ATTRIBUTES* lpsa);
+//#endif
 
-    [DllImport("user32.dll")]
-    internal static extern IntPtr GetMessageExtraInfo();
-
-    [DllImport("user32", CharSet = CharSet.Unicode, SetLastError = true)]
-    public static extern IntPtr CreateDesktop(string lpszDesktop, IntPtr lpszDevice, IntPtr pDevmode, int dwFlags,
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern IntPtr CreateDesktop(string lpszDesktop, IntPtr lpszDevice, IntPtr pDevmode, int dwFlags,
         int dwDesiredAccess, IntPtr lpsa);
 
-    [DllImport("user32", SetLastError = true)]
-    public static extern int CloseDesktop(IntPtr hDesktop);
-    internal const int KEYEVENTF_KEYDOWN = 0x0000;
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true)]
+    internal static partial int CloseDesktop(IntPtr hDesktop);
+#else
+    [DllImport(User32, SetLastError = true)]
+    internal static extern int CloseDesktop(IntPtr hDesktop);
+#endif
 
-    [DllImport("user32", SetLastError = true)]
-    public static extern IntPtr GetThreadDesktop(uint dwThreadId);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true)]
+    internal static partial IntPtr GetThreadDesktop(uint dwThreadId);
+#else
+    [DllImport(User32, SetLastError = true)]
+    internal static extern IntPtr GetThreadDesktop(uint dwThreadId);
+#endif
 
-    [DllImport("user32", SetLastError = true)]
-    public static extern int SetThreadDesktop(IntPtr hDesktop);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true)]
+    internal static partial int SetThreadDesktop(IntPtr hDesktop);
+#else
+    [DllImport(User32, SetLastError = true)]
+    internal static extern int SetThreadDesktop(IntPtr hDesktop);
+#endif
 
-    [DllImport("user32", SetLastError = true)]
-    public static extern int SwitchDesktop(IntPtr hDesktop);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true)]
+    internal static partial int SwitchDesktop(IntPtr hDesktop);
+#else
+    [DllImport(User32, SetLastError = true)]
+    internal static extern int SwitchDesktop(IntPtr hDesktop);
+#endif
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool SetDlgItemText(IntPtr hDlg, int nIDDlgItem, string lpString);
+#else
+    [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool SetDlgItemText(IntPtr hDlg, int nIDDlgItem, string lpString);
+#endif
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "SetWindowTextW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool SetWindowText(IntPtr hwnd, string lpString);
+#else
+    [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool SetWindowText(IntPtr hWnd, string lpString);
+#endif
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+//#if NET7_0_OR_GREATER
+//    [LibraryImport(User32, StringMarshalling = StringMarshalling.Utf16)]
+//    internal static partial int GetDlgItemText(IntPtr hDlg, int nIDDlgItem, StringBuilder lpString, int maxCount);
+//#else
+    [DllImport(User32, CharSet = CharSet.Unicode)]
     internal static extern int GetDlgItemText(IntPtr hDlg, int nIDDlgItem, StringBuilder lpString, int maxCount);
+//#endif
 
-    [DllImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool IsWindowVisible(IntPtr hDlg);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool IsWindowVisible(IntPtr hDlg);
+#endif
 
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport("kernel32")]
+    internal static partial uint GetCurrentThreadId();
+#else
     [DllImport("kernel32", SetLastError = true)]
-    public static extern uint GetCurrentThreadId();
-
-    #region Nested type: CBTCallback
-
-    internal delegate IntPtr CBTCallback(int code, IntPtr wParam, IntPtr lParam);
-    internal delegate IntPtr MSGCallback(int code, IntPtr wParam, ref Message lParam);
-
-    #endregion
+    internal static extern uint GetCurrentThreadId();
+#endif
 
     #region Nested type: EnumDelegate
 
     internal delegate bool EnumDelegate(IntPtr hWnd, int lParam);
-
-    #endregion
-
-    #region Nested type: KEYBDINPUT
-
-    internal const ushort VK_SHIFT = 0x10;
-    internal const ushort VK_CONTROL = 0x11;
-    internal const ushort VK_MENU = 0x12;
-
-    [StructLayout(LayoutKind.Explicit)]
-    internal struct KBINPUT
-    {
-        [FieldOffset(0)] internal /*DWord*/ uint type;  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input
-
-        // https://techcpb.wordpress.com/2010/03/15/new-blog-post-getting-sendinput-pinvoke-in-c/
-#if x86 //32bit
-        [FieldOffset(4)]
-#else   //64bit
-        [FieldOffset(8)]
-#endif
-        public KEYBDINPUT ki;
-
-        public KBINPUT()
-        {
-            type = INPUT_KEYBOARD;
-            ki = new KEYBDINPUT();
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct KEYBDINPUT
-    {
-        // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
-        internal /*Word*/ UInt16 wVk;
-        internal /*Word*/ UInt16 wScan;
-        internal /*DWord*/ UInt32 dwFlags;
-
-        internal /*DWord*/ UInt32 time;
-        internal /*ULong_Ptr*/ IntPtr dwExtraInfo;
-    }
 
     #endregion
 
@@ -463,59 +540,128 @@ internal class Win32
 
     #endregion
 
-    [DllImport("user32.dll")]
-    public static extern short VkKeyScanEx(char ch, IntPtr dwhkl);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial IntPtr GetKeyboardLayout(uint dwThreadId);
+#else
+    [DllImport(User32)]
+    internal static extern IntPtr GetKeyboardLayout(uint dwThreadId);
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern IntPtr GetKeyboardLayout(uint dwThreadId);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "SendMessageW")]
+    internal static partial IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+#else
+    [DllImport(User32, CharSet = CharSet.Unicode)]
+    internal static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+#endif
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)] //
-    public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "MapVirtualKeyExW")]
+    internal static partial uint MapVirtualKeyEx(uint uCode, uint uMapType, IntPtr dwhkl);
+#else
+    [DllImport(User32)]
+    internal static extern uint MapVirtualKeyEx(uint uCode, uint uMapType, IntPtr dwhkl);
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern uint MapVirtualKeyEx(uint uCode, uint uMapType, IntPtr dwhkl);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, SetLastError = true, EntryPoint = "PostThreadMessageW")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool PostThreadMessage(uint dwThreadId, uint msg, UIntPtr wParam, IntPtr lParam);
+#else
+    [DllImport(User32, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool PostThreadMessage(uint dwThreadId, uint msg, UIntPtr wParam, IntPtr lParam);
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern bool GetKeyboardState(byte[] lpKeyState);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "DestroyWindow")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool DestroyWindow(IntPtr hWnd);
+#else
+    [DllImport(User32, EntryPoint = "DestroyWindow")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool DestroyWindow(IntPtr hWnd);
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern bool SetKeyboardState(byte[] lpKeyState);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool PostThreadMessage(uint dwThreadId, uint Msg, UIntPtr wParam, IntPtr lParam);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr lpdwProcessId);
-
-    [DllImport("user32.dll")]
-    public static extern bool AttachThreadInput(int idAttach, uint idAttachTo, bool fAttach);
-
-    [DllImport("user32.dll", EntryPoint = "DestroyWindow")] //
-    public static extern bool DestroyWindow(IntPtr hWnd);
-
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)] //
-    public static extern int RegisterWindowMessage(string lpstring);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32, EntryPoint = "RegisterWindowMessageW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    internal static partial int RegisterWindowMessage(string lpstring);
+#else
+    [DllImport(User32, EntryPoint = "RegisterWindowMessageW", CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern int RegisterWindowMessage(string lpstring);
+#endif
 
 
     // Bring a window to the foreground/top of Z-order
-    [DllImport("user32.dll")]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool SetForegroundWindow(IntPtr hWnd);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool SetForegroundWindow(IntPtr hWnd);
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern bool BringWindowToTop(IntPtr hWnd);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool BringWindowToTop(IntPtr hWnd);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool BringWindowToTop(IntPtr hWnd);
+#endif
 
     // Release any current mouse capture so subsequent clicks go to the intended control
-    [DllImport("user32.dll")]
-    public static extern bool ReleaseCapture();
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool ReleaseCapture();
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool ReleaseCapture();
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern IntPtr GetForegroundWindow();
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial IntPtr GetForegroundWindow();
+#else
+    [DllImport(User32)]
+    internal static extern IntPtr GetForegroundWindow();
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    internal static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+#else
+    [DllImport(User32)]
+    internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+#endif
 
-    [DllImport("user32.dll")]
-    public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool AttachThreadInput(uint idAttach, uint idAttachTo, [MarshalAs(UnmanagedType.Bool)]bool fAttach);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, [MarshalAs(UnmanagedType.Bool)] bool fAttach);
+#endif
 
 
 }

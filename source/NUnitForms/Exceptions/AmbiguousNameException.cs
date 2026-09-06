@@ -51,7 +51,9 @@ namespace NUnit.Extensions.Forms.Exceptions;
 ///grandparent.parent.child is a valid name string.. You can use the shortest name string
 ///that uniquely identifies a control.
 ///</example>
+#pragma warning disable CA1032
 public class AmbiguousNameException : Exception
+#pragma warning restore CA1032
 {
     /// <summary>
     /// Creates an AmbiguousNameException.

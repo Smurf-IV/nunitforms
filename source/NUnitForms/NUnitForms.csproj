@@ -26,6 +26,7 @@
 		<!-- Force consistent architecture for multi-targeting -->
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<Prefer32Bit>false</Prefer32Bit>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<!-- .NET 8+ Performance Optimizations -->
 		<TieredCompilation>true</TieredCompilation>

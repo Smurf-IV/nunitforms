@@ -46,6 +46,7 @@
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser` (Removed `SendKeys`)
 - ✅ Copy SourceForge issues etc into Github [Bug] / [Feature] issues types
+- ✅ Add focused (Single file) PInvoke and LoadLibrary for Win32 API(s) and use it in the codebase
 - [-] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
     - [-] net 4.8 (_Identify obsoleted types and replace_)
@@ -80,7 +81,6 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- [ ] Add focused (Single file) PInvoke and LoadLibrary for Win32 API(s) and use it in the codebase
 - [ ] Nuget package just for the tester
 - [ ] GitHub build scripts (For the badges etc)
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)

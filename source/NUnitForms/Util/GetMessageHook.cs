@@ -50,34 +50,29 @@ namespace NUnit.Extensions.Forms.Util;
 /// </summary>
 public class GetMessageHook
 {
-    ///// <returns>true to keep the callback, false to remove it</returns>
     public delegate bool Callback();
 
-    private static int msgid;
-
-    private static Win32.MSGCallback? s_callback;
+    private static int s_msgId;
+    private static Win32.CBTCallback? s_callback;
     private static IntPtr s_handleToHook = IntPtr.Zero;
-    private static List<Callback> s_callbacks;
+    private static List<Callback> s_callbacks = [];
 
-
-    ///// <summary>
-    ///// Called at test setup by NUnitFormTest
-    ///// </summary>
     public static void InstallHook()
     {
-        msgid = Win32.RegisterWindowMessage("NUnitForms Callback");
+        s_msgId = Win32.RegisterWindowMessage("NUnitForms Callback");
         s_callbacks = [];
         s_callback = ProcessCallbacks;
-
-        s_handleToHook = Win32.SetMSGWindowsHookEx(3, s_callback, IntPtr.Zero, Win32.GetCurrentThreadId());
+        s_handleToHook = Win32.SetWindowsHookEx(3, s_callback, IntPtr.Zero, Win32.GetCurrentThreadId());
     }
 
-    /// <summary>
-    /// Called at test teardown by NUnitFormTest
-    /// </summary>
     public static void RemoveHook()
     {
-        Win32.UnhookWindowsHookEx(s_handleToHook);
+        if (s_handleToHook != IntPtr.Zero)
+        {
+            Win32.UnhookWindowsHookEx(s_handleToHook);
+            s_handleToHook = IntPtr.Zero;
+            s_callback = null;
+        }
     }
 
     public static void Record(Callback c)
@@ -92,29 +87,34 @@ public class GetMessageHook
 
     private static void Post()
     {
-        Win32.PostThreadMessage(Win32.GetCurrentThreadId(), (uint)msgid, UIntPtr.Zero, IntPtr.Zero);
+        Win32.PostThreadMessage(Win32.GetCurrentThreadId(), (uint)s_msgId, UIntPtr.Zero, IntPtr.Zero);
     }
 
-    private static IntPtr ProcessCallbacks(int code, IntPtr wParam, ref Message lParam)
+    private static IntPtr ProcessCallbacks(int code, IntPtr wParam, IntPtr lParam)
     {
-        if (code >= 0 && lParam.Msg == msgid)
+        if (code >= 0 && lParam != IntPtr.Zero)
         {
-
-            List<Callback> tmp = s_callbacks;
-            s_callbacks = [];
-            foreach (Callback c in tmp)
+            unsafe
             {
-                if (!c())
+                Win32.MSG* msg = (Win32.MSG*)lParam;
+                if (msg->message == (uint)s_msgId)
                 {
-                    s_callbacks.Add(c);
+                    List<Callback> tmp = s_callbacks;
+                    s_callbacks = [];
+                    foreach (Callback c in tmp)
+                    {
+                        if (!c())
+                        {
+                            s_callbacks.Add(c);
+                        }
+                    }
+                    if (s_callbacks.Count > 0)
+                    {
+                        Post();
+                    }
                 }
             }
-            if (s_callbacks.Count > 0)
-            {
-                Post();
-            }
         }
-        return Win32.CallNextMSGHookEx(s_handleToHook, code, wParam, ref lParam);
-
+        return Win32.CallNextHookEx(s_handleToHook, code, wParam, lParam);
     }
 }

@@ -82,7 +82,8 @@ internal static class NativeMethods
     /// <param name="rect">The rectangle</param>
     /// <returns></returns>
     [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-    public static extern bool GetWindowRect(IntPtr hwnd, out RECT rect);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    internal static extern bool GetWindowRect(IntPtr hwnd, out RECT rect);
 
     /// <summary>
     /// The BringWindowToTop function brings the specified window to the top of the Z order. 
@@ -96,7 +97,8 @@ internal static class NativeMethods
     /// To get extended error information, call GetLastError. 
     /// </returns>
     [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-    public static extern bool BringWindowToTop(IntPtr hWnd);
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    internal static extern bool BringWindowToTop(IntPtr hWnd);
 
 
     /// <summary>
@@ -104,7 +106,7 @@ internal static class NativeMethods
     /// </summary>
     /// <param name="hwnd">The window handle to look up</param>
     /// <returns>The rectangle</returns>
-    public static Rectangle GetWindowRect(IntPtr hwnd)
+    internal static Rectangle GetWindowRect(IntPtr hwnd)
     {
         GetWindowRect(hwnd, out RECT rect);
         return rect.Rect;

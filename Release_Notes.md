@@ -17,6 +17,7 @@
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser`
 - ✅ Copy SourceForge issues etc into Github [Bug] / [Feature] issues types
+- ✅ Add focused (Single file) PInvoke and LoadLibrary for Win32 API(s) and use it in the codebase
 - [ ] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
     - ✅ net 4.8

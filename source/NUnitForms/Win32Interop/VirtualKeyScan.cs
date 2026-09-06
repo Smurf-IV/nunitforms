@@ -35,6 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NUnit.Extensions.Forms.Util;
 
 namespace NUnit.Extensions.Forms.Win32Interop;
 
@@ -44,7 +45,7 @@ internal class VirtualKeyScan
 
     public VirtualKeyScan(char character)
     {
-        scanCode = VkKeyScan(character);
+        scanCode = Win32.VkKeyScan(character);
     }
 
     public Keys KeyCodesCode => (Keys)(scanCode & 0x00ff);
@@ -77,7 +78,4 @@ internal class VirtualKeyScan
         Control = 0x0200, // Either CTRL key is pressed.
         Alt = 0x0400, // Either ALT key is pressed.
     }
-
-    [DllImport("user32.dll")]
-    private static extern short VkKeyScan(char ch);
 }
