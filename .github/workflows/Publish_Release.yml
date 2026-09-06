@@ -39,15 +39,15 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore NUnitForms.slnx
       env:
         NUGET_AUTH_TOKEN: ${{ github.token }}
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build NUnitForms.slnx --configuration Release --no-restore
 
     # - name: Test
-    #   run: dotnet test --no-build --configuration Release --verbosity normal
+    #   run: dotnet test NUnitForms.slnx --no-build --configuration Release --verbosity normal
 
     - name: Pack
       run: dotnet pack "NUnitForms/NUnitForms.csproj" --no-build --configuration Release
