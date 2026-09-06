@@ -29,12 +29,14 @@ jobs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: | 
-          4.6.x
-          4.8.x
+         # 4.6.x
+          #4.8.x
+          6.x
           8.x
           10.x
         # Authenticates packages to push to GPR
         source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        cache: true
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
