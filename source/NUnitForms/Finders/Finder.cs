@@ -259,10 +259,10 @@ public class Finder<T>
     private bool Matches(string? name, object? control, object? src)
     {
         object? c = control;
-        string[] names = name?.Split('.') ?? new string[0];
+        string[] names = name?.Split('.') ?? [];
         for (int i = names.Length - 1; i >= 0; i--)
         {
-            if (!names[i].Equals(Name(c)))
+            if (names[i] != Name(c))
             {
                 return false;
             }

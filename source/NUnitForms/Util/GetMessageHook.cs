@@ -48,7 +48,7 @@ namespace NUnit.Extensions.Forms.Util;
 /// Due to the static design, this class will not work in the case of multiple UI threads,
 /// each operating a message pump. If this is a concern, it should be feasible to modify it.
 /// </summary>
-public class GetMessageHook
+public static class GetMessageHook
 {
     /// <summary>
     /// Represents a callback that can be executed by the message hook.

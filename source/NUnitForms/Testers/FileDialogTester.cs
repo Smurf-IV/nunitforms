@@ -234,11 +234,11 @@ public class FileDialogTester
     }
 
 
-    [Obsolete]
     /// <summary>
     /// Initializes a new instance of the <see cref="FileDialogTester"/> class with the specified title. This constructor is obsolete.
     /// </summary>
     /// <param name="title">The title of the file dialog.</param>
+    [Obsolete]
     public FileDialogTester(string title)
     {
         // disregard the given title, since at the time it is called, it will always be InitialFileDialogName
@@ -246,7 +246,6 @@ public class FileDialogTester
     }
 
 
-    /// <summary>
     /// <summary>
     /// Finds the OpenFileDialog.
     /// </summary>

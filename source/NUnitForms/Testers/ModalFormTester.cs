@@ -69,11 +69,8 @@ internal delegate void ModalFormActivatedHwnd(IntPtr hWnd);
 public class ModalFormTester : IDisposable
 {
     // ReSharper disable InconsistentNaming
-    private const int CbtHookType = 5;
     private const int HCBT_DESTROYWND = 4;
     private const int HCBT_ACTIVATE = 5;
-    private const int HCBT_MOVESIZE = 0;
-    private const int HCBT_SETFOCUS = 9;
     // ReSharper restore InconsistentNaming
 
 
@@ -182,7 +179,7 @@ public class ModalFormTester : IDisposable
         if (handlers.Count == 0)
         {
             var res = new Result(FormHandler == null, unexpectedModals);
-            unexpectedModals = new List<string>();
+            unexpectedModals = [];
             return res;
         }
 

@@ -57,7 +57,7 @@ public class SendKeysParser : ISendKeysParser
 
         var regex = new Regex(GroupsPattern, RegexOptions.IgnorePatternWhitespace);
         MatchCollection matches = regex.Matches(sendKeysFormattedText);
-        string[] groupsList = matches.Cast<Match>().Select(match => match.Value).ToArray();
+        string[] groupsList = [.. matches.Cast<Match>().Select(match => match.Value)];
 
         foreach (string group in groupsList)
         {

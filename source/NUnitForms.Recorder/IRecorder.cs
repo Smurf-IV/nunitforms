@@ -34,6 +34,8 @@
 using System;
 using System.Reflection;
 
+using NUnit.Extensions.Forms.Testers;
+
 
 namespace NUnitForms.Recorder;
 

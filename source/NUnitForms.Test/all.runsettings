@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RunSettings>
-  <RunConfiguration>
-    <!-- Forces the runner to use the .NET Core / .NET 6+ engine -->
-    <TargetFrameworkVersion>.NETCoreApp,Version=v6.0</TargetFrameworkVersion>
-  </RunConfiguration>
-</RunSettings>

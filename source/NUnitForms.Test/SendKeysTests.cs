@@ -204,6 +204,6 @@ public class SendKeysTests : MockingTestFixture
         A.CallTo(() => group.EscapedKey).Returns(escapedKeys);
         A.CallTo(() => group.Body).Returns(body);
 
-        A.CallTo(() => parser.Groups).Returns(new[] { group });
+        A.CallTo(() => parser.Groups).Returns([group]);
     }
 }

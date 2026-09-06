@@ -114,7 +114,7 @@ public class ControlTester<T, TThis> : Tester<T, TThis>
         Properties.Text = text;
         FireEvent("Leave");
 
-        EndCurrentEdit("Text");
+        EndCurrentEdit(@"Text");
     }
 
     /// <summary>

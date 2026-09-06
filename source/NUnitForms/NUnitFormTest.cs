@@ -109,7 +109,7 @@ public class NUnitFormTest
         {
             string? useHiddenDesktop = Environment.GetEnvironmentVariable("UseHiddenDesktop");
             return useHiddenDesktop != null
-                   && useHiddenDesktop.ToUpper().Equals("TRUE");
+                   && useHiddenDesktop.Equals("TRUE", StringComparison.InvariantCultureIgnoreCase);
         }
     }
 

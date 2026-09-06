@@ -323,7 +323,7 @@ public class TestWriter
         }
 
         WriteLine(sb);
-        sb.Append("}");
+        sb.Append('}');
 
         Test = sb.ToString();
     }
@@ -414,7 +414,7 @@ public class TestWriter
     {
         if (sb != null)
         {
-            sb.Append("\t");
+            sb.Append('\t');
         }
         else
         {

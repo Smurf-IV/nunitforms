@@ -71,6 +71,6 @@ public partial class CheckBoxTester
     private void EditChecked(bool shouldCheck)
     {
         Properties.Checked = shouldCheck;
-        EndCurrentEdit("Checked");
+        EndCurrentEdit(@"Checked");
     }
 }

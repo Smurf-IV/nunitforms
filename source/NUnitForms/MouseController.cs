@@ -98,13 +98,11 @@ namespace NUnit.Extensions.Forms;
 public class MouseController : IDisposable
 {
     private static readonly int s_hoverTime;
-    private MouseControl? mouseControl;
+    private MouseControl? _mouseControl;
 
-    private Win32.Point originalPosition;
+    private Win32.Point _originalPosition;
 
-    private bool restoreUserInput;
-
-    private PointF scale;
+    private PointF _scale;
 
     #region Contstructors
 
@@ -134,7 +132,7 @@ public class MouseController : IDisposable
     /// </remarks>
     /// <example>
     /// <code>
-    /// using (MouseController mouse = new MouseControler(myTestControl))
+    /// using (MouseController mouse = new MouseController(myTestControl))
     /// {
     ///   mouse.Position = new PointF(1,1);
     ///   mouse.PressAndRelease(MouseButtons.Middle);
@@ -151,14 +149,14 @@ public class MouseController : IDisposable
     /// </summary>
     public void UseOn(ReflectionTester control)
     {
-        if (mouseControl == null)
+        if (_mouseControl == null)
         {
-            Win32.GetCursorPos(out originalPosition);
+            Win32.GetCursorPos(out _originalPosition);
         }
 
         ThrowHelper.ThrowIfNull(control, nameof(control));
 
-        mouseControl = new MouseControl(control);
+        _mouseControl = new MouseControl(control);
 
         PositionUnit = GraphicsUnit.Pixel;
 
@@ -208,7 +206,7 @@ public class MouseController : IDisposable
     /// </remarks>
     public void Dispose()
     {
-        if (mouseControl != null)
+        if (_mouseControl != null)
         {
             // If we do not have a control, then an exception will be thrown.
             try
@@ -236,7 +234,7 @@ public class MouseController : IDisposable
             finally
             {
                 // Restore the mouse position
-                Win32.SetCursorPos(originalPosition.x, originalPosition.y);
+                Win32.SetCursorPos(_originalPosition.x, _originalPosition.y);
 
                 // No global input blocking to undo; leave system input state unchanged
             }
@@ -260,12 +258,12 @@ public class MouseController : IDisposable
         get
         {
             Win32.GetCursorPos(out Win32.Point p);
-            return mouseControl.Convert(p, scale);
+            return _mouseControl.Convert(p, _scale);
         }
         set
         {
-            mouseControl.Focus();
-            Win32.Point p = mouseControl.Convert(value, scale);
+            _mouseControl.Focus();
+            Win32.Point p = _mouseControl.Convert(value, _scale);
             Win32.SetCursorPos(p.x, p.y);
             Application.DoEvents();
         }
@@ -295,13 +293,13 @@ public class MouseController : IDisposable
         {
             if (value == GraphicsUnit.Pixel)
             {
-                scale = new PointF(1, 1);
+                _scale = new PointF(1, 1);
             }
             else
             {
-                PointF resolution = mouseControl.Resolution;
+                PointF resolution = _mouseControl.Resolution;
 
-                scale = value switch
+                _scale = value switch
                 {
                     GraphicsUnit.Inch => new PointF(resolution.X, resolution.Y),
                     GraphicsUnit.Point => new PointF(resolution.X / 72, resolution.Y / 72),
@@ -571,25 +569,25 @@ public class MouseController : IDisposable
         // Prefer targeted client messages for left-button to avoid foreground/focus issues after modals
         if ((buttons & MouseButtons.Left) != 0)
         {
-            int lParam = mouseControl.MakeLParam(point, scale);
+            int lParam = _mouseControl.MakeLParam(point, _scale);
             // If the form isn't active, emulate mouse-activate handshake so the child can receive the click
-            IntPtr formHandle = mouseControl.FormHandle;
+            IntPtr formHandle = _mouseControl.FormHandle;
             try
             {
                 // Best-effort: send WM_MOUSEACTIVATE to the top-level window
                 if (formHandle != IntPtr.Zero)
                 {
                     int actParam = ((int)Win32.WM_LBUTTONDOWN << 16) | (Win32.HTCLIENT & 0xFFFF);
-                    Win32.SendMessage(formHandle, Win32.WM_MOUSEACTIVATE, mouseControl.Handle, (IntPtr)actParam);
+                    Win32.SendMessage(formHandle, Win32.WM_MOUSEACTIVATE, _mouseControl.Handle, (IntPtr)actParam);
                     // Indicate activation due to mouse click
-                    Win32.SendMessage(formHandle, Win32.WM_ACTIVATE, (IntPtr)Win32.WA_CLICKACTIVE, mouseControl.Handle);
+                    Win32.SendMessage(formHandle, Win32.WM_ACTIVATE, (IntPtr)Win32.WA_CLICKACTIVE, _mouseControl.Handle);
                     // Ensure the control has focus before clicking
-                    Win32.SendMessage(mouseControl.Handle, Win32.WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+                    Win32.SendMessage(_mouseControl.Handle, Win32.WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
                 }
             }
             catch { /* ignore */ }
-            Win32.SendMessage(mouseControl.Handle, Win32.WM_MOUSEMOVE, IntPtr.Zero, (IntPtr)lParam);
-            Win32.SendMessage(mouseControl.Handle, Win32.WM_LBUTTONDOWN, (IntPtr)Win32.MK_LBUTTON, (IntPtr)lParam);
+            Win32.SendMessage(_mouseControl.Handle, Win32.WM_MOUSEMOVE, IntPtr.Zero, (IntPtr)lParam);
+            Win32.SendMessage(_mouseControl.Handle, Win32.WM_LBUTTONDOWN, (IntPtr)Win32.MK_LBUTTON, (IntPtr)lParam);
             Application.DoEvents();
             return;
         }
@@ -803,8 +801,8 @@ public class MouseController : IDisposable
 
         if ((buttons & MouseButtons.Left) != 0)
         {
-            int lParam = mouseControl.MakeLParam(point, scale);
-            Win32.SendMessage(mouseControl.Handle, Win32.WM_LBUTTONUP, IntPtr.Zero, (IntPtr)lParam);
+            int lParam = _mouseControl.MakeLParam(point, _scale);
+            Win32.SendMessage(_mouseControl.Handle, Win32.WM_LBUTTONUP, IntPtr.Zero, (IntPtr)lParam);
             Application.DoEvents();
             return;
         }

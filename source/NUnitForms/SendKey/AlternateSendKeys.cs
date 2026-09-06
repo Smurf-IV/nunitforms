@@ -105,7 +105,7 @@ public class AlternateSendKeys : ISendKeys, IDisposable
                     modifierList.Add(key);
                 }
             }
-            Keys[] modifierKeys = modifierList.ToArray();
+            Keys[] modifierKeys = [.. modifierList];
             if (modifierKeys.Any())
             {
                 PressKeysDown(modifierKeys);

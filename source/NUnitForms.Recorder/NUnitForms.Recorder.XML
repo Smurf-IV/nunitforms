@@ -283,7 +283,7 @@
         </member>
         <member name="P:NUnitForms.Recorder.IRecorder.TesterType">
             <summary>
-            Gets the type of the <see cref="!:ControlTester"/>
+            Gets the type of the <see cref="T:NUnit.Extensions.Forms.Testers.ControlTester"/>
             being used.
             </summary>
         </member>
@@ -344,7 +344,7 @@
         </member>
         <member name="P:NUnitForms.Recorder.Recorder.TesterType">
             <summary>
-            Gets the type of the <see cref="!:ControlTester"/>
+            Gets the type of the <see cref="T:NUnit.Extensions.Forms.Testers.ControlTester"/>
             being used.
             </summary>
         </member>

@@ -290,13 +290,18 @@ public class Listener
                     foreach (FieldInfo field in staticFields)
                     {
                         string cleanFieldName = field.Name.Replace("_", "").ToUpperInvariant();
-                        if (cleanFieldName.Equals($"EVENT{cleanTargetName}") ||
-                            cleanFieldName.Equals($"S{cleanTargetName}EVENT") ||
-                            cleanFieldName.Equals(cleanTargetName) ||
-                            (cleanFieldName.StartsWith("EVENT") && (cleanFieldName.Contains(cleanTargetName) || cleanTargetName.Contains(cleanFieldName.Replace("EVENT", "")))))
+                        if (cleanFieldName.Equals($"EVENT{cleanTargetName}")
+                            || cleanFieldName.Equals($"S{cleanTargetName}EVENT")
+                            || cleanFieldName.Equals(cleanTargetName)
+                            || (cleanFieldName.StartsWith("EVENT") && (cleanFieldName.Contains(cleanTargetName) || cleanTargetName.Contains(cleanFieldName.Replace("EVENT", ""))))
+                            )
                         {
                             eventKey = field.GetValue(null);
-                            if (eventKey != null) { foundKey = true; break; }
+                            if (eventKey != null) 
+                            {
+                                foundKey = true; 
+                                break; 
+                            }
                         }
                     }
                     if (foundKey) break;

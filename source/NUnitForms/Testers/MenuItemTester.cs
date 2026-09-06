@@ -127,7 +127,7 @@ public class MenuItemTester
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         ParameterInfo[] param = mInfo.GetParameters();
         Type parameterType = param[0].ParameterType;
-            mInfo.Invoke(MenuItem, new object[] {Activator.CreateInstance(parameterType)});
+            mInfo.Invoke(MenuItem, [Activator.CreateInstance(parameterType)]);
     }
 
     #endregion
