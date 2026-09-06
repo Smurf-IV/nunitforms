@@ -24,6 +24,12 @@ jobs:
       with:
           nuget-version: 'latest'
 
+    - name: Setup .NET Framework
+      uses: microsoft/setup-msbuild@v3
+      with:
+        msbuild-version: latest
+        msbuild-architecture: x64
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:

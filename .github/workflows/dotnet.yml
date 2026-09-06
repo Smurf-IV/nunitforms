@@ -25,11 +25,15 @@ jobs:
       with:
           nuget-version: 'latest'
 
+    - name: Setup .NET Framework
+      uses: microsoft/setup-msbuild@v3
+      with:
+        msbuild-version: latest
+        msbuild-architecture: x64
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        # 4.6.x
-        # 4.8.x
         dotnet-version: | 
           6.x
           8.x
@@ -48,4 +52,4 @@ jobs:
       run: dotnet build NUnitForms.slnx --configuration Release --no-restore
       
     - name: Test
-      run: dotnet test --configuration Release --no-build --verbosity normal
+      run: dotnet test NUnitForms.slnx --configuration Release --no-build --verbosity normal

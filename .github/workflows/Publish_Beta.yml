@@ -25,6 +25,12 @@ jobs:
       with:
           nuget-version: 'latest'
 
+    - name: Setup .NET Framework
+      uses: microsoft/setup-msbuild@v3
+      with:
+        msbuild-version: latest
+        msbuild-architecture: x64
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
@@ -45,7 +51,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ github.token }}
 
     - name: Build
-      run: dotnet build  NUnitForms.slnx--configuration Release --no-restore
+      run: dotnet build NUnitForms.slnx --configuration Release --no-restore
 
     # - name: Test  is done in the "Build and Test" github workflow
     #   run: dotnet test --no-build --configuration Release --verbosity normal
