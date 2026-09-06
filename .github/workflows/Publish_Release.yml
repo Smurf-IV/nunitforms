@@ -18,16 +18,9 @@ jobs:
       with:
         # lfs: true
         fetch-depth: 0
-        
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v4
-      with:
-          nuget-version: 'latest'
 
-    - name: Setup .NET Framework
+    - name: Setup Visual Studio
       uses: microsoft/setup-msbuild@v3
-      with:
-        msbuild-architecture: x64
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
