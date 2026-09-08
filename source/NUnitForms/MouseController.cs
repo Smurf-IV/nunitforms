@@ -432,6 +432,9 @@ public class MouseController : IDisposable
     public void Click(PointF point, MouseButtons buttons = MouseButtons.Left)
     {
         Press(buttons, point);
+        // Small delay to allow the message loop to process the DOWN state before the UP arrives.
+        // This is especially important for modern .NET versions on shared desktops.
+        System.Threading.Thread.Sleep(10);
         Release(buttons, point);
     }
 

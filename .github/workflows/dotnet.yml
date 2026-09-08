@@ -35,9 +35,6 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-    # - name: Clear NuGet Cache
-    #   run: dotnet nuget locals all --clear
-
     - name: Restore dependencies
       run: dotnet restore NUnitForms.slnx
       env:
@@ -47,4 +44,4 @@ jobs:
       run: dotnet build NUnitForms.slnx --configuration Release --no-restore
       
     - name: Test
-      run: dotnet test NUnitForms.slnx --configuration Release --no-build --verbosity normal
+      run: dotnet test NUnitForms.slnx --configuration Release --no-build --verbosity normal --settings source/.runsettings --maxcpucount:1

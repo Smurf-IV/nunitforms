@@ -25,8 +25,6 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        # 4.6.x
-        # 4.8.x
         dotnet-version: | 
           6.x
           8.x
@@ -35,9 +33,6 @@ jobs:
         source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Clear NuGet Cache
-      run: dotnet nuget locals all --clear
 
     - name: Restore dependencies
       run: dotnet restore NUnitForms.slnx --no-cache
@@ -48,7 +43,7 @@ jobs:
       run: dotnet build NUnitForms.slnx --configuration Release --no-restore
 
     # - name: Test
-    #   run: dotnet test NUnitForms.slnx --no-build --configuration Release --verbosity normal
+    #      run: dotnet test NUnitForms.slnx --configuration Release --no-build --verbosity normal --settings source/.runsettings --maxcpucount:1
 
     - name: Pack
       run: dotnet pack "NUnitForms/NUnitForms.csproj" --no-build --configuration Release

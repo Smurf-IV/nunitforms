@@ -7,6 +7,9 @@
     <!-- Adjust this regex match to fit the exact naming convention of your actual test projects -->
     <TestProjectSearchPattern>.*\.Test?\.dll$</TestProjectSearchPattern>
   </RunConfiguration>
+  <NUnit>
+    <NumberOfTestWorkers>0</NumberOfTestWorkers>
+  </NUnit>
 	<MSTest>
 		<Parallelize>
 			<Workers>1</Workers>
