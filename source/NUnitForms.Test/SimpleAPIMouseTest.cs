@@ -80,13 +80,13 @@ public class SimpleAPIMouseTest : NUnitFormTest
         click2 = 0;
 
         Mouse.UseOn("myTextBox");
-        Mouse.Click(3, 1);
+        Mouse.Click(10, 10);
 
         Assert.AreEqual(1, click);
         Assert.AreEqual(0, click2);
 
         Mouse.UseOn("anotherTextBox");
-        Mouse.Click(3, 1);
+        Mouse.Click(10, 10);
 
         Assert.AreEqual(1, click);
         Assert.AreEqual(1, click2);
@@ -105,7 +105,7 @@ public class SimpleAPIMouseTest : NUnitFormTest
         click = 0;
 
         Mouse.UseOn(textBox);
-        Mouse.Click(3, 1);
+        Mouse.Click(10, 10);
 
         Assert.AreEqual(1, click);
     }
@@ -120,8 +120,8 @@ public class SimpleAPIMouseTest : NUnitFormTest
         var button = new ButtonTester("myButton");
         var label = new LabelTester("myLabel");
         Mouse.UseOn(button);
-        Mouse.Click(3, 1);
-        Assert.AreEqual(label.Text, "1");
+        Mouse.Click(10, 10);
+        Assert.AreEqual("1", label.Text);
     }
 
     //this is incorrect.  we are testing the form here.  we should use regular 
@@ -134,9 +134,9 @@ public class SimpleAPIMouseTest : NUnitFormTest
         frm.Show();
 
         Mouse.UseOn("myButton");
-        Mouse.Click(3, 1);
-        Mouse.Click(3, 1);
+        Mouse.Click(10, 10);
+        Mouse.Click(10, 10);
 
-        Assert.AreEqual(new ControlTester("myLabel")["Text"], "2");
+        Assert.AreEqual("2", new ControlTester("myLabel")["Text"]);
     }
 }

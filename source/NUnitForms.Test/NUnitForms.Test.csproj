@@ -8,6 +8,7 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!-- Set the CheckEolTargetFramework property as false to fix the warning -->
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<UseWindowsForms>true</UseWindowsForms>
 		<OutputType>Library</OutputType>
@@ -109,5 +110,19 @@
 	<ItemGroup Label="Compile items now included by globbing that were not in the original project file">
 		<Compile Remove="TestForms\ToolStripTestForm.cs" />
 		<Compile Remove="ModalFormsTestOld.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
+		<Compile Remove="ContextMenuTest.cs" />
+		<Compile Remove="MainMenuTest.cs" />
+		<Compile Remove="ToolbarTest.cs" />
+		<Compile Remove="Recorder\MenuItemRecorderTest.cs" />
+		<Compile Remove="TestForms\ContextMenuTestForm.cs" />
+		<Compile Remove="TestForms\MainMenuTestForm.cs" />
+		<Compile Remove="TestForms\ToolbarTestForm.cs" />
+
+		<EmbeddedResource Remove="TestForms\ContextMenuTestForm.resx" />
+		<EmbeddedResource Remove="TestForms\MainMenuTestForm.resx" />
+		<EmbeddedResource Remove="TestForms\ToolbarTestForm.resx" />
 	</ItemGroup>
 </Project>

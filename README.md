@@ -62,6 +62,7 @@
     - ✅ net6.0 (Will be dropped in NUnit 5)
     - ✅ net8.0
     - ✅ net10.0
+      - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
 - ✅ Add `ThrowHelper` and use it in the codebase

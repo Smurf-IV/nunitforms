@@ -156,6 +156,8 @@ public class MouseController : IDisposable
 
         ThrowHelper.ThrowIfNull(control, nameof(control));
 
+        control.EnsureHandleReady();
+
         _mouseControl = new MouseControl(control);
 
         PositionUnit = GraphicsUnit.Pixel;

@@ -6,6 +6,7 @@
 		<IsTestExecutionHost>false</IsTestExecutionHost>
 		<!-- Set the CheckEolTargetFramework property as false to fix the warning -->
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<UseWindowsForms>true</UseWindowsForms>
 		<OutputType>Library</OutputType>

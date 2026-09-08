@@ -6,6 +6,7 @@
 		<IsTestExecutionHost>false</IsTestExecutionHost>
 		<!-- Set the CheckEolTargetFramework property as false to fix the warning -->
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<UseWindowsForms>true</UseWindowsForms>
 		<OutputType>WinExe</OutputType>
@@ -45,5 +46,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\NUnitForms.Recorder\NUnitForms.Recorder.csproj" />
 		<ProjectReference Include="..\NUnitForms\NUnitForms.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 	</ItemGroup>
 </Project>
