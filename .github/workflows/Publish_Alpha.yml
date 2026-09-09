@@ -47,7 +47,7 @@ jobs:
       run: dotnet test NUnitForms.slnx --configuration Release --no-build --verbosity normal --settings source/.runsettings --maxcpucount:1
 
     - name: Pack
-      run: dotnet pack "NUnitForms/NUnitForms.csproj" --no-build --configuration Release --version-suffix Alpha
+      run: dotnet pack "source/NUnitForms/NUnitForms.csproj" --no-build --configuration Release --version-suffix Alpha
 
     - name: PushGithub
       run: dotnet nuget push **/*.nupkg --no-symbols --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }}

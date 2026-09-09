@@ -16,7 +16,8 @@
 
 | Badge 🔄 | Area   |
 |--------------------------- |-------------|
-| [![.NET](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml) | Release build and tests |
+| [![.NET](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml) | Release build and tests |
+| [![.NET Publish Alpha](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Alpha.yml/badge.svg)](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Alpha.yml) | Publish Alpha Nuget package |
 
 -----
 <!-- TOC-->
