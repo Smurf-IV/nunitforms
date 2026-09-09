@@ -16,6 +16,7 @@
 
 | Badge 🔄 | Area   |
 |--------------------------- |-------------|
+| [![.NET](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml) | Release build and tests |
 
 -----
 <!-- TOC-->
@@ -82,7 +83,7 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- [-] Nuget package just for the tester
+- [-] Nuget package just for the tester.dll
 - [-] GitHub build scripts (For the badges etc)
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
 - [ ] Other stuff to be added later...

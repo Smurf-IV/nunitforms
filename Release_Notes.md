@@ -22,6 +22,8 @@
     - ✅ net 4.6.2
     - ✅ net 4.8
     - [-] net6.0 (Will be dropped in NUnit 5)
+    - [-] net8.0
+    - [-] net10.0
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - ✅ net 4.6.2
@@ -32,3 +34,4 @@
     - ✅ net10.0
       - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
 - ✅ Add `ThrowHelper` and use it in the codebase
+- [-] Nuget package just for the tester.dll
