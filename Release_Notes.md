@@ -1,4 +1,4 @@
-﻿# 2026-08-17 - V3.POC.Alpha - Release Notes
+﻿# 2026-09-## - V3.POC.Alpha - Release Notes
 
 ## ⛓️‍💥 **Breaking Change(s)**
 
@@ -34,4 +34,4 @@
     - ✅ net10.0
       - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
 - ✅ Add `ThrowHelper` and use it in the codebase
-- [-] Nuget package just for the tester.dll
+- ✅ Nuget package just for the tester.dll

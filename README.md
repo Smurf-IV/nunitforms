@@ -3,14 +3,20 @@
 ## Who
 
 - V1.x Copyright (c) 2003-2006 by Luke T. Maxon
-- V2.x Copyright (c) 2006-2010 by Luke T. Maxon and others
+- V2.x Copyright (c) 2007-2011 by Luke T. Maxon; nathan_marlor and others
 - V3.x Copyright (c) 2026-onwards by Smurf-IV
 
 ## Why
 
 - I wanted a way to be able to test standalone controls (Actually for wizard pages),
  but could not find a way to do this without having to perform reflection on the `Focus_Lost` events, because of the way Dev-Ops runners work (i.e. headless)
-- I found this (I had used it in 2006 for a couple of projects) and thought it would be a good idea to modernize it and make it work with the latest NUnit TFM(s) and also fix / add some new features.
+- I found an old version of [this](https://github.com/dbremner/nunitforms) (I had used it in 2006 for a couple of projects) and thought it would be a good idea to modernize it and make it work with the latest NUnit TFM(s) and also fix / add some new features.
+
+## When
+
+- Start with a V3 and modernise it to the latest NUnit TFM(s) and also fix to run the existing written unit tests.
+- Find a way to make it work with nunit 4.x (Rather than a fixed version) to keep it compatible with .net 4.62 onwards.
+- Add the replacement controls for the obsoleted ones in .netCore 3.1 and later (i.e. `ToolStrip` instead of `ToolBar`, `MenuStrip` instead of `MainMenu`, etc.)
 
 -----
 
@@ -84,7 +90,7 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- [-] Nuget package just for the tester.dll
+- ✅ Nuget package just for the tester.dll
 - [-] GitHub build scripts (For the badges etc)
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
 - [ ] Other stuff to be added later...

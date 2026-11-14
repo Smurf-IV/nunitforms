@@ -7,11 +7,11 @@ namespace NUnit.Extensions.Forms.Testers;
 
 /// <summary>
 /// Compatibility shim for the old ToolBarButtonTester API on non-NETFRAMEWORK targets.
-/// Internally uses ToolStripButtonTester / ToolStrip items.
+/// Internally uses ToolStripItemTester / ToolStrip items.
 /// </summary>
 public class ToolBarButtonTester
 {
-    private readonly ToolStripButtonTester _inner;
+    private readonly ToolStripItemTester _inner;
 
     public ToolBarButtonTester()
     {
@@ -19,28 +19,34 @@ public class ToolBarButtonTester
 
     public ToolBarButtonTester(string name, Form form)
     {
-        _inner = new ToolStripButtonTester(name, form);
+        _inner = new ToolStripItemTester(name, form);
     }
 
     public ToolBarButtonTester(string name, string formName)
     {
-        _inner = new ToolStripButtonTester(name, formName);
+        _inner = new ToolStripItemTester(name, formName);
     }
 
     public ToolBarButtonTester(string name)
     {
-        _inner = new ToolStripButtonTester(name);
+        _inner = new ToolStripItemTester(name);
     }
 
 
-    private ToolStripButton Button => _inner.Properties;
+    public ToolStripItem Button => _inner.Properties;
 
     public ToolStrip Bar => (ToolStrip)Button.Owner;
 
     public bool Pushed
     {
-        get => Button.Checked;
-        set => Button.Checked = value;
+        get => (Button as ToolStripButton)?.Checked ?? false;
+        set
+        {
+            if (Button is ToolStripButton b)
+            {
+                b.Checked = value;
+            }
+        }
     }
 
     // ToolStrip has no "partial push" semantics; store a boolean in Tag to emulate it for tests.
@@ -52,7 +58,7 @@ public class ToolBarButtonTester
 
     public void Click()
     {
-        _inner.Click();
+        Button.PerformClick();
     }
 
     public void ClickDropDownMenuItem(string menuText)
