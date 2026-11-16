@@ -26,8 +26,19 @@
 | [![.NET Publish Alpha](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Alpha.yml/badge.svg)](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Alpha.yml) | Publish Alpha Nuget package |
 
 -----
-<!-- TOC-->
 <!-- TOC -->
+
+- [NUnit.Winforms 🌟](#nunitwinforms-)
+  - [Who](#who)
+  - [Why](#why)
+  - [When](#when)
+- [Targets 🎯](#targets-)
+  - [Version 3 - POC: Alpha](#version-3---poc-alpha)
+    - [⛓️‍💥Breaking Changes](#breaking-changes)
+    - [Work in Progress (So Far)](#work-in-progress-so-far)
+- [Version x - ideas 💡](#version-x---ideas-)
+
+<!-- /TOC -->
 -----
 
 # Targets 🎯
@@ -62,6 +73,7 @@
     - [-] net6.0 (Will be dropped in NUnit 5)
     - [-] net8.0
     - [-] net10.0
+    - [-] net11.0
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - ✅ net 4.6.2
@@ -70,6 +82,7 @@
     - ✅ net6.0 (Will be dropped in NUnit 5)
     - ✅ net8.0
     - ✅ net10.0
+    - ✅ net11.0
       - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)

@@ -52,7 +52,7 @@ jobs:
       run: dotnet pack "source/NUnitForms/NUnitForms.csproj" --configuration Release  --no-restore --configuration Release
 
     - name: PushGithub
-      run: dotnet nuget push **/NUnitForms.*.nupkg --no-symbols --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push **/NUnit.WinForms.*.nupkg --no-symbols --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -64,5 +64,5 @@ jobs:
         user: ${{ secrets.NUGET_USER }}
 
     - name: PushNuget
-      run: dotnet nuget push **/NUnitForms.*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY  }} --skip-duplicate
+      run: dotnet nuget push **/NUnit.WinForms.*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY  }} --skip-duplicate
 
