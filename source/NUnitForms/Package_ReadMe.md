@@ -6,6 +6,11 @@
 - V2.x Copyright (c) 2006-2010 by Luke T. Maxon and others
 - V3.x Copyright (c) 2026-onwards by Smurf-IV
 
+## When
+
+- As the timeline shows above, V1 -> V2 was a long time ago and had nuget names like `NUnitForms` and `NUnitforms.Framework`.
+- V3 starts the NUnit.Winforms nuget package based on the above.
+
 ## Why
 
 - I wanted a way to be able to test standalone controls (Actually for wizard pages),
