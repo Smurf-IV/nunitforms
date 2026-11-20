@@ -31,7 +31,6 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Exceptions;
 using NUnit.Extensions.Forms.Util;
 
 

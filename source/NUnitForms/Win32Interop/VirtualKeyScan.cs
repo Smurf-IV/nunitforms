@@ -33,8 +33,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using NUnit.Extensions.Forms.Util;
 
 namespace NUnit.Extensions.Forms.Win32Interop;

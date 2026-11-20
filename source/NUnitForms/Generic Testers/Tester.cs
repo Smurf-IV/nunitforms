@@ -31,12 +31,13 @@
 
 #endregion
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
+
 using NUnit.Extensions.Forms.Finders;
 using NUnit.Extensions.Forms.Util;
+
 
 namespace NUnit.Extensions.Forms.Generic_Testers;
 

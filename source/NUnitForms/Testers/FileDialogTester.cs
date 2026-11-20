@@ -37,7 +37,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.Exceptions;
 using NUnit.Extensions.Forms.Util;
 
 

@@ -34,7 +34,6 @@
 using System;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.Exceptions;
 using NUnit.Extensions.Forms.Generic_Testers;
 using NUnit.Extensions.Forms.Util;
 

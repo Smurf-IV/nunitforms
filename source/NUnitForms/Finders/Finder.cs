@@ -191,10 +191,7 @@ public class Finder<T>
             // .NET (Core/5+) replacement: use MainMenuStrip instead of the removed Form.Menu
             if (f.MainMenuStrip != null)
             {
-                foreach (ToolStripItem item in f.MainMenuStrip.Items)
-                {
-                    results.AddRange(Find(name, item, f));
-                }
+                results.AddRange(Find(name, f.MainMenuStrip, f));
             }
         }
 
@@ -235,10 +232,7 @@ public class Finder<T>
 #endif
             if (control.ContextMenuStrip != null)
             {
-                foreach (ToolStripItem item in control.ContextMenuStrip.Items)
-                {
-                    results.AddRange(Find(name, item, null));
-                }
+                results.AddRange(Find(name, control.ContextMenuStrip, control));
             }
         }
 

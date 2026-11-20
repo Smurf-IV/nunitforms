@@ -34,7 +34,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace NUnit.Extensions.Forms.Util;
 

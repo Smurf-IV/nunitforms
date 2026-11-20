@@ -15,35 +15,35 @@
 ## When
 
 - Start with a V3 and modernise it to the latest NUnit TFM(s) and also fix to run the existing written unit tests.
-- Find a way to make it work with nunit 4.x (Rather than a fixed version) to keep it compatible with .net 4.62 onwards.
+- Find a way to make it work with nunit >= 4.5 (Rather than a fixed version) to keep it compatible with .net 4.62 onwards.
 - Add the replacement controls for the obsoleted ones in .netCore 3.1 and later (i.e. `ToolStrip` instead of `ToolBar`, `MenuStrip` instead of `MainMenu`, etc.)
+
+## What
+
+- It will be a fork of the original NUnitForms project, but with a new name and a new nuget package name.
+- Support for the latest NUnit TFM(s) and also fix / add some new features.
 
 -----
 
 | Badge 🔄 | Area   |
 |--------------------------- |-------------|
 | [![.NET](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Smurf-IV/NUnitForms/actions/workflows/dotnet.yml) | Release build and tests |
-| [![.NET Publish Alpha](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Alpha.yml/badge.svg)](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Alpha.yml) | Publish Alpha Nuget package |
+| [![.NET Publish Beta](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Beta.yml/badge.svg)](https://github.com/Smurf-IV/nunitforms/actions/workflows/Publish_Beta.yml) | Publish Beta Nuget package |
 
 -----
-<!-- TOC -->
-
-- [NUnit.Winforms 🌟](#nunitwinforms-)
-  - [Who](#who)
-  - [Why](#why)
-  - [When](#when)
+<!-- TOC-->
 - [Targets 🎯](#targets-)
-  - [Version 3 - POC: Alpha](#version-3---poc-alpha)
+  - [2026-11-16 - V3.Beta](#2026-11-16---v3beta)
     - [⛓️‍💥Breaking Changes](#breaking-changes)
-    - [Work in Progress (So Far)](#work-in-progress-so-far)
-- [Version x - ideas 💡](#version-x---ideas-)
-
-<!-- /TOC -->
+    - [Work done](#work-done)
+  - [2026-12-## V4.Beta](#2026-12--v4beta)
+  - [Version x - ideas 💡](#version-x---ideas-)
+<!-- TOC -->
 -----
 
 # Targets 🎯
 
-## Version 3 - POC: Alpha
+## 2026-11-16 - V3.Beta
 
 ### ⛓️‍💥Breaking Changes
 
@@ -60,7 +60,7 @@
     - `MenuItemTester`
     - `ToolBarButtonTester`
 
-### Work in Progress (So Far)
+### Work done
 - ✅ Create Fork and add information to the README.md
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser` (Removed `SendKeys`)
@@ -84,9 +84,15 @@
     - ✅ net10.0
     - ✅ net11.0
       - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
+- ✅ Add `ThrowHelper` and use it in the codebase
+- ✅ Nuget package just for the tester.dll
+- ✅ GitHub build scripts (For the badges etc)
+
+
+## 2026-12-## V4.Beta
+- [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
-- ✅ Add `ThrowHelper` and use it in the codebase
 - [ ] Add missing tests for:
     - [ ] `CheckedListBoxTester`
     - [ ] `ComponentTester`
@@ -103,13 +109,12 @@
         - [ ] `ContextMenuTest`
         - [ ] `MainMenuTest`
         - [ ] `MenuItemRecorderTest`
-- ✅ Nuget package just for the tester.dll
-- [-] GitHub build scripts (For the badges etc)
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
 - [ ] Other stuff to be added later...
 
 
-# Version x - ideas 💡
+
+## Version x - ideas 💡
 
 - [ ] Investigate "Recorder Application" and see if it can be fixed (Or if it is even worth fixing)
 - [ ] More ideas to be added later, Please suggest... ;-)

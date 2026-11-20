@@ -1,4 +1,4 @@
-﻿# 2026-09-## - V3.POC.Alpha - Release Notes
+﻿# 2026-11-16 - V3.Beta
 
 ## ⛓️‍💥 **Breaking Change(s)**
 
@@ -10,9 +10,7 @@
 - Removed `SendKeys`
 - `Finder<T>().Name("xx")` now returns a `KeyNotFoundException` rather than a generic `Exception` when the element is not found
 
-
-## Current Changes (So Far)
-
+### Work done
 - ✅ Create Fork and add information to the README.md
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser`

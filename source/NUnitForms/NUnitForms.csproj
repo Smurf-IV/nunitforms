@@ -97,6 +97,6 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="NUnit" Version="4.6.1" />
+		<PackageReference Include="NUnit" Version="4.5.0" />
 	</ItemGroup>
 </Project>
