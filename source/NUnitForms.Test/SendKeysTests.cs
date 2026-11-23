@@ -37,13 +37,12 @@ using System.Linq;
 using System.Windows.Forms;
 
 using FakeItEasy;
-
-using NUnit.Extensions.Forms.SendKey;
-using NUnit.Extensions.Forms.Win32Interop;
 using NUnit.Framework;
+using NUnit.WinForms.SendKey;
+using NUnit.WinForms.Win32Interop;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class SendKeysTests : MockingTestFixture

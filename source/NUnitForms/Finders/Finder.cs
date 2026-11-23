@@ -35,10 +35,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Util;
+using NUnit.WinForms.Util;
 
-
-namespace NUnit.Extensions.Forms.Finders;
+namespace NUnit.WinForms.Finders;
 
 /// <summary>
 /// Internal use only.  Finds controls, components, and menuitems

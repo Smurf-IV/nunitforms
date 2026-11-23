@@ -33,14 +33,13 @@
 
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
-
+using NUnit.WinForms.Testers;
 using NUnitForms.Recorder;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+namespace NUnit.WinForms.Test.Recorder;
 
 ///<summary>
 /// Test fixture for the <see cref="MenuItemRecorder"/>.

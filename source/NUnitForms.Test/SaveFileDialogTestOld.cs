@@ -33,12 +33,11 @@
 
 using System;
 using System.IO;
-
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 [Explicit("This dialog caused my tests to hang.")]

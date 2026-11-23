@@ -32,11 +32,9 @@
 #endregion
 
 using System;
+using NUnit.WinForms.Win32Interop;
 
-using NUnit.Extensions.Forms.Win32Interop;
-
-
-namespace NUnit.Extensions.Forms.SendKey;
+namespace NUnit.WinForms.SendKey;
 
 public class SendKeysFactory : ISendKeysFactory
 {

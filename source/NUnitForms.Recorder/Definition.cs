@@ -32,7 +32,7 @@
 #endregion
 
 using System;
-using NUnit.Extensions.Forms.Util;
+using NUnit.WinForms.Util;
 
 namespace NUnitForms.Recorder;
 

@@ -34,7 +34,7 @@
 
 using System;
 
-namespace NUnit.Extensions.Forms.Win32Interop;
+namespace NUnit.WinForms.Win32Interop;
 
 /// <summary>
 /// Flags for keyboard input state.

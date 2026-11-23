@@ -33,9 +33,9 @@
 
 using System;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Util;
+using NUnit.WinForms.Util;
 
-namespace NUnit.Extensions.Forms.Win32Interop;
+namespace NUnit.WinForms.Win32Interop;
 
 /// <summary>
 /// Provides keyboard input sending functionality for Windows forms.

@@ -30,16 +30,15 @@
 ' ******************************************************************************************************************/
 
 #endregion
-
+#if NETCOREAPP
 using System;
 using System.ComponentModel;
 using System.Reflection;
+#endif
 using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Util;
-
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing ComboBoxes.
@@ -50,8 +49,32 @@ namespace NUnit.Extensions.Forms.Testers;
 /// Fully supported by the recorder application
 /// </para>
 /// </remarks>
-public partial class ComboBoxTester
+public class ComboBoxTester : ControlTester<ComboBox, ComboBoxTester>
 {
+    public ComboBoxTester()
+    {
+    }
+
+    public ComboBoxTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ComboBoxTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ComboBoxTester(string name)
+        : base(name)
+    {
+    }
+
+    public ComboBoxTester(ComboBoxTester tester, int index)
+        : base((ControlTester<ComboBox, ComboBoxTester>)tester, index)
+    {
+    }
+
     private bool checkedReady;
     /// <summary>
     /// Sets the text property of the ComboBox to the specified value.
@@ -81,8 +104,8 @@ public partial class ComboBoxTester
         // According to Microsoft's documentation guidelines, TextUpdate is only intended to occur when the control formats
         // text in response to direct user manipulation. Programmatic updates directly modify the data layer and skip the
         // interactive layout pass, meaning TextUpdate is no longer
-            MethodInfo? onTextUpdateMethod = typeof(ComboBox).GetMethod("OnTextUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
-            onTextUpdateMethod?.Invoke(comboBox, [EventArgs.Empty]);
+            System.Reflection.MethodInfo? onTextUpdateMethod = typeof(ComboBox).GetMethod("OnTextUpdate", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            onTextUpdateMethod?.Invoke(comboBox, [System.EventArgs.Empty]);
 #endif
         EndCurrentEdit("Text");
     }

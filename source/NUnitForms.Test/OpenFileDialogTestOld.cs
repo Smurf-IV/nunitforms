@@ -33,12 +33,11 @@
 
 using System;
 using System.IO;
-
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 ///<summary>
 /// Test Fixture for the OpenFileDialogTester class.

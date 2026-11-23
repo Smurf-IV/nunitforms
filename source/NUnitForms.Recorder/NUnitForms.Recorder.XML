@@ -243,7 +243,7 @@
         </member>
         <member name="P:NUnitForms.Recorder.FormRecorder.TesterType">
             <summary>
-            The tester type for this recorder, <see cref="T:NUnit.Extensions.Forms.Testers.FormTester"/>.
+            The tester type for this recorder, <see cref="T:NUnit.WinForms.Testers.FormTester"/>.
             </summary>
         </member>
         <member name="M:NUnitForms.Recorder.FormRecorder.Closed(System.Object,System.EventArgs)">
@@ -283,7 +283,7 @@
         </member>
         <member name="P:NUnitForms.Recorder.IRecorder.TesterType">
             <summary>
-            Gets the type of the <see cref="T:NUnit.Extensions.Forms.Testers.ControlTester"/>
+            Gets the type of the <see cref="T:NUnit.WinForms.Testers.ControlTester"/>
             being used.
             </summary>
         </member>
@@ -344,7 +344,7 @@
         </member>
         <member name="P:NUnitForms.Recorder.Recorder.TesterType">
             <summary>
-            Gets the type of the <see cref="T:NUnit.Extensions.Forms.Testers.ControlTester"/>
+            Gets the type of the <see cref="T:NUnit.WinForms.Testers.ControlTester"/>
             being used.
             </summary>
         </member>
@@ -438,7 +438,7 @@
             <param name="form">
             The form which contains the control or menu item we are looking for.
             </param>
-            <exception cref="T:NUnit.Extensions.Forms.Exceptions.AmbiguousNameException">
+            <exception cref="T:NUnit.WinForms.Exceptions.AmbiguousNameException">
             This exception is thrown if no control or menu item is found.
             </exception>
         </member>

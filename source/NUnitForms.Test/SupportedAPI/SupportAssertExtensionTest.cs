@@ -33,7 +33,7 @@
 
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications.SupportedAPI;
+namespace NUnit.WinForms.Test.SupportedAPI;
 
 [TestFixture]
 public class SupportsAssertExtensionTest : NUnitFormsAssertTest

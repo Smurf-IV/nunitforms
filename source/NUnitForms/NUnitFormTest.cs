@@ -36,16 +36,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Finders;
-using NUnit.Extensions.Forms.SendKey;
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.Util;
-using NUnit.Extensions.Forms.Win32Interop;
 using NUnit.Framework;
+using NUnit.WinForms.Finders;
+using NUnit.WinForms.SendKey;
+using NUnit.WinForms.Testers;
+using NUnit.WinForms.Util;
+using NUnit.WinForms.Win32Interop;
 
-
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// One of three base classes for your NUnitForms tests.  This one can be

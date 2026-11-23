@@ -31,19 +31,44 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Util;
+using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A Component tester for testing ToolStripComboBoxes.
 /// </summary>
-public partial class ToolStripComboBoxTester
+public partial class ToolStripComboBoxTester : ToolStripItemTester<ToolStripComboBox, ToolStripComboBoxTester>
 {
+    public ToolStripComboBoxTester()
+    {
+    }
+
+    public ToolStripComboBoxTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ToolStripComboBoxTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ToolStripComboBoxTester(string name)
+        : base(name)
+    {
+    }
+
+    public ToolStripComboBoxTester(ToolStripComboBoxTester tester, int index)
+        : base((ToolStripItemTester<ToolStripComboBox, ToolStripComboBoxTester>)tester, index)
+    {
+    }
+    
     /// <summary>
-    /// Selects the item at the specified index.
-    /// </summary>
-    /// <param name="index">The zero-based index of the item to select.</param>
+         /// Selects the item at the specified index.
+         /// </summary>
+         /// <param name="index">The zero-based index of the item to select.</param>
     public void Select(int index)
     {
         Properties.SelectedIndex = index;

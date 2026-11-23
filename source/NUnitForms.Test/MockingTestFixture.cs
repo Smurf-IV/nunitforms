@@ -34,7 +34,7 @@
 
 using FakeItEasy;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 public abstract class MockingTestFixture
 {

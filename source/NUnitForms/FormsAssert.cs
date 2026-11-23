@@ -31,10 +31,10 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Util;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Util;
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 ///<summary>
 /// Additional assertion methods for NUnitForms.

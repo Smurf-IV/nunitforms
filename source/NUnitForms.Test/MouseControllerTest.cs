@@ -34,15 +34,13 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
+using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
 
-using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 /// <summary>
 ///   Tests the <see cref="MouseController"/>.

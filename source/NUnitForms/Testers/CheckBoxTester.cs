@@ -32,13 +32,39 @@
 #endregion
 
 
-namespace NUnit.Extensions.Forms.Testers;
+using System.Windows.Forms;
+
+namespace NUnit.WinForms.Testers;
+
 
 /// <summary>
 /// A ControlTester for testing CheckBoxes.
 /// </summary>
-public partial class CheckBoxTester
+public class CheckBoxTester : ControlTester<CheckBox, CheckBoxTester>
 {
+    public CheckBoxTester()
+    {
+    }
+
+    public CheckBoxTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public CheckBoxTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public CheckBoxTester(string name)
+        : base(name)
+    {
+    }
+
+    public CheckBoxTester(ControlTester<CheckBox, CheckBoxTester> tester, int index)
+        : base(tester, index)
+    {
+    }
     /// <summary>
     /// Retrieves the Checked property of the CheckBox
     /// </summary>

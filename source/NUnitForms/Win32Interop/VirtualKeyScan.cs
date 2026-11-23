@@ -34,10 +34,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Util;
-
-namespace NUnit.Extensions.Forms.Win32Interop;
+namespace NUnit.WinForms.Win32Interop;
 
 internal class VirtualKeyScan
 {

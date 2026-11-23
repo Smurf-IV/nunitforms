@@ -36,7 +36,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.TestApplications.Factory;
+namespace NUnit.WinForms.Test.Factory;
 
 [TestFixture]
 public class FactoryTest

@@ -31,7 +31,7 @@
 
 #endregion
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// This interface allows a Form to signal that it should not be disposed between tests.

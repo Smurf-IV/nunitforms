@@ -32,7 +32,7 @@
 #endregion
 
 
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 ///<summary>
 /// Additional methods for working with strings.

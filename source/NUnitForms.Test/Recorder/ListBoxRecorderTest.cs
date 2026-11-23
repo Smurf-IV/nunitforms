@@ -32,12 +32,12 @@
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+namespace NUnit.WinForms.Test.Recorder;
 
 [TestFixture]
 [Category("Recorder")]

@@ -34,7 +34,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications.SupportedAPI;
+namespace NUnit.WinForms.Test.SupportedAPI;
 
 /// <summary>
 /// A note about this class: it only tests that those methods exist on the

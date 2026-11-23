@@ -33,11 +33,11 @@
 
 using System;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ModalDialogsTest : NUnitFormTest

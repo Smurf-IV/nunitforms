@@ -31,10 +31,36 @@
 
 #endregion
 
-namespace NUnit.Extensions.Forms.Testers;
+using System.Windows.Forms;
 
-public partial class ToolStripTextBoxTester
+namespace NUnit.WinForms.Testers;
+
+public partial class ToolStripTextBoxTester : ToolStripItemTester<ToolStripTextBox, ToolStripTextBoxTester>
 {
+    public ToolStripTextBoxTester()
+    {
+    }
+
+    public ToolStripTextBoxTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ToolStripTextBoxTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ToolStripTextBoxTester(string name)
+        : base(name)
+    {
+    }
+
+    public ToolStripTextBoxTester(ToolStripTextBoxTester tester, int index)
+        : base((ToolStripItemTester<ToolStripTextBox, ToolStripTextBoxTester>)tester, index)
+    {
+    }
+
     /// <summary>
     /// This method allows you to enter text into the text box.
     /// </summary>

@@ -38,7 +38,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 /// <summary>
 /// Summary description for TextBoxDataSetBindingTestForm.

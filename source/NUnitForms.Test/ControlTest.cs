@@ -36,12 +36,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 ///<summary>
 /// Basic tests for the <see cref="ControlTester"/> class.
@@ -79,24 +79,42 @@ public class ControlTest : NUnitFormTest
         return false;
     }
 
-    private static void VerifyAllConstructors(string typeName, ConstructorInfo[] constructors)
+    private static void VerifyAllConstructors(string typeName, Type type, ConstructorInfo[] constructors)
     {
         var argString = false;
         var argStringString = false;
         var argStringForm = false;
-        var argControltesterInt = false;
+        var argTesterInt = false;
 
         foreach (ConstructorInfo constructor in constructors)
         {
-            argString = argString || CheckMatches(constructor, "string");
-            argStringString = argString || CheckMatches(constructor, "string", "string");
-            argStringForm = argString || CheckMatches(constructor, "string", new Form());
-            argControltesterInt = argString || CheckMatches(constructor, new ControlTester("string"), 1);
+            ParameterInfo[] parameters = constructor.GetParameters();
+            if (parameters.Length == 1 && parameters[0].ParameterType == typeof(string))
+            {
+                argString = true;
+                constructor.Invoke(["string"]);
+            }
+            else if (parameters.Length == 2 && parameters[0].ParameterType == typeof(string) && parameters[1].ParameterType == typeof(string))
+            {
+                argStringString = true;
+                constructor.Invoke(["string", "string"]);
+            }
+            else if (parameters.Length == 2 && parameters[0].ParameterType == typeof(string) && typeof(Form).IsAssignableFrom(parameters[1].ParameterType))
+            {
+                argStringForm = true;
+                constructor.Invoke(["string", new Form()]);
+            }
+            else if (parameters.Length == 2 && typeof(int) == parameters[1].ParameterType && parameters[0].ParameterType.IsAssignableFrom(type))
+            {
+                argTesterInt = true;
+                var sample = Activator.CreateInstance(type, "string");
+                constructor.Invoke([sample, 1]);
+            }
         }
-        Assert.IsTrue(argString, $"{typeName} missing constructor 1");
-        Assert.IsTrue(argStringString, $"{typeName} missing constructor 2");
-        Assert.IsTrue(argStringForm, $"{typeName} missing constructor 3");
-        Assert.IsTrue(argControltesterInt, $"{typeName} missing constructor 4");
+        Assert.IsTrue(argString, $"{typeName} missing constructor (string)");
+        Assert.IsTrue(argStringString, $"{typeName} missing constructor (string, string)");
+        Assert.IsTrue(argStringForm, $"{typeName} missing constructor (string, Form)");
+        Assert.IsTrue(argTesterInt, $"{typeName} missing constructor ({typeName}, int)");
     }
 
     private static bool CheckMatches(ConstructorInfo constructor, params object[] args)
@@ -153,7 +171,7 @@ public class ControlTest : NUnitFormTest
     [Test]
     public void ControlTestersHaveFourConstructorsAndIndexer()
     {
-        IList<Type> typesToSkip = [typeof(MessageBoxTester), typeof(FormTester)];
+        IList<Type> typesToSkip = [typeof(MessageBoxTester), typeof(FormTester), typeof(ModalFormTester), typeof(FileDialogTester), typeof(SaveFileDialogTester)];
 
         Type[] types = typeof(ControlTester).Assembly.GetTypes();
         foreach (Type type in types)
@@ -161,7 +179,7 @@ public class ControlTest : NUnitFormTest
             if (typeof(ControlTester).IsAssignableFrom(type))
             {
                 // Skip tests for generic classes (for now.)
-                if (type.IsGenericType)
+                if (type.IsGenericType || type.IsAbstract)
                 {
                     continue;
                 }
@@ -185,9 +203,45 @@ public class ControlTest : NUnitFormTest
                 Assert.IsTrue(4 <= constructors.Length,
                     $"{type.Name}has incorrect constructor count.");
 
-                VerifyAllConstructors(type.Name, constructors);
+                VerifyAllConstructors(type.Name, type, constructors);
                 Assert.IsTrue(HasIntIndexer(type),
                     $"Type {type.Name} does not have an int indexer.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Verifies that all ToolStrip item testers have the expected constructors and indexer.
+    /// </summary>
+    [Test]
+    public void ToolStripItemTestersHaveConstructorsAndIndexer()
+    {
+        Type[] types = typeof(ControlTester).Assembly.GetTypes();
+        foreach (Type type in types)
+        {
+            if (type.IsAbstract || type.IsGenericType || !type.IsClass)
+            {
+                continue;
+            }
+
+            Type? baseType = type.BaseType;
+            bool isToolStripItemTester = false;
+            while (baseType != null)
+            {
+                if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(ToolStripItemTester<,>))
+                {
+                    isToolStripItemTester = true;
+                    break;
+                }
+                baseType = baseType.BaseType;
+            }
+
+            if (isToolStripItemTester)
+            {
+                ConstructorInfo[] constructors = type.GetConstructors();
+                Assert.IsTrue(4 <= constructors.Length, $"{type.Name} has incorrect constructor count.");
+                VerifyAllConstructors(type.Name, type, constructors);
+                Assert.IsTrue(HasIntIndexer(type), $"Type {type.Name} does not have an int indexer.");
             }
         }
     }

@@ -35,9 +35,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Finders;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Finders;
 
 
 namespace NUnitForms.Recorder;

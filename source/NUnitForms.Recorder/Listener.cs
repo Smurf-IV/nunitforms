@@ -36,8 +36,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Finders;
+using NUnit.WinForms.Finders;
 
 
 namespace NUnitForms.Recorder;

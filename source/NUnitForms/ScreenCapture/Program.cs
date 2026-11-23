@@ -31,7 +31,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.ScreenCapture;
+namespace NUnit.WinForms.ScreenCapture;
 
 internal static class Program
 {

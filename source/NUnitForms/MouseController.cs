@@ -37,14 +37,11 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Generic_Testers;
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.Util;
-
-
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 ///   Provides testing control over the mouse.

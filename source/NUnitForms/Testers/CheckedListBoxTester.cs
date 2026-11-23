@@ -34,17 +34,39 @@
 
 using System.Collections;
 using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Util;
-
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing CheckedListBoxes.  
 /// </summary>
-public partial class CheckedListBoxTester
+public class CheckedListBoxTester : ControlTester<CheckedListBox, CheckedListBoxTester>
 {
+    public CheckedListBoxTester()
+    {
+    }
+
+    public CheckedListBoxTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public CheckedListBoxTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public CheckedListBoxTester(string name)
+        : base(name)
+    {
+    }
+
+    public CheckedListBoxTester(CheckedListBoxTester tester, int index)
+        : base((ControlTester<CheckedListBox, CheckedListBoxTester>)tester, index)
+    {
+    }
+
     /// <summary>
     /// Provides access to the list of items
     /// </summary>

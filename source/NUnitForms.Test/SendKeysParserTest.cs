@@ -31,11 +31,10 @@
 #endregion
 
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.SendKey;
 using NUnit.Framework;
+using NUnit.WinForms.SendKey;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class SendKeysParserTest

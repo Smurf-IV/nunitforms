@@ -36,8 +36,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 internal partial class Win32
 {

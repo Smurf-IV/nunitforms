@@ -36,7 +36,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 /// <summary>
 /// Additional methods for working with Types and other Reflection objects.

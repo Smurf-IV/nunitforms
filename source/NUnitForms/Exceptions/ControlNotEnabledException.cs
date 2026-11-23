@@ -33,8 +33,7 @@
 
 using System;
 
-
-namespace NUnit.Extensions.Forms.Exceptions;
+namespace NUnit.WinForms.Exceptions;
 
 /// <summary>
 /// Exception is thrown when you attempt an action on a Control that is not

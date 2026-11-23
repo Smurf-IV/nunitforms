@@ -35,8 +35,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing List Views.  
@@ -44,11 +43,35 @@ namespace NUnit.Extensions.Forms.Testers;
 /// <remarks>
 /// It includes helper methods for selecting items from the list
 /// and for clearing those selections.</remarks>
-public partial class ListViewTester
+public class ListViewTester : ControlTester<ListView, ListViewTester>
 {
+    public ListViewTester()
+    {
+    }
+
+    public ListViewTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ListViewTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ListViewTester(string name)
+        : base(name)
+    {
+    }
+
+    public ListViewTester(ListViewTester tester, int index)
+        : base((ControlTester<ListView, ListViewTester>)tester, index)
+    {
+    }
+    
     /// <summary>
-    /// Helper method to return the List View's Items property
-    /// </summary>
+         /// Helper method to return the List View's Items property
+         /// </summary>
     public ListView.ListViewItemCollection Items => Properties.Items;
 
     /// <summary>
@@ -115,7 +138,7 @@ public partial class ListViewTester
         {
             return false;
         }
-        IEnumerable<ListViewItem> listViewItems = Properties.SelectedItems.Cast<ListViewItem>();
+        IEnumerable<ListViewItem> listViewItems = Enumerable.Cast<ListViewItem>(Properties.SelectedItems);
         return listViewItems.All(item => matchList.Contains(item.Text));
     }
 

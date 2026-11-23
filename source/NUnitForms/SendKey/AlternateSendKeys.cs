@@ -35,11 +35,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Util;
-using NUnit.Extensions.Forms.Win32Interop;
+using NUnit.WinForms.Util;
+using NUnit.WinForms.Win32Interop;
 
-
-namespace NUnit.Extensions.Forms.SendKey;
+namespace NUnit.WinForms.SendKey;
 
 /// <summary>
 /// Alternative to the dot Net SendKeys class.

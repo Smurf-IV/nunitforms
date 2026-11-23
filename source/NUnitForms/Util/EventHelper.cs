@@ -34,7 +34,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 ///<summary>
 /// Methods for firing events via reflection.

@@ -37,6 +37,8 @@
     - [⛓️‍💥Breaking Changes](#breaking-changes)
     - [Work done](#work-done)
   - [2026-12-## V4.Beta](#2026-12--v4beta)
+    - [⛓️‍💥Breaking Changes](#breaking-changes-1)
+  - [Work Done](#work-done-1)
   - [Version x - ideas 💡](#version-x---ideas-)
 <!-- TOC -->
 -----
@@ -61,6 +63,7 @@
     - `ToolBarButtonTester`
 
 ### Work done
+
 - ✅ Create Fork and add information to the README.md
 - ✅ Restructure the layout of the directories within GitHub
 - ✅ Fix `SendKeysParser` (Removed `SendKeys`)
@@ -68,13 +71,13 @@
 - ✅ Add focused (Single file) PInvoke and LoadLibrary for Win32 API(s) and use it in the codebase
 - [-] Modernize to the supported NUnit TFM(s)
     - ✅ net 4.6.2
-    - [-] net 4.8 (_Identify obsoleted types and replace_)
+    - ✅ net 4.8 (_Identify obsoleted types and replace_)
         - [ ] `NumericUpDownTester` #15
-    - [-] net6.0 (Will be dropped in NUnit 5)
-    - [-] net8.0
-    - [-] net10.0
-    - [-] net11.0
-- [-] Fix Unit Test projects and should be able to run on all TFM(s)
+    - ✅ net6.0 (Will be dropped in NUnit 5)
+    - ✅ net8.0
+    - ✅ net10.0
+    - ✅ net11.0
+- ✅ Fix Unit Test projects and should be able to run on all TFM(s)
     - ✅ Remove `NMock#` and replace with `FakeItEasy`
     - ✅ net 4.6.2
     - ✅ net 4.8
@@ -83,13 +86,21 @@
     - ✅ net8.0
     - ✅ net10.0
     - ✅ net11.0
-      - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
+        - Adding a smart "readiness" check, to ensure that UI controls are fully initialized before the tests try to interact with them, which was the root cause of the flakiness in .net10
 - ✅ Add `ThrowHelper` and use it in the codebase
 - ✅ Nuget package just for the tester.dll
 - ✅ GitHub build scripts (For the badges etc)
 
 
 ## 2026-12-## V4.Beta
+
+### ⛓️‍💥Breaking Changes
+
+- Move to NUnit 4.6.1
+- Change namepace from `NUnit.Extensions.Forms` to `NUnit.Winforms`
+
+## Work Done
+
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
@@ -101,16 +112,47 @@
 - [ ] Got through the `obsolete`s and fix (i.e. `OpenFileDialogTester.OpenFileDialogTester(string)`)
 - [-] Non supported winform controls will be guarded (For backward compatibility)
     - [ ] Fix the recorder project to use the new `ToolStripTester` instead of `ToolBarTester` etc.
-    - [ ] Create class and add tests to cover deprecated/removed controls:
-        - [ ] `ContextMenuTestForm`
-        - [ ] `MainMenuTestForm`
-        - [ ] `ToolbarTestForm`
-        - [ ] `ToolbarTest`
-        - [ ] `ContextMenuTest`
-        - [ ] `MainMenuTest`
-        - [ ] `MenuItemRecorderTest`
+- ✅ Create class and add tests to cover deprecated/removed controls:
+    - `ContainerControlTester`
+    - `ContextMenuStripTester`
+    - `DataGridTester`
+    - `DataGridViewTester`
+    - `DateTimePickerTester`
+    - `DomainUpDownTester`
+    - `FlowLayoutPanelTester`
+    - `GroupBoxTester`
+    - `HScrollBarTester`
+    - `MaskedTextBoxTester`
+    - `MenuStripTester`
+    - `MonthCalendarTester`
+    - `NumericUpDownTester`
+    - `PictureBoxTester`
+    - `PrintPreviewControlTester`
+    - `PrgressBarTester`
+    - `PropertyGridTester`
+    - `PrgressBarTester`
+    - `PropertyGridTester`
+    - `ScrollableControlTester`
+    - `ScrollBarTester`
+    - `SplitContainerTester`
+    - `StatusBarTester`
+    - `StatusStripTester`
+    - `TableLayoutPanelTester`
+    - `TabPageTester`
+    - `ToolStripContainerTester`
+    - `ToolStripContentPanelTester`
+    - `ToolStripDropDownTester`
+    - `ToolStripLabelTester`
+    - `ToolStripPanelTester`
+    - `ToolStripProgressBarTester`
+    - `ToolStripSeparatorTester`
+    - `ToolStripStatusLabelTester`
+    - `ToolStripTester`
+    - `TrackBarTester`
+    - `UserControlTester`
+    - `VScrollBarTester`
+    - `WebBrowserTester`
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
-- [ ] Other stuff to be added later...
 
 
 

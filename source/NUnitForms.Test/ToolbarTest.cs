@@ -33,14 +33,13 @@
 
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using ToolBarTester = NUnit.WinForms.Testers.ToolBarTester;
 
-using ToolBarTester = NUnit.Extensions.Forms.Testers.ToolBarTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ToolbarTest : NUnitFormTest

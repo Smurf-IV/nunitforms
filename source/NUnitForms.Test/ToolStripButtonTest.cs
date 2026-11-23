@@ -31,11 +31,12 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using ToolStripDropDownButtonTester = NUnit.WinForms.Testers.ToolStripDropDownButtonTester;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ToolStripButtonTest : NUnitFormTest

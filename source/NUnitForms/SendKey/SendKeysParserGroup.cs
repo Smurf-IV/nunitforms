@@ -33,8 +33,7 @@
 
 using System.Windows.Forms;
 
-
-namespace NUnit.Extensions.Forms.SendKey;
+namespace NUnit.WinForms.SendKey;
 
 /// <summary>
 /// Represents a parsed group of send keys with modifiers and body.

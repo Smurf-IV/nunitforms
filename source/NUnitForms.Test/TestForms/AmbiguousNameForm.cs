@@ -33,9 +33,9 @@
 
 using System;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Exceptions;
+using NUnit.WinForms.Exceptions;
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 /// <summary>
 /// Form for use in testing <see cref="AmbiguousNameException"/>.

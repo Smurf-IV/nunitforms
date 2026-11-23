@@ -32,7 +32,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace NUnit.Extensions.Forms.ScreenCapture;
+namespace NUnit.WinForms.ScreenCapture;
 
 /// <summary>
 /// Helper class which maps some WIN32 values

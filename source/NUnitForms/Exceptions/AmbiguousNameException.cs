@@ -33,8 +33,7 @@
 
 using System;
 
-
-namespace NUnit.Extensions.Forms.Exceptions;
+namespace NUnit.WinForms.Exceptions;
 
 /// <summary>
 /// Exception is thrown when there is more than one control with the specified name.

@@ -33,14 +33,12 @@
 
 using System;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using RichTextBoxTester = NUnit.WinForms.Testers.RichTextBoxTester;
 
-using RichTextBoxTester = NUnit.Extensions.Forms.Testers.RichTextBoxTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 ///<summary>
 /// Test Fixture for the <see cref="RichTextBoxTester"/> class.

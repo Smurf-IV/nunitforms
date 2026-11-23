@@ -31,13 +31,12 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using ToolStripComboBoxTester = NUnit.WinForms.Testers.ToolStripComboBoxTester;
 
-using ToolStripComboBoxTester = NUnit.Extensions.Forms.Testers.ToolStripComboBoxTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ToolStripComboBoxTest : NUnitFormTest

@@ -32,11 +32,10 @@
 #endregion
 
 using System.Windows.Forms;
+using NUnit.WinForms.Testers;
 
-using NUnit.Extensions.Forms.Testers;
 
-
-namespace NUnit.Extensions.Forms.TestApplications.CustomTesters;
+namespace NUnit.WinForms.Test.CustomTesters;
 
 ///<summary>
 /// A custom ControlTester for use in unit tests.

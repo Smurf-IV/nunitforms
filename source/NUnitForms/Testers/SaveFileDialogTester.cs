@@ -33,7 +33,7 @@
 
 using System;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// This class is used to test the built-in OpenFileDialog. This class is not meant to be

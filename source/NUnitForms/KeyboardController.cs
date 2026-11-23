@@ -33,15 +33,12 @@
 
 using System;
 using System.Windows.Forms;
+using NUnit.WinForms.Testers;
+using NUnit.WinForms.SendKey;
+using NUnit.WinForms.Util;
+using NUnit.WinForms.Win32Interop;
 
-using NUnit.Extensions.Forms.Generic_Testers;
-using NUnit.Extensions.Forms.SendKey;
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.Util;
-using NUnit.Extensions.Forms.Win32Interop;
-
-
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 //TODO: should make sure caps lock is off and return it to its pretest state
 //make sure all keys are released at the end of each test.

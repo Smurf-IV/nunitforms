@@ -1,9 +1,9 @@
 #if !NETFRAMEWORK
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Testers;
 
 #pragma warning disable IDE0130
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// Compatibility shim for the old ToolBarButtonTester API on non-NETFRAMEWORK targets.

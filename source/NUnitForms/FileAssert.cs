@@ -33,7 +33,7 @@
 
 using System.IO;
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 ///<summary>
 /// Assertions for files.

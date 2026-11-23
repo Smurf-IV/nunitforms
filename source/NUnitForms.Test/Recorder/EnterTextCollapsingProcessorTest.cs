@@ -38,7 +38,7 @@ using NUnit.Framework;
 using NUnitForms.Recorder;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+namespace NUnit.WinForms.Test.Recorder;
 
 [TestFixture]
 [Category("Recorder")]

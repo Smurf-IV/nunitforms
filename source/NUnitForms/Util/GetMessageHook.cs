@@ -35,7 +35,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 /// <summary>
 /// Installs a GetMessageHook, and maintains a list of user supplied callbacks.

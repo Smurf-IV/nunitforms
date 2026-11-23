@@ -36,7 +36,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.ScreenCapture;
+using NUnit.WinForms.ScreenCapture;
 
 
 namespace NUnitForms.Recorder;

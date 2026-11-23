@@ -36,7 +36,7 @@ using System;
 using NUnitForms.Recorder;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.CustomTesters;
+namespace NUnit.WinForms.Test.CustomTesters;
 
 public class ButtonControlRecorder : ControlRecorder
 {

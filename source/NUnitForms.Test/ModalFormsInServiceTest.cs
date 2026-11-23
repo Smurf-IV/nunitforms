@@ -36,7 +36,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 /// <summary>
 /// Simulates Windows Service envinronment by running the entire test

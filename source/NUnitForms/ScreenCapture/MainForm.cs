@@ -33,8 +33,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-
-namespace NUnit.Extensions.Forms.ScreenCapture;
+namespace NUnit.WinForms.ScreenCapture;
 
 /// <summary>
 /// Main form of screen capture application

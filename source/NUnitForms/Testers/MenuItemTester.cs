@@ -36,11 +36,9 @@
 using System;
 using System.Reflection;
 using System.Windows.Forms;
+using NUnit.WinForms.Finders;
 
-using NUnit.Extensions.Forms.Finders;
-
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 
 /// <summary>
