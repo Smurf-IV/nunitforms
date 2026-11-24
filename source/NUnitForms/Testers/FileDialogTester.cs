@@ -61,6 +61,7 @@ public class FileDialogTester
     protected const int OpenButton = 1;
 
     private IntPtr _hWnd;
+    private string? _title;
 
     /// <summary>
     /// Gets the window handle of the file dialog.
@@ -84,7 +85,7 @@ public class FileDialogTester
     {
         if (_hWnd == IntPtr.Zero)
         {
-            _hWnd = FindFileDialog();
+            _hWnd = FindFileDialog(_title);
         }
 
         GetMessageHook.Record(ClickCancelCB);
@@ -104,7 +105,7 @@ public class FileDialogTester
     {
         if (_hWnd == IntPtr.Zero)
         {
-            _hWnd = FindFileDialog();
+            _hWnd = FindFileDialog(_title);
         }
 
         GetMessageHook.Record(ClickOpenSaveButtonCB);
@@ -125,7 +126,7 @@ public class FileDialogTester
     {
         if (_hWnd == IntPtr.Zero)
         {
-            _hWnd = FindFileDialog();
+            _hWnd = FindFileDialog(_title);
         }
 
         GetMessageHook.Record(() => SetFileNameCB(file));
@@ -214,7 +215,7 @@ public class FileDialogTester
         else if (new Regex("german", RegexOptions.IgnoreCase)
                  .IsMatch(CultureInfo.CurrentCulture.EnglishName))
         {
-            InitialFileDialogName = @"Öffnen";
+            InitialFileDialogName = @"Ã–ffnen";
         }
         else
         {
@@ -232,13 +233,18 @@ public class FileDialogTester
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FileDialogTester"/> class with the specified title. This constructor is obsolete.
+    /// Initializes a new instance of the <see cref="FileDialogTester"/> class with the specified title.
     /// </summary>
     /// <param name="title">The title of the file dialog.</param>
-    [Obsolete]
+    [Obsolete("Title-based lookup is unreliable; prefer the constructor that accepts the dialog handle.")]
     public FileDialogTester(string title)
     {
-        // disregard the given title, since at the time it is called, it will always be InitialFileDialogName
+        if (title == null)
+        {
+            throw new ArgumentNullException(nameof(title));
+        }
+
+        _title = title;
         _hWnd = IntPtr.Zero;
     }
 
@@ -246,8 +252,13 @@ public class FileDialogTester
     /// <summary>
     /// Finds the OpenFileDialog.
     /// </summary>
-    /// <returns>The window handle of the file dialog, or <see cref="IntPtr.Zero"/> if not found.</returns>
+    /// <returns>The window handle of the file dialog.</returns>
     protected static IntPtr FindFileDialog()
+    {
+        return FindFileDialog(null);
+    }
+
+    private static IntPtr FindFileDialog(string? title)
     {
         IntPtr desktop = Win32.GetDesktopWindow();
         IntPtr res = IntPtr.Zero;
@@ -257,11 +268,14 @@ public class FileDialogTester
                 if (WindowHandle.IsDialog(hwnd))
                 {
                     string name = WindowHandle.GetCaption(hwnd);
-                    if (name == InitialFileDialogName
-                        // Vista 64 hack
-                        || name == @"Save as"
-                        || name == @"Enregistrer sous"
-                        || name == @"Speichern unter")
+                    bool matchesTitle = title == null
+                        ? name == InitialFileDialogName
+                          // Vista 64 hack
+                          || name == @"Save as"
+                          || name == @"Enregistrer sous"
+                          || name == @"Speichern unter"
+                        : name == title;
+                    if (matchesTitle)
                     {
                         res = hwnd;
                     }

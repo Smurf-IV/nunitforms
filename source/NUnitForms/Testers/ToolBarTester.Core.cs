@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 
 using NUnit.WinForms.Testers;
+using NUnit.WinForms.Util;
 
 #pragma warning disable IDE0130
 namespace NUnit.WinForms.Testers;
@@ -41,7 +42,7 @@ public partial class ToolBarTester : ControlTester<ToolStrip, ToolBarTester>
     {
         if (index < 0 || index >= Properties.Items.Count)
         {
-            throw new System.ArgumentOutOfRangeException(nameof(index));
+            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index));
         }
         var item = Properties.Items[index];
         var itemName = string.IsNullOrEmpty(item.Name) ? item.Text : item.Name;

@@ -36,7 +36,9 @@ using System.ComponentModel;
 using System.Reflection;
 #endif
 using System.Windows.Forms;
+
 using NUnit.WinForms.Util;
+
 
 namespace NUnit.WinForms.Testers;
 
@@ -147,7 +149,7 @@ public class ComboBoxTester : ControlTester<ComboBox, ComboBoxTester>
 
         // 1. EXTRACT THE WINFORMS EVENT LIST
         PropertyInfo eventsProp = typeof(Component).GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
-        EventHandlerList eventHandlerList = (EventHandlerList)eventsProp.GetValue(comboBox);
+        var eventHandlerList = (EventHandlerList)eventsProp.GetValue(comboBox);
 
         // 2. LOCATE THE TEXTUPDATE TRACKING KEY
         FieldInfo textUpdateField = typeof(ComboBox).GetField("s_textUpdateEvent", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
@@ -168,7 +170,7 @@ public class ComboBoxTester : ControlTester<ComboBox, ComboBoxTester>
             // 3. EXECUTE THE NATIVE EVENT SEQUENCE (Fires SelectedIndexChanged exactly when needed)
             Win32.SendMessage(handle, CB_SETCURSEL, (IntPtr)index, IntPtr.Zero);
 
-            IntPtr wParam = (IntPtr)(((int)handle & 0xFFFF) | (CBN_SELCHANGE << 16));
+            var wParam = (IntPtr)(((int)handle & 0xFFFF) | (CBN_SELCHANGE << 16));
             Win32.SendMessage(comboBox.Parent.Handle, WM_COMMAND, wParam, handle);
 
             // 4. SETTLE THE LAYOUT OVERAGES IMMEDIATELY BEFORE RESTORING

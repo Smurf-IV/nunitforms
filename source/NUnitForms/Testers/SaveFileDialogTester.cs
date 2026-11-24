@@ -52,9 +52,9 @@ public class SaveFileDialogTester : FileDialogTester
     }
 
     /// <summary>
-    /// Unreliable, kept for compatibility. The title is not actually used.
+    /// Kept for compatibility. Prefer the constructor that accepts the dialog handle.
     /// </summary>
-    [Obsolete]
+    [Obsolete("Title-based lookup is unreliable; prefer the constructor that accepts the dialog handle.")]
     public SaveFileDialogTester(string title)
         : base(title)
     {

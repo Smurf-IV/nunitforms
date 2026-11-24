@@ -112,7 +112,7 @@ public static class GetMessageHook
         {
             unsafe
             {
-                Win32.MSG* msg = (Win32.MSG*)lParam;
+                var msg = (Win32.MSG*)lParam;
                 if (msg->message == (uint)s_msgId)
                 {
                     List<Callback> tmp = s_callbacks;

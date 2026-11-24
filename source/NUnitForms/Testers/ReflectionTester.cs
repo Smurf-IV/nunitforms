@@ -35,7 +35,9 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+
 using NUnit.WinForms.Util;
+
 
 namespace NUnit.WinForms.Testers;
 
@@ -182,7 +184,7 @@ public abstract class ReflectionTester
         var watch = System.Diagnostics.Stopwatch.StartNew();
         // 2. CRITICAL FOR .NET 6+: Execute multiple message loops to clear 
         // structural painting notifications (like theme painting and DPI adjustments)
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
             if (control.IsDisposed)
             {

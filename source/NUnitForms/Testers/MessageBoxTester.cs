@@ -133,7 +133,7 @@ public class MessageBoxTester : Tester<MessageBox, MessageBoxTester>
     /// Deprecated in favor of the constructor taking the box's handle as argument.
     /// </summary>
     /// <param name="name">The name of the MessageBox to test.</param>
-    [Obsolete("Deprecated in favor of the constructor taking the box's handle as argument.)")]
+    [Obsolete("Deprecated in favor of the constructor taking the box's handle as argument.")]
     public MessageBoxTester(string name)
         : base(name)
     {

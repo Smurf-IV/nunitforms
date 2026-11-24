@@ -77,6 +77,8 @@ public class ModalFormTester : IDisposable
     /// </summary>
     public ModalFormHandler? FormHandler { get; set; }
 
+    internal bool HasPendingModernHandler => FormHandler != null && FormHandler != (ModalFormHandler)Adapter;
+
     private Win32.CBTCallback? callback;
     private IntPtr handleToHook = IntPtr.Zero;
 
@@ -174,23 +176,19 @@ public class ModalFormTester : IDisposable
     /// </summary>
     public Result Verify()
     {
-        if (handlers.Count == 0)
-        {
-            var res = new Result(FormHandler == null, unexpectedModals);
-            unexpectedModals = [];
-            return res;
-        }
-
-        // the old interface was used
+        bool allModalsShown = !HasPendingModernHandler;
         foreach (string name in handlers.Keys)
         {
             var h = (Handler)handlers[name];
             if (!h.Verify())
             {
-                return new Result(false, []);
+                allModalsShown = false;
             }
         }
-        return new Result(true, []);
+
+        var result = new Result(allModalsShown, unexpectedModals);
+        unexpectedModals = [];
+        return result;
     }
 
     private void BeginListening()
@@ -224,8 +222,12 @@ public class ModalFormTester : IDisposable
             h = UnexpectedModal;
         }
 
+        bool isLegacyHandler = h == (ModalFormHandler)Adapter;
         h(name, hWnd, form);
-        FormHandler = null; // It has been invoked so set to null for the verify to pass
+        if (!isLegacyHandler && FormHandler == h)
+        {
+            FormHandler = null; // It has been invoked so set to null for the verify to pass
+        }
     }
 
     private List<string> unexpectedModals;
@@ -347,6 +349,11 @@ public class ModalFormTester : IDisposable
             name = FileDialogTester.InitialFileDialogName;
         }
 
+        if (handlers[name] == null && f != null && handlers[f.Text] != null)
+        {
+            name = f.Text;
+        }
+
         if (handlers[name] is not Handler namedHandler)
         {
             namedHandler = Add(name, (ModalFormActivatedHwnd)
@@ -354,7 +361,6 @@ public class ModalFormTester : IDisposable
                     "UnexpectedModal"), 0);
         }
         namedHandler.Invoke(hWnd);
-        FormHandler = Adapter;
     }
 
     ///<summary>

@@ -104,14 +104,11 @@
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
     - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
-- [ ] Add missing tests for:
-    - [ ] `CheckedListBoxTester`
-    - [ ] `ComponentTester`
-    - [ ] `ListViewTester`
-    - [ ] `PanelTester`
-- [ ] Got through the `obsolete`s and fix (i.e. `OpenFileDialogTester.OpenFileDialogTester(string)`)
+- ✅ Go through the `obsolete`s and fix (i.e. `OpenFileDialogTester.OpenFileDialogTester(string)`)
+    - Legacy modal handlers now match a form’s caption when its name does not match, without changing existing name-based behavior. 
 - [-] Non supported winform controls will be guarded (For backward compatibility)
     - [ ] Fix the recorder project to use the new `ToolStripTester` instead of `ToolBarTester` etc.
+- ✅ Add missing tests for
 - ✅ Create class and add tests to cover deprecated/removed controls:
     - `ContainerControlTester`
     - `ContextMenuStripTester`

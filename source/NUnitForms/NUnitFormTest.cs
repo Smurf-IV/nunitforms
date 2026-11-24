@@ -214,7 +214,7 @@ public class NUnitFormTest
             TearDown();
             GetMessageHook.RemoveHook();
 
-            if (ModalFormHandler == null)
+            if (!modal.HasPendingModernHandler)
             {
                 // Make an effort to ensure that no window message is left dangling
                 // Such a message might cause an unexpected dialog box
@@ -298,7 +298,7 @@ public class NUnitFormTest
     /// </summary>
     [Obsolete("Unreliable. Deprecated in favor of ModalFormHandler/ModalDialogHandler.")]
     protected void ExpectFileDialog(ModalFormActivated handler, bool expected)
-        => modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, true);
+        => modal.ExpectModal(FileDialogTester.InitialFileDialogName, handler, expected);
 
     /// <summary>
     /// Deprecated in favor of ModalFormHandler/ModalDialogHandler.

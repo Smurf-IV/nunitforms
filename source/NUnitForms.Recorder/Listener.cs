@@ -36,6 +36,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
+
 using NUnit.WinForms.Finders;
 
 
@@ -221,8 +222,15 @@ public class Listener
 
     private void AddEventHandlerAtStartOfChain(object control, string eventName, MulticastDelegate recorder)
     {
-        if (control == null) throw new ArgumentNullException(nameof(control));
-        if (recorder == null) throw new ArgumentNullException(nameof(recorder));
+        if (control == null)
+        {
+            throw new ArgumentNullException(nameof(control));
+        }
+
+        if (recorder == null)
+        {
+            throw new ArgumentNullException(nameof(recorder));
+        }
 
         Type baseType = control.GetType();
 
@@ -239,14 +247,18 @@ public class Listener
         while (currentType != null)
         {
             backingField = currentType.GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (backingField != null) break;
+            if (backingField != null)
+            {
+                break;
+            }
+
             currentType = currentType.BaseType;
         }
 
         if (backingField != null)
         {
             // PATTERN B: Pure C# Backing Field Event (e.g., 'SuperClick')
-            Delegate currentDelegate = (Delegate)backingField.GetValue(control);
+            var currentDelegate = (Delegate)backingField.GetValue(control);
             Delegate updatedDelegate = Delegate.Combine(recorder, currentDelegate);
             backingField.SetValue(control, updatedDelegate);
             return;
@@ -278,7 +290,7 @@ public class Listener
             }
 
             string cleanTargetName = eventName.Replace("_", "").ToUpperInvariant();
-            bool foundKey = false;
+            var foundKey = false;
 
             foreach (Type scanType in typesToScan)
             {
@@ -296,24 +308,34 @@ public class Listener
                             )
                         {
                             eventKey = field.GetValue(null);
-                            if (eventKey != null) 
+                            if (eventKey != null)
                             {
-                                foundKey = true; 
-                                break; 
+                                foundKey = true;
+                                break;
                             }
                         }
                     }
-                    if (foundKey) break;
+                    if (foundKey)
+                    {
+                        break;
+                    }
+
                     targetType = targetType.BaseType;
                 }
-                if (foundKey) break;
+                if (foundKey)
+                {
+                    break;
+                }
             }
 
             // Specific absolute fallbacks for irregular controls if loops skip them
             if (eventKey == null && control is TabControl)
             {
                 FieldInfo? tabKeyField = typeof(TabControl).GetField("EVENT_SELECTEDINDEX", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-                if (tabKeyField != null) eventKey = tabKeyField.GetValue(null);
+                if (tabKeyField != null)
+                {
+                    eventKey = tabKeyField.GetValue(null);
+                }
             }
 
             if (eventKey != null)
@@ -331,9 +353,13 @@ public class Listener
                         // Reassemble the chain manually to move our recorder to index 0 (Head/LIFO priority)
                         Delegate? reorderedChain = typedRecorder;
 
-                        for (int i = 0; i < invocationList.Length; i++)
+                        for (var i = 0; i < invocationList.Length; i++)
                         {
-                            if (i == registeredIndex) continue; // Skip since we placed it at the head
+                            if (i == registeredIndex)
+                            {
+                                continue; // Skip since we placed it at the head
+                            }
+
                             reorderedChain = Delegate.Combine(reorderedChain, invocationList[i]);
                         }
 
@@ -407,7 +433,7 @@ public class Listener
                 throw new InvalidOperationException("Could not find internal 'Events' container.");
             }
 
-            EventHandlerList eventHandlerList = (EventHandlerList)eventsProp.GetValue(control);
+            var eventHandlerList = (EventHandlerList)eventsProp.GetValue(control);
             Delegate currentDelegate = eventHandlerList[eventKey];
 
 
@@ -439,7 +465,7 @@ public class Listener
                 throw new InvalidOperationException($"Could not locate event tracking container nor instance backing field for event '{eventInfo.Name}' on type {control.GetType().FullName}.");
             }
 
-            Delegate currentDelegate = (Delegate)backingField.GetValue(control);
+            var currentDelegate = (Delegate)backingField.GetValue(control);
             Delegate updatedDelegate = Delegate.Combine(newHandler, currentDelegate);
 
             backingField.SetValue(control, updatedDelegate);

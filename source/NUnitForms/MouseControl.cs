@@ -34,8 +34,10 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+
 using NUnit.WinForms.Testers;
 using NUnit.WinForms.Util;
+
 
 namespace NUnit.WinForms;
 
@@ -87,9 +89,9 @@ internal class MouseControl
                 {
                     fgThread = Win32.GetWindowThreadProcessId(fg, out _);
                 }
-                uint thisThread = (uint)AppDomain.GetCurrentThreadId();
+                var thisThread = (uint)AppDomain.GetCurrentThreadId();
                 uint formThread = Win32.GetWindowThreadProcessId(form.Handle, out _);
-                bool attached = false;
+                var attached = false;
                 try
                 {
                     if (fgThread != 0 && fgThread != formThread)
@@ -114,7 +116,7 @@ internal class MouseControl
             }
 
             // Give the form a brief moment to become the active foreground window
-            for (int i = 0; i < 10 && Form.ActiveForm != form; i++)
+            for (var i = 0; i < 10 && Form.ActiveForm != form; i++)
             {
                 Application.DoEvents();
                 try { Win32.BringWindowToTop(form.Handle); } catch { }
@@ -126,7 +128,7 @@ internal class MouseControl
         Application.DoEvents();
 
         // Wait briefly until the control reports focused to avoid missing the first click after modals
-        for (int i = 0; i < 10 && !control.Focused; i++)
+        for (var i = 0; i < 10 && !control.Focused; i++)
         {
             control.Focus();
             Application.DoEvents();
@@ -166,8 +168,8 @@ internal class MouseControl
 
     internal int MakeLParam(PointF p, PointF scale)
     {
-        int x = (int)Math.Round(p.X * scale.X);
-        int y = (int)Math.Round(p.Y * scale.Y);
+        var x = (int)Math.Round(p.X * scale.X);
+        var y = (int)Math.Round(p.Y * scale.Y);
         return (y << 16) | (x & 0xFFFF);
     }
 }

@@ -37,10 +37,9 @@ using System.Runtime.CompilerServices;
 
 using NUnit.WinForms.Exceptions;
 
-// ReSharper disable UnusedMember.Global
-
 
 namespace NUnit.WinForms.Util;
+// ReSharper disable UnusedMember.Global
 
 
 /// <summary>

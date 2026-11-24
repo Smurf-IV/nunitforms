@@ -36,6 +36,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+
 namespace NUnit.WinForms.SendKey;
 
 public class SendKeysParser : ISendKeysParser
@@ -152,7 +153,7 @@ public class SendKeysParser : ISendKeysParser
                             string lookup = "{" + token.ToUpperInvariant() + "}";
                             if (_keyValueMap.TryGetValue(lookup, out var repeatedKey))
                             {
-                                for (int i = 0; i < count; i++)
+                                for (var i = 0; i < count; i++)
                                 {
                                     _groupModifiers.Add(modifierCharacters);
                                     _escapedKeyCodes.Add(repeatedKey);

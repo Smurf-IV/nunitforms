@@ -225,7 +225,7 @@ public class ControlTest : NUnitFormTest
             }
 
             Type? baseType = type.BaseType;
-            bool isToolStripItemTester = false;
+            var isToolStripItemTester = false;
             while (baseType != null)
             {
                 if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(ToolStripItemTester<,>))

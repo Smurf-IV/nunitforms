@@ -204,6 +204,11 @@ public class Finder<T>
 
         if (obj is ToolStripDropDownItem downItem)
         {
+            if (Matches(name, downItem.DropDown, null))
+            {
+                results.Add(downItem.DropDown);
+            }
+
             foreach (ToolStripItem i2 in downItem.DropDownItems)
             {
                 results.AddRange(Find(name, i2, null));
