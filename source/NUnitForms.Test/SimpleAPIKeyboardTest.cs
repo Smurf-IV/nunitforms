@@ -155,7 +155,6 @@ public class SimpleAPIKeyboardTest : NUnitFormTest
     }
 
     [Test]
-    [Explicit("This test leaves keyboard controller in a shift state affecting following test.")]
     public void UnbalancedGroupDelimitersThrowsException()
     {
         new TextBoxTestForm().Show();

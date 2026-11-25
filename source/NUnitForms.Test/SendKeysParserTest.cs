@@ -112,7 +112,6 @@ public class SendKeysParserTest
     }
 
     [Test]
-    [Ignore("Required but not implemented functionality")]
     public void Key_CAPSLOCK()
     {
         // Need to confirm correct key code

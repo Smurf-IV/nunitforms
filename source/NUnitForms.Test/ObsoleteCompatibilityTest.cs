@@ -207,6 +207,18 @@ public class ObsoleteCompatibilityTest : NUnitFormTest
         Assert.That(lookupException, Is.Null);
     }
 
+    [Test]
+    public void ClassicOpenDialogLaunchedFromFormCanBeCancelled()
+    {
+        using var form = new TestForms.OpenFileDialogTestForm();
+        form.Show();
+        ModalFormHandler = (_, handle, _) => new OpenFileDialogTester(handle).ClickCancel();
+
+        new ButtonTester("btOpenFile", form).Click();
+
+        Assert.That(new LabelTester("lblFileName", form).Text, Is.EqualTo("cancel pressed"));
+    }
+
     [TestCaseSource(nameof(FileDialogTesterTypes))]
     public void StringConstructorFindsDialogByTitle(Type testerType)
     {

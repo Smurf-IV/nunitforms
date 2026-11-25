@@ -9,15 +9,15 @@ using NUnit.WinForms.Testers;
 namespace NUnit.WinForms.Test;
 
 [TestFixture]
+[Apartment(ApartmentState.STA)]
 public class OuterTestTest
 {
-    [Test, STAThread]
-    [Explicit("Hangs for some reason - Does not show the first dialog")]
+    [Test]
     public void RunTwiceWithoutFailure()
     {
         using (var nuf = new OuterTest())
         {
-            using (var dlg = new OpenFileDialog())
+            using (var dlg = new OpenFileDialog { AutoUpgradeEnabled = false })
             {
                 dlg.CheckFileExists = false;
 
@@ -31,7 +31,7 @@ public class OuterTestTest
         }
         using (var nuf = new OuterTest())
         {
-            using (var dlg = new OpenFileDialog())
+            using (var dlg = new OpenFileDialog { AutoUpgradeEnabled = false })
             {
                 dlg.CheckFileExists = false;
 

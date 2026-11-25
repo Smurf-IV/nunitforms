@@ -104,6 +104,7 @@ public class SendKeysParser : ISendKeysParser
         _keyValueMap.Add("{RIGHT}", Keys.Right);
         _keyValueMap.Add("{CAPSLOCK}", Keys.Capital);
         _keyValueMap.Add("{CAPS}", Keys.Capital);
+        _keyValueMap.Add("{CAP}", Keys.Capital);
         _keyValueMap.Add("{SPACE}", Keys.Space);
         _keyValueMap.Add("{TAB}", Keys.Tab);
         _keyValueMap.Add("{UP}", Keys.Up);
@@ -111,6 +112,14 @@ public class SendKeysParser : ISendKeysParser
 
     private void ParseGroupElements(string group)
     {
+        if (group.Length > 1
+            && "+^%".IndexOf(group[0]) >= 0
+            && group[1] == '('
+            && group[group.Length - 1] != ')')
+        {
+            throw new System.ArgumentException("SendKeys group is missing a closing parenthesis.");
+        }
+
         var regex = new Regex(ModifiersPattern, RegexOptions.IgnorePatternWhitespace);
 
         var modifierCharacters = string.Empty;

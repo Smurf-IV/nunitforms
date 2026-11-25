@@ -50,6 +50,7 @@ namespace NUnit.WinForms.Test;
 /// assigning a service (hidden) WindowStation to the process.
 /// </remarks>
 [TestFixture]
+[Ignore("Requires a service window-station test host; the fixture cannot be validated in a standard desktop run.")]
 [Framework.Category("UsesServiceWindowStation")]
 public class ModalFormsInServiceTest : ModalFormsTest
 {
@@ -71,7 +72,7 @@ public class ModalFormsInServiceTest : ModalFormsTest
 
     private IntPtr serviceWinStation;
 
-    [OneTimeSetUp, Ignore("does not work when run from a service")]
+    [OneTimeSetUp]
     public void PreInit()
     {
         originalWinStation = GetProcessWindowStation();
@@ -92,7 +93,7 @@ public class ModalFormsInServiceTest : ModalFormsTest
         }
     }
 
-    [OneTimeTearDown, Ignore("does not work when run from a service")]
+    [OneTimeTearDown]
     public void PostVerify()
     {
         if (originalWinStation == IntPtr.Zero)
@@ -101,7 +102,6 @@ public class ModalFormsInServiceTest : ModalFormsTest
         }
         SetProcessWindowStation(originalWinStation);
 
-        CloseWindowStation(originalWinStation);
         CloseWindowStation(serviceWinStation);
     }
 }

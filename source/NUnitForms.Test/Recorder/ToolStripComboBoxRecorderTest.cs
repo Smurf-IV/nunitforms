@@ -39,9 +39,6 @@ namespace NUnit.WinForms.Test.Recorder;
 
 [TestFixture]
 [Category("Recorder")]
-#if NETCOREAPP
-[Explicit("To be replaced by supported type")]
-#endif
 public class ToolStripComboBoxRecorderTest : NUnitFormTest
 {
     [Test]

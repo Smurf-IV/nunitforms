@@ -53,6 +53,9 @@ internal partial class Win32
     internal const int MOUSEEVENTF_MIDDLEUP = 0x0040;
     internal const int MOUSEEVENTF_XDOWN = 0x0080;
     internal const int MOUSEEVENTF_XUP = 0x0100;
+    internal const byte VK_SHIFT = 0x10;
+    internal const byte VK_CONTROL = 0x11;
+    internal const byte VK_MENU = 0x12;
     internal const int SPI_GETMOUSEHOVERTIME = 102;
     internal const int XBUTTON1 = 0x1;
     //internal const int XBUTTON1 = 8388608;
@@ -346,7 +349,7 @@ internal partial class Win32
 
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 #if NET7_0_OR_GREATER
-    [LibraryImport(User32, StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    [LibraryImport(User32, EntryPoint = "SetDlgItemTextW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool SetDlgItemText(IntPtr hDlg, int nIDDlgItem, string lpString);
 #else
@@ -384,6 +387,17 @@ internal partial class Win32
     [DllImport(User32)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool IsWindowVisible(IntPtr hDlg);
+#endif
+
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+#if NET7_0_OR_GREATER
+    [LibraryImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool IsWindowEnabled(IntPtr hWnd);
+#else
+    [DllImport(User32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool IsWindowEnabled(IntPtr hWnd);
 #endif
 
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]

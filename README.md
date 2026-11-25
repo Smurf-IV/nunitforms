@@ -14,9 +14,22 @@
 
 ## When
 
+
+### V3
+
 - Start with a V3 and modernise it to the latest NUnit TFM(s) and also fix to run the existing written unit tests.
 - Find a way to make it work with nunit >= 4.5 (Rather than a fixed version) to keep it compatible with .net 4.62 onwards.
+
+### V4.x
+
+- Use latest V4.6.x NUnit only
 - Add the replacement controls for the obsoleted ones in .netCore 3.1 and later (i.e. `ToolStrip` instead of `ToolBar`, `MenuStrip` instead of `MainMenu`, etc.)
+
+### V5.x
+
+- Use latest V5.x NUnit only
+- Drop TFM 4.6.x and be 4.8.x only
+- Drop .Net 6 and be >= .Net 8 (Skip 9)
 
 ## What
 
@@ -102,7 +115,7 @@
 ## Work Done
 
 - [-] Fix Unit Test projects and should be able to run on all TFM(s)
-    - [ ] Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
+    - ✅ Investigate `Explicit` marked tests, and possible fix them (Also check `Ignore`s)
     - [ ] Change _test_names_ to run in declarative order (i.e. `A010_Stest_name`, `A020_Atest_name`, etc.)
 - ✅ Go through the `obsolete`s and fix (i.e. `OpenFileDialogTester.OpenFileDialogTester(string)`)
     - Legacy modal handlers now match a form’s caption when its name does not match, without changing existing name-based behavior. 
@@ -151,7 +164,11 @@
     - `WebBrowserTester`
 - [ ] Convert SourceForge Discussions / Help into GitHub Discussions (If possible)
 
+### V5.x
 
+- Use latest V5.x NUnit only
+- Drop TFM 4.6.x and be 4.8.x only
+- Drop .Net 6 and be >= .Net 8 (Skip 9)
 
 ## Version x - ideas 💡
 

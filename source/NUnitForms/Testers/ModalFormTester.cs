@@ -331,7 +331,7 @@ public class ModalFormTester : IDisposable
         handlers[name] = new Handler(handler, (expected ? 1 : 0), name);
     }
 
-    private void Adapter(string name, IntPtr hWnd, Form f)
+    private void Adapter(string? name, IntPtr hWnd, Form? f)
     {
         if (name == null)
         {
@@ -344,7 +344,8 @@ public class ModalFormTester : IDisposable
         }
 
         // Vista 64 hack
-        if (name == "Save as" || name == "Enregistrer sous")
+        if (name.Equals("Save as", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("Enregistrer sous", StringComparison.OrdinalIgnoreCase))
         {
             name = FileDialogTester.InitialFileDialogName;
         }

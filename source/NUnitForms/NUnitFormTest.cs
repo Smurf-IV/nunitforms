@@ -229,6 +229,9 @@ public class NUnitFormTest
                 verified = true;
                 List<Form> allForms = new FormFinder().FindAll();
 
+                mouse?.Dispose();
+                keyboard?.Dispose();
+
                 foreach (Form form in allForms.Where(form => !KeepAlive.ShouldKeepAlive(form)))
                 {
                     form.Dispose();

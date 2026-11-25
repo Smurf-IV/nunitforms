@@ -100,6 +100,7 @@ public class MouseController : IDisposable
     private Win32.Point _originalPosition;
 
     private PointF _scale;
+    private Keys _pressedModifiers;
 
     #region Contstructors
 
@@ -207,7 +208,6 @@ public class MouseController : IDisposable
     {
         if (_mouseControl != null)
         {
-            // If we do not have a control, then an exception will be thrown.
             try
             {
                 // Release any pressed mouse buttons.
@@ -216,12 +216,19 @@ public class MouseController : IDisposable
                 {
                     Release(pressedButtons);
                 }
+            }
+            catch (AmbiguousNameException)
+            {
+            }
+            catch (NoSuchControlException)
+            {
+            }
 
-                // Release any modifier keys.
-                Keys keys = Control.ModifierKeys;
-                if (keys != Keys.None)
+            try
+            {
+                if (_pressedModifiers != Keys.None)
                 {
-                    Release(keys);
+                    Release(_pressedModifiers);
                 }
             }
             catch (AmbiguousNameException)
@@ -690,39 +697,19 @@ public class MouseController : IDisposable
         {
             ThrowHelper.ThrowArgumentOutOfRangeException(nameof(keys), "Only Alt, Shift and Control are currently handled.");
         }
-        var keyValue = (byte)keys;
-
-        Win32.KeyBdEvent(keyValue, 0, 0, UIntPtr.Zero); //key down
-
-        //Win32.KBINPUT kbi = new Win32.KBINPUT();
-        //kbi.ki.dwExtraInfo = Win32.GetMessageExtraInfo();
-
-        //if ((keys & Keys.Alt) == Keys.Alt)
-        //{
-        //    kbi.ki.wVk = Win32.VK_MENU;
-        //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
-        //    {
-        //        ThrowHelper.ThrowWin32Exception();
-        //    }
-        //}
-        //if ((keys & Keys.Control) == Keys.Control)
-        //{
-        //    kbi.ki.wVk = Win32.VK_CONTROL;
-        //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
-        //    {
-        //        ThrowHelper.ThrowWin32Exception();
-        //    }
-        //}
-        //if ((keys & Keys.Shift) == Keys.Shift)
-        //{
-        //    kbi.ki.wVk = Win32.VK_SHIFT;
-        //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
-        //    {
-        //        ThrowHelper.ThrowWin32Exception();
-        //    }
-        //}
-
-        Application.DoEvents();
+        if ((keys & Keys.Control) != 0)
+        {
+            Win32.KeyBdEvent(Win32.VK_CONTROL, 0, 0, UIntPtr.Zero);
+        }
+        if ((keys & Keys.Alt) != 0)
+        {
+            Win32.KeyBdEvent(Win32.VK_MENU, 0, 0, UIntPtr.Zero);
+        }
+        if ((keys & Keys.Shift) != 0)
+        {
+            Win32.KeyBdEvent(Win32.VK_SHIFT, 0, 0, UIntPtr.Zero);
+        }
+        _pressedModifiers |= keys;
     }
 
     /// <summary>
@@ -898,40 +885,19 @@ public class MouseController : IDisposable
         {
             ThrowHelper.ThrowArgumentOutOfRangeException(nameof(keys), "Only Alt, Shift and Control is allowed.");
         }
-        var keyValue = (byte)keys;
-        Win32.KeyBdEvent(keyValue, 0, 0x02, UIntPtr.Zero); //key Up
-
-
-        //Win32.KBINPUT kbi = new Win32.KBINPUT();
-        //kbi.ki.dwExtraInfo = Win32.GetMessageExtraInfo();
-        //kbi.ki.dwFlags = Win32.KEYEVENTF_KEYUP;
-
-        //if ((keys & Keys.Alt) == Keys.Alt)
-        //{
-        //    kbi.ki.wVk = Win32.VK_MENU;
-        //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
-        //    {
-        //        ThrowHelper.ThrowWin32Exception();
-        //    }
-        //}
-        //if ((keys & Keys.Control) == Keys.Control)
-        //{
-        //    kbi.ki.wVk = Win32.VK_CONTROL;
-        //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
-        //    {
-        //        ThrowHelper.ThrowWin32Exception();
-        //    }
-        //}
-        //if ((keys & Keys.Shift) == Keys.Shift)
-        //{
-        //    kbi.ki.wVk = Win32.VK_SHIFT;
-        //    if (0 == Win32.SendKeyboardInput(1, ref kbi, Marshal.SizeOf(kbi)))
-        //    {
-        //        ThrowHelper.ThrowWin32Exception();
-        //    }
-        //}
-
-        Application.DoEvents();
+        if ((keys & Keys.Shift) != 0)
+        {
+            Win32.KeyBdEvent(Win32.VK_SHIFT, 0, 0x02, UIntPtr.Zero);
+        }
+        if ((keys & Keys.Alt) != 0)
+        {
+            Win32.KeyBdEvent(Win32.VK_MENU, 0, 0x02, UIntPtr.Zero);
+        }
+        if ((keys & Keys.Control) != 0)
+        {
+            Win32.KeyBdEvent(Win32.VK_CONTROL, 0, 0x02, UIntPtr.Zero);
+        }
+        _pressedModifiers &= ~keys;
     }
 
     /// <summary>

@@ -108,14 +108,23 @@ public class FileDialogTester
             _hWnd = FindFileDialog(_title);
         }
 
-        GetMessageHook.Record(ClickOpenSaveButtonCB);
+        GetMessageHook.Record(ClickOpenSaveButtonImp);
     }
 
-    private bool ClickOpenSaveButtonCB()
+    private bool ClickOpenSaveButtonImp()
     {
+        if (!Win32.IsWindowVisible(_hWnd))
+        {
+            return false;
+        }
+
         IntPtr open_btn = Win32.GetDlgItem(_hWnd, OpenButton);
-        Win32.PostMessage(open_btn, Win32.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
-        return true;
+        if (open_btn == IntPtr.Zero || !Win32.IsWindowEnabled(open_btn))
+        {
+            return false;
+        }
+
+        return Win32.PostMessage(open_btn, Win32.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
     }
 
 
