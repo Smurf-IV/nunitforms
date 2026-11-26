@@ -126,6 +126,11 @@ public class KeyboardController : IDisposable
         sendKeys = sendKeysFactory.Create(c.Handle);
 
         keyboardControl = new KeyboardControl(control);
+        keyboardControl.Focus();
+        if (c is TextBoxBase textBox)
+        {
+            textBox.SelectAll();
+        }
 
         if (!restoreUserInput)
         {

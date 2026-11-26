@@ -33,9 +33,10 @@
 
 using System;
 using System.Windows.Forms;
-using NUnit.WinForms.Test.TestForms;
+
 using NUnit.Framework;
 using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.WinForms.Testers;
 
 
@@ -74,6 +75,5 @@ public class ModalFormsTest : NUnitFormTest
         buttonOne.Click();
         form.Close();
         Verify();
-
     }
 }

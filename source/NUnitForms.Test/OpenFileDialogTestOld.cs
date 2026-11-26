@@ -31,7 +31,6 @@
 
 #endregion
 
-using System;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.WinForms.Testers;
@@ -60,9 +59,9 @@ public class OpenFileDialogTestOld : NUnitFormTest
     ///</summary>
     public void OpenFileHandler()
     {
-        var dlg_tester = new OpenFileDialogTester("Open");
+        var dlgTester = new OpenFileDialogTester("Open");
         string fileName = typeof(OpenFileDialogTester).Assembly.Location;
-        dlg_tester.OpenFile(fileName);
+        dlgTester.OpenFile(fileName);
     }
 
     ///<summary>
@@ -102,8 +101,8 @@ public class OpenFileDialogTestOld : NUnitFormTest
         Assert.AreEqual(label1.Text.ToLower(), fileName.ToLower());
     }
 
-    [Test,
-     Ignore("This test is used for debug confidence, not to prove the functionality of the OpenFileDialogTester.")]
+    //[Test,
+    // Ignore("This test is used for debug confidence, not to prove the functionality of the OpenFileDialogTester.")]
     public void OpenTest_ConfidenceOnManyOpens()
     {
         for (var count = 0; count < 1000; count++)
@@ -116,7 +115,7 @@ public class OpenFileDialogTestOld : NUnitFormTest
 
             //SOLUTION
             /* The 'SetDlgItemText' function in the 'FileDialogTester.cs' file did not set the text
-             * in the dialog box occassionaly. The solution was to set the text twice on the dialog box.
+             * in the dialog box occasionally. The solution was to set the text twice on the dialog box.
              * The code below was run upto 1000 times to check that the solution works.
              */
 

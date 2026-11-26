@@ -38,13 +38,17 @@ using System.Windows.Forms;
 
 namespace NUnit.WinForms.Util;
 
-internal partial class Win32
+internal
+#if NET7_0_OR_GREATER
+    partial
+#endif
+    class Win32
 {
     /// <summary>User library - provides window management and user interface functions</summary>
-    public const string User32 = "user32.dll";
+    private const string User32 = "user32.dll";
 
     internal const int BM_CLICK = 0x00F5; //Button
-    public const int GENERIC_ALL = 0x10000000;
+    internal const int GENERIC_ALL = 0x10000000;
     internal const int INPUT_MOUSE = 0;
     internal const int MOUSEEVENTF_RIGHTDOWN = 0x0008;
     internal const int MOUSEEVENTF_RIGHTUP = 0x0010;
@@ -61,24 +65,24 @@ internal partial class Win32
     //internal const int XBUTTON1 = 8388608;
     internal const int XBUTTON2 = 0x2; //16777216
 
-    public const uint WM_KEYDOWN = 0x0100;
-    public const uint WM_KEYUP = 0x0101;
-    public const uint WM_CHAR = 0x0102;
-    public const uint WM_SYSKEYDOWN = 0x104;
-    public const uint WM_SYSKEYUP = 0x105;
-    public const uint WM_LBUTTONDOWN = 0x0201;
-    public const uint WM_LBUTTONUP = 0x0202;
-    public const uint WM_MOUSEMOVE = 0x0200;
-    public const int MK_LBUTTON = 0x0001;
-    public const uint WM_MOUSEACTIVATE = 0x0021;
-    public const int HTCLIENT = 1;
-    public const uint WM_ACTIVATE = 0x0006;
-    public const int WA_CLICKACTIVE = 2;
-    public const uint WM_SETFOCUS = 0x0007;
+    internal const uint WM_KEYDOWN = 0x0100;
+    internal const uint WM_KEYUP = 0x0101;
+    internal const uint WM_CHAR = 0x0102;
+    internal const uint WM_SYSKEYDOWN = 0x104;
+    internal const uint WM_SYSKEYUP = 0x105;
+    internal const uint WM_LBUTTONDOWN = 0x0201;
+    internal const uint WM_LBUTTONUP = 0x0202;
+    internal const uint WM_MOUSEMOVE = 0x0200;
+    internal const int MK_LBUTTON = 0x0001;
+    internal const uint WM_MOUSEACTIVATE = 0x0021;
+    internal const int HTCLIENT = 1;
+    internal const uint WM_ACTIVATE = 0x0006;
+    internal const int WA_CLICKACTIVE = 2;
+    internal const uint WM_SETFOCUS = 0x0007;
 
 
     // The signature required for Windows message callbacks
-    public delegate IntPtr CBTCallback(int nCode, IntPtr wParam, IntPtr lParam);
+    internal delegate IntPtr CBTCallback(int nCode, IntPtr wParam, IntPtr lParam);
 
     // Native Windows message memory layout 
     [StructLayout(LayoutKind.Sequential)]

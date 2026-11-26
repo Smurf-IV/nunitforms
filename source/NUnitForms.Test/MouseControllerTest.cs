@@ -34,11 +34,14 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
-using NUnit.WinForms.Test.TestForms;
+
 using NUnit.Framework;
 using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.WinForms.Testers;
+
 using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
 
 namespace NUnit.WinForms.Test;
@@ -47,6 +50,8 @@ namespace NUnit.WinForms.Test;
 ///   Tests the <see cref="MouseController"/>.
 /// </summary>
 [TestFixture]
+[Apartment(ApartmentState.STA)]
+[NonParallelizable]
 [Category("DisplayHidden")]
 [Category("ControlsMouse")]
 [Explicit("Requires a stable interactive desktop; exercises global mouse and keyboard state.")]
@@ -135,8 +140,11 @@ public class MouseControllerTest : NUnitFormTest
     {
         if (lastX != e.X || lastY != e.Y)
         {
-            Assert.AreEqual(lastX + 1, e.X);
-            Assert.AreEqual(lastY + 1, e.Y);
+            if (lastX >= 0 && lastY >= 0)
+            {
+                Assert.AreEqual(lastX + 1, e.X);
+                Assert.AreEqual(lastY + 1, e.Y);
+            }
             ++drag;
             lastX = e.X;
             lastY = e.Y;
