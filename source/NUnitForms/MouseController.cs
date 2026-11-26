@@ -98,6 +98,7 @@ public class MouseController : IDisposable
     private MouseControl? _mouseControl;
 
     private Win32.Point _originalPosition;
+    private IntPtr _originalForegroundWindow;
 
     private PointF _scale;
     private Keys _pressedModifiers;
@@ -150,6 +151,7 @@ public class MouseController : IDisposable
         if (_mouseControl == null)
         {
             Win32.GetCursorPos(out _originalPosition);
+            _originalForegroundWindow = Win32.GetForegroundWindow();
         }
 
         ThrowHelper.ThrowIfNull(control, nameof(control));
@@ -239,10 +241,13 @@ public class MouseController : IDisposable
             }
             finally
             {
-                // Restore the mouse position
+                // Restore the desktop state changed while tests were using the controller.
                 Win32.SetCursorPos(_originalPosition.x, _originalPosition.y);
-
-                // No global input blocking to undo; leave system input state unchanged
+                if (_originalForegroundWindow != IntPtr.Zero)
+                {
+                    Win32.SetForegroundWindow(_originalForegroundWindow);
+                }
+                _mouseControl = null;
             }
         }
     }

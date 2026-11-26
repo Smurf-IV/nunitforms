@@ -81,22 +81,17 @@ internal class MouseControl
         {
             try
             {
-                // Try to force the test form to the foreground to avoid residual focus from prior modals
-                // If another thread owns the foreground window, temporarily attach input queues to allow activation.
-                IntPtr fg = Win32.GetForegroundWindow();
-                uint fgThread = 0;
-                if (fg != IntPtr.Zero)
-                {
-                    fgThread = Win32.GetWindowThreadProcessId(fg, out _);
-                }
-                var thisThread = (uint)AppDomain.GetCurrentThreadId();
+                IntPtr foreground = Win32.GetForegroundWindow();
+                uint foregroundThread = foreground == IntPtr.Zero
+                    ? 0
+                    : Win32.GetWindowThreadProcessId(foreground, out _);
                 uint formThread = Win32.GetWindowThreadProcessId(form.Handle, out _);
-                var attached = false;
+                bool attached = false;
                 try
                 {
-                    if (fgThread != 0 && fgThread != formThread)
+                    if (foregroundThread != 0 && foregroundThread != formThread)
                     {
-                        attached = Win32.AttachThreadInput(formThread, fgThread, true);
+                        attached = Win32.AttachThreadInput(formThread, foregroundThread, true);
                     }
                     Win32.SetForegroundWindow(form.Handle);
                     Win32.BringWindowToTop(form.Handle);
@@ -105,22 +100,16 @@ internal class MouseControl
                 {
                     if (attached)
                     {
-                        Win32.AttachThreadInput(formThread, fgThread, false);
+                        Win32.AttachThreadInput(formThread, foregroundThread, false);
                     }
                 }
             }
             catch
             {
-                // Fallback to Activate if direct foreground fails (e.g., desktop restrictions)
                 form.Activate();
             }
 
-            // Give the form a brief moment to become the active foreground window
-            for (var i = 0; i < 10 && Form.ActiveForm != form; i++)
-            {
-                Application.DoEvents();
-                try { Win32.BringWindowToTop(form.Handle); } catch { }
-            }
+            Application.DoEvents();
         }
 
         // Ensure the specific control has input focus before moving/clicking

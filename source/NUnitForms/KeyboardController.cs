@@ -58,6 +58,7 @@ public class KeyboardController : IDisposable
     private ISendKeys sendKeys;
     private KeyboardControl? keyboardControl;
     private bool restoreUserInput;
+    private IntPtr originalForegroundWindow;
 
     internal KeyboardController(ISendKeysFactory sendKeysFactory)
     {
@@ -106,6 +107,12 @@ public class KeyboardController : IDisposable
                 Win32.BlockInput(false);
                 restoreUserInput = false;
             }
+            if (originalForegroundWindow != IntPtr.Zero)
+            {
+                Win32.SetForegroundWindow(originalForegroundWindow);
+                originalForegroundWindow = IntPtr.Zero;
+            }
+            keyboardControl = null;
         }
     }
 
@@ -122,6 +129,10 @@ public class KeyboardController : IDisposable
 
         var c = control.TheObject as Control;
         FormsAssert.IsTrue(c != null, "Keyboard control requires tester of Control");
+        if (keyboardControl == null)
+        {
+            originalForegroundWindow = Win32.GetForegroundWindow();
+        }
         (sendKeys as IDisposable)?.Dispose();
         sendKeys = sendKeysFactory.Create(c.Handle);
 
