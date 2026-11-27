@@ -17,7 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v7
       with:
-        # lfs: true
         fetch-depth: 0
 
     - name: Setup Visual Studio
@@ -38,7 +37,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Restore dependencies
-      run: dotnet restore NUnitForms.slnx --no-cache
+      run: dotnet restore NUnitForms.slnx
       env:
         NUGET_AUTH_TOKEN: ${{ github.token }}
 
