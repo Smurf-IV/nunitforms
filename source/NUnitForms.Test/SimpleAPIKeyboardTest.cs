@@ -34,14 +34,13 @@
 using System;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
 
-using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 [Category("DisplayHidden")]
@@ -156,7 +155,6 @@ public class SimpleAPIKeyboardTest : NUnitFormTest
     }
 
     [Test]
-    [Explicit("This test leaves keyboard controller in a shift state affecting following test.")]
     public void UnbalancedGroupDelimitersThrowsException()
     {
         new TextBoxTestForm().Show();

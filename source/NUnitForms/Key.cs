@@ -1,4 +1,4 @@
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 //values from winuser.h
 
 /// <summary>

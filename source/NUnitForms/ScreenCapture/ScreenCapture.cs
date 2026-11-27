@@ -34,11 +34,9 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Util;
-
-
-namespace NUnit.Extensions.Forms.ScreenCapture;
+namespace NUnit.WinForms.ScreenCapture;
 
 ///<summary>
 /// This delegate defines a method that takes a window handle

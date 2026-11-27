@@ -33,20 +33,22 @@
 
 using System;
 using System.IO;
+using System.Text;
+using System.Threading;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
-[Explicit("Hangs - Needs investigation")]
+[Apartment(ApartmentState.STA)]
 public class SaveFileDialogTest : NUnitFormTest
 {
     private readonly LabelTester label1 = new("lblFileName");
     private string _fileName = "";
+    private string? _dialogFileName;
     private TestForms.SaveFileDialogTestForm form;
 
     public override void Setup()
@@ -89,19 +91,44 @@ public class SaveFileDialogTest : NUnitFormTest
     public void SaveDefaultFileHandler(string name, IntPtr hWnd, Form form)
     {
         var dlg_tester = new SaveFileDialogTester(hWnd);
-        dlg_tester.SaveFile();
-    }
-
-    private void EnsureFileDoesntExist()
-    {
-        // If exists remove it
-        if (File.Exists(_fileName))
+        int attempts = 0;
+        var timer = new System.Windows.Forms.Timer { Interval = 50 };
+        timer.Tick += (_, _) =>
         {
-            File.Delete(_fileName);
-        }
+            var fileName = new StringBuilder(512);
+            NUnit.WinForms.Util.Win32.GetDlgItemText(hWnd, 1148, fileName, fileName.Capacity);
+            _dialogFileName = fileName.ToString();
+            bool isDefaultFileName = IsExpectedDefaultFileName(_dialogFileName);
+            if (isDefaultFileName || ++attempts == 20)
+            {
+                timer.Stop();
+                if (isDefaultFileName)
+                {
+                    dlg_tester.SaveFile(_fileName);
+                }
+                else
+                {
+                    dlg_tester.ClickCancel();
+                }
+                timer.Dispose();
+            }
+        };
+        timer.Start();
     }
 
-    [Test, STAThread]
+    private bool IsExpectedDefaultFileName(string? dialogFileName)
+    {
+        if (string.IsNullOrEmpty(dialogFileName))
+        {
+            return false;
+        }
+
+        string expectedFileName = Path.GetFileName(_fileName);
+        return dialogFileName.Equals(expectedFileName, StringComparison.OrdinalIgnoreCase)
+               || dialogFileName.Equals(Path.GetFileNameWithoutExtension(expectedFileName), StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Test]
     public void CancelTest()
     {
         ModalFormHandler = CancelFileHandler;
@@ -109,30 +136,30 @@ public class SaveFileDialogTest : NUnitFormTest
         Assert.AreEqual(label1.Text, "cancel pressed");
     }
 
-    [Test, STAThread]
+    [Test]
     public void SaveTest()
     {
         ModalFormHandler = SaveFileHandler;
 
         // Generate a temporary file
-        _fileName = $"{Path.GetTempPath()}NUnitFormsTestFile.tmp";
-        EnsureFileDoesntExist();
+        _fileName = Path.Combine(Path.GetTempPath(), $"NUnitFormsTestFile_{Guid.NewGuid():N}.tmp");
 
         ClickSaveButton();
         Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
     }
 
 
-    [Test, STAThread]
+    [Test]
     public void SaveWithDefaultFile()
     {
         ModalFormHandler = SaveDefaultFileHandler;
 
-        _fileName = $"{Path.GetTempPath()}NUnitFormsDefaultTestFile.tmp";
-        EnsureFileDoesntExist();
+        _fileName = Path.Combine(Path.GetTempPath(), $"NUnitFormsDefaultTestFile_{Guid.NewGuid():N}.tmp");
 
         form.SetDefaultTestFileName(_fileName);
         ClickSaveButton();
+        Assert.That(IsExpectedDefaultFileName(_dialogFileName), Is.True,
+            $"Unexpected default filename displayed by the save dialog: '{_dialogFileName}'.");
         Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
     }
 }

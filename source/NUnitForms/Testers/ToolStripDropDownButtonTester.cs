@@ -33,17 +33,42 @@
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ToolStripItem tester for testing DropDownButtons.
 /// </summary>
-public partial class ToolStripDropDownButtonTester
+public partial class ToolStripDropDownButtonTester :
+    ToolStripItemTester<ToolStripDropDownButton, ToolStripDropDownButtonTester>
 {
+    public ToolStripDropDownButtonTester()
+    {
+    }
+
+    public ToolStripDropDownButtonTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ToolStripDropDownButtonTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ToolStripDropDownButtonTester(string name)
+        : base(name)
+    {
+    }
+
+    public ToolStripDropDownButtonTester(ToolStripDropDownButtonTester tester, int index)
+        : base((ToolStripItemTester<ToolStripDropDownButton, ToolStripDropDownButtonTester>)tester, index)
+    {
+    }
+    
     /// <summary>
-    /// Clickes the DropDownItem with the given index.
-    /// </summary>
-    /// <param name="index"></param>
+         /// Clickes the DropDownItem with the given index.
+         /// </summary>
+         /// <param name="index"></param>
     public void ClickDropDownItem(int index)
     {
         var found = false;

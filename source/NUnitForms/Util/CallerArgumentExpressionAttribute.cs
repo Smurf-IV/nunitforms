@@ -1,9 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 #pragma warning disable IDE0130
-namespace System.Runtime.CompilerServices;
+namespace NUnit.WinForms.Util;
 #pragma warning restore IDE0130
 
 /// <summary>

@@ -37,7 +37,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 
-namespace NUnit.Extensions.Forms.SendKey;
+namespace NUnit.WinForms.SendKey;
 
 public class SendKeysParser : ISendKeysParser
 {
@@ -104,6 +104,7 @@ public class SendKeysParser : ISendKeysParser
         _keyValueMap.Add("{RIGHT}", Keys.Right);
         _keyValueMap.Add("{CAPSLOCK}", Keys.Capital);
         _keyValueMap.Add("{CAPS}", Keys.Capital);
+        _keyValueMap.Add("{CAP}", Keys.Capital);
         _keyValueMap.Add("{SPACE}", Keys.Space);
         _keyValueMap.Add("{TAB}", Keys.Tab);
         _keyValueMap.Add("{UP}", Keys.Up);
@@ -111,6 +112,14 @@ public class SendKeysParser : ISendKeysParser
 
     private void ParseGroupElements(string group)
     {
+        if (group.Length > 1
+            && "+^%".IndexOf(group[0]) >= 0
+            && group[1] == '('
+            && group[group.Length - 1] != ')')
+        {
+            throw new System.ArgumentException("SendKeys group is missing a closing parenthesis.");
+        }
+
         var regex = new Regex(ModifiersPattern, RegexOptions.IgnorePatternWhitespace);
 
         var modifierCharacters = string.Empty;
@@ -153,7 +162,7 @@ public class SendKeysParser : ISendKeysParser
                             string lookup = "{" + token.ToUpperInvariant() + "}";
                             if (_keyValueMap.TryGetValue(lookup, out var repeatedKey))
                             {
-                                for (int i = 0; i < count; i++)
+                                for (var i = 0; i < count; i++)
                                 {
                                     _groupModifiers.Add(modifierCharacters);
                                     _escapedKeyCodes.Add(repeatedKey);

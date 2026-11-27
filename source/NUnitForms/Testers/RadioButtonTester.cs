@@ -31,7 +31,9 @@
 
 #endregion
 
-namespace NUnit.Extensions.Forms.Testers;
+using System.Windows.Forms;
+
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing RadioButtons.  
@@ -39,10 +41,34 @@ namespace NUnit.Extensions.Forms.Testers;
 /// <remarks>
 /// This class provides a convenience property for determining
 /// whether a RadioButton is checked.</remarks>
-public partial class RadioButtonTester
+public class RadioButtonTester : ControlTester<RadioButton, RadioButtonTester>
 {
+    public RadioButtonTester()
+    {
+    }
+
+    public RadioButtonTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public RadioButtonTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public RadioButtonTester(string name)
+        : base(name)
+    {
+    }
+
+    public RadioButtonTester(RadioButtonTester tester, int index)
+        : base((ControlTester<RadioButton, RadioButtonTester>)tester, index)
+    {
+    }
+    
     ///<summary>
-    /// Gets the Checked property of the underlying radio button.
-    ///</summary>
+         /// Gets the Checked property of the underlying radio button.
+         ///</summary>
     public bool Checked => Properties.Checked;
 }

@@ -33,7 +33,7 @@
 
 using System;
 
-namespace NUnit.Extensions.Forms.SendKey;
+namespace NUnit.WinForms.SendKey;
 
 public interface ISendKeysFactory
 {

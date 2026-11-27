@@ -32,10 +32,10 @@
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Util;
 using NUnit.Framework;
+using NUnit.WinForms.Util;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 public class GetMessageHookTest
 {

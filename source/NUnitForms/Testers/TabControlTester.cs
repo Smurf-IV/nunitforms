@@ -31,19 +31,45 @@
 
 #endregion
 
-namespace NUnit.Extensions.Forms.Testers;
+using System.Windows.Forms;
+
+
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing TabControls.
 /// </summary>
 /// <remarks>
 /// There is a convenience method for selecting a specified tab.</remarks>
-public partial class TabControlTester
+public partial class TabControlTester : ControlTester<TabControl, TabControlTester>
 {
+    public TabControlTester()
+    {
+    }
+
+    public TabControlTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public TabControlTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public TabControlTester(string name)
+        : base(name)
+    {
+    }
+
+    public TabControlTester(TabControlTester tester, int index)
+        : base((ControlTester<TabControl, TabControlTester>)tester, index)
+    {
+    }
     /// <summary>
-    /// Selects the tab at the specified index.
-    /// </summary>
-    /// <param name="index">The tab to select.</param>
+         /// Selects the tab at the specified index.
+         /// </summary>
+         /// <param name="index">The tab to select.</param>
     public void SelectTab(int index)
     {
         Properties.SelectedIndex = index;

@@ -33,13 +33,12 @@
 
 using System.Collections.Generic;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Finders;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Finders;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class FormFinderTest : NUnitFormTest

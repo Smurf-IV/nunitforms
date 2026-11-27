@@ -31,10 +31,10 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Util;
+using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing ListBoxes.  
@@ -42,11 +42,35 @@ namespace NUnit.Extensions.Forms.Testers;
 /// <remarks>
 /// It includes helper methods for selecting items from the list
 /// and for clearing those selections.</remarks>
-public partial class ListBoxTester
+public class ListBoxTester : ControlTester<ListBox, ListBoxTester>
 {
+    public ListBoxTester()
+    {
+    }
+
+    public ListBoxTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ListBoxTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ListBoxTester(string name)
+        : base(name)
+    {
+    }
+
+    public ListBoxTester(ListBoxTester tester, int index)
+        : base((ControlTester<ListBox, ListBoxTester>)tester, index)
+    {
+    }
+    
     /// <summary>
-    /// Clears the selections from the list box.
-    /// </summary>
+         /// Clears the selections from the list box.
+         /// </summary>
     public void ClearSelected()
     {
         Properties.ClearSelected();

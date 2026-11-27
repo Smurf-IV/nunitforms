@@ -33,15 +33,12 @@
 
 using System;
 using System.Windows.Forms;
+using NUnit.WinForms.Testers;
+using NUnit.WinForms.SendKey;
+using NUnit.WinForms.Util;
+using NUnit.WinForms.Win32Interop;
 
-using NUnit.Extensions.Forms.Generic_Testers;
-using NUnit.Extensions.Forms.SendKey;
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.Util;
-using NUnit.Extensions.Forms.Win32Interop;
-
-
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 //TODO: should make sure caps lock is off and return it to its pretest state
 //make sure all keys are released at the end of each test.
@@ -61,6 +58,7 @@ public class KeyboardController : IDisposable
     private ISendKeys sendKeys;
     private KeyboardControl? keyboardControl;
     private bool restoreUserInput;
+    private IntPtr originalForegroundWindow;
 
     internal KeyboardController(ISendKeysFactory sendKeysFactory)
     {
@@ -97,14 +95,24 @@ public class KeyboardController : IDisposable
     /// blocks.  The base class handles this for you.</remarks>
     public void Dispose()
     {
-        if (keyboardControl != null)
+        try
         {
-            if (restoreUserInput)
+            (sendKeys as IDisposable)?.Dispose();
+        }
+        finally
+        {
+            if (keyboardControl != null && restoreUserInput)
             {
                 //if this next line returns false, I used to throw an exception...
                 Win32.BlockInput(false);
                 restoreUserInput = false;
             }
+            if (originalForegroundWindow != IntPtr.Zero)
+            {
+                Win32.SetForegroundWindow(originalForegroundWindow);
+                originalForegroundWindow = IntPtr.Zero;
+            }
+            keyboardControl = null;
         }
     }
 
@@ -121,9 +129,19 @@ public class KeyboardController : IDisposable
 
         var c = control.TheObject as Control;
         FormsAssert.IsTrue(c != null, "Keyboard control requires tester of Control");
+        if (keyboardControl == null)
+        {
+            originalForegroundWindow = Win32.GetForegroundWindow();
+        }
+        (sendKeys as IDisposable)?.Dispose();
         sendKeys = sendKeysFactory.Create(c.Handle);
 
         keyboardControl = new KeyboardControl(control);
+        keyboardControl.Focus();
+        if (c is TextBoxBase textBox)
+        {
+            textBox.SelectAll();
+        }
 
         if (!restoreUserInput)
         {

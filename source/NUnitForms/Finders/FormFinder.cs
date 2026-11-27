@@ -34,12 +34,10 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Util;
-
-
-namespace NUnit.Extensions.Forms.Finders;
+namespace NUnit.WinForms.Finders;
 
 /// <summary>
 /// A class to help find a form according to its name.  NUnitForms users should not need to use

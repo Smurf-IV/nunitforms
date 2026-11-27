@@ -31,20 +31,18 @@
 
 #endregion
 
-using System;
-using System.IO;
-
-using NUnit.Extensions.Forms.Testers;
+using System.Threading;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 ///<summary>
 /// Test Fixture for the OpenFileDialogTester class.
 ///</summary>
 [TestFixture]
-[Explicit("This dialog caused my tests to hang.")]
+[Apartment(ApartmentState.STA)]
 public class OpenFileDialogTestOld : NUnitFormTest
 {
     ///<summary>
@@ -61,9 +59,9 @@ public class OpenFileDialogTestOld : NUnitFormTest
     ///</summary>
     public void OpenFileHandler()
     {
-        var dlg_tester = new OpenFileDialogTester("Open");
-        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
-        dlg_tester.OpenFile(fileName);
+        var dlgTester = new OpenFileDialogTester("Open");
+        string fileName = typeof(OpenFileDialogTester).Assembly.Location;
+        dlgTester.OpenFile(fileName);
     }
 
     ///<summary>
@@ -78,7 +76,7 @@ public class OpenFileDialogTestOld : NUnitFormTest
     ///<summary>
     /// Tests cancelling.
     ///</summary>
-    [Test, STAThread]
+    [Test]
     public void CancelTest()
     {
         var label1 = new LabelTester("lblFileName");
@@ -91,20 +89,20 @@ public class OpenFileDialogTestOld : NUnitFormTest
     ///<summary>
     /// Tests opening a file.
     ///</summary>
-    [Test, STAThread]
+    [Test]
     public void OpenTest()
     {
         var label1 = new LabelTester("lblFileName");
         ExpectFileDialog("OpenFileHandler");
-        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+        string fileName = typeof(OpenFileDialogTester).Assembly.Location;
         var open_btn = new ButtonTester("btOpenFile");
         open_btn.Click();
 
         Assert.AreEqual(label1.Text.ToLower(), fileName.ToLower());
     }
 
-    [Test, STAThread,
-     Ignore("This test is used for debug confidence, not to prove the functionality of the OpenFileDialogTester.")]
+    //[Test,
+    // Ignore("This test is used for debug confidence, not to prove the functionality of the OpenFileDialogTester.")]
     public void OpenTest_ConfidenceOnManyOpens()
     {
         for (var count = 0; count < 1000; count++)
@@ -117,13 +115,13 @@ public class OpenFileDialogTestOld : NUnitFormTest
 
             //SOLUTION
             /* The 'SetDlgItemText' function in the 'FileDialogTester.cs' file did not set the text
-             * in the dialog box occassionaly. The solution was to set the text twice on the dialog box.
+             * in the dialog box occasionally. The solution was to set the text twice on the dialog box.
              * The code below was run upto 1000 times to check that the solution works.
              */
 
             var label1 = new LabelTester("lblFileName");
             ExpectFileDialog("OpenFileHandler");
-            string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+            string fileName = typeof(OpenFileDialogTester).Assembly.Location;
             var open_btn = new ButtonTester("btOpenFile");
             open_btn.Click();
 

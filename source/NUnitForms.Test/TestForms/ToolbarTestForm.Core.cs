@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 public class ToolbarTestForm : Form
 {

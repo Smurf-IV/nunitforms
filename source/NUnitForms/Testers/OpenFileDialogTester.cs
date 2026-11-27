@@ -33,7 +33,7 @@
 
 using System;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// This class is used to test the built-in OpenFileDialog. This class is not meant to be
@@ -50,9 +50,9 @@ public class OpenFileDialogTester : FileDialogTester
     {
     }
     /// <summary>
-    /// Unreliable, kept for compatibility. The title is not actually used.
+    /// Kept for compatibility. Prefer the constructor that accepts the dialog handle.
     /// </summary>
-    [Obsolete("Unreliable, kept for compatibility. The title is not actually used.")]
+    [Obsolete("Title-based lookup is unreliable; prefer the constructor that accepts the dialog handle.")]
     public OpenFileDialogTester(string title)
         : base(title)
     {

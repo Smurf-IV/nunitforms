@@ -35,7 +35,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 /// <summary>
 /// Summary description for TreeViewTestForm.

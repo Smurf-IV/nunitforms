@@ -33,19 +33,44 @@
 
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 using System.Windows.Forms;
+using NUnit.WinForms.Testers;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing Toolbars.  
 /// </summary>
-public partial class ToolBarTester
+public partial class ToolBarTester : ControlTester<ToolBar, ToolBarTester>
 {
+    public ToolBarTester()
+    {
+    }
+
+    public ToolBarTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public ToolBarTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public ToolBarTester(string name)
+        : base(name)
+    {
+    }
+
+    public ToolBarTester(ToolBarTester tester, int index)
+        : base((ControlTester<ToolBar, ToolBarTester>)tester, index)
+    {
+    }
+    
     /// <summary>
-    /// Get the toolbar with the specified text
-    /// </summary>
-    /// <param name="buttonText">The text of the ToolBarButton</param>
-    /// <returns>A ToolBarButtonTester containing the matching ToolBarButton</returns>
+         /// Get the toolbar with the specified text
+         /// </summary>
+         /// <param name="buttonText">The text of the ToolBarButton</param>
+         /// <returns>A ToolBarButtonTester containing the matching ToolBarButton</returns>
     public ToolBarButtonTester? GetButton(string buttonText)
     {
         for (var i = 0; i < Properties.Buttons.Count; ++i)

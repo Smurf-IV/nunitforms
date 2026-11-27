@@ -31,13 +31,12 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using ToolStripSplitButtonTester = NUnit.WinForms.Testers.ToolStripSplitButtonTester;
 
-using ToolStripSplitButtonTester = NUnit.Extensions.Forms.Testers.ToolStripSplitButtonTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ToolStripSplitButtonTest : NUnitFormTest

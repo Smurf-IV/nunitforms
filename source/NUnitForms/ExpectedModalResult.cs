@@ -33,7 +33,7 @@
 
 using System.Collections.ObjectModel;
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// This class stores expected and unexpected dialog information.

@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 partial class ToolStripContainerTestForm
 {
@@ -32,7 +32,7 @@ partial class ToolStripContainerTestForm
     /// </summary>
     private void InitializeComponent()
     {
-        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestApplications.TestForms.ToolStripContainerTestForm));
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NUnit.WinForms.Test.TestForms.ToolStripContainerTestForm));
         this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
         this.tb1 = new System.Windows.Forms.TextBox();
         this.b1 = new System.Windows.Forms.Button();

@@ -33,8 +33,7 @@
 
 using System;
 
-
-namespace NUnit.Extensions.Forms.Exceptions;
+namespace NUnit.WinForms.Exceptions;
 
 /// <summary>
 /// Defines a base class for exceptions generated when testing forms.

@@ -34,10 +34,7 @@
 using System;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.Generic_Testers;
-
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing forms.

@@ -34,7 +34,7 @@
 
 using System;
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// Meant to be used as a member in a test class not derived from NUnitFormTest.

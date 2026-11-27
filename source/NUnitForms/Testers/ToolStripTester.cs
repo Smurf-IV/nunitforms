@@ -30,68 +30,46 @@
 ' ******************************************************************************************************************/
 
 #endregion
-#if NETFRAMEWORK
+
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.Generic_Testers;
-
-
 #pragma warning disable IDE0130
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// Provides test access to a Windows Forms ToolStrip control.
 /// </summary>
-public class ToolStripTester : ControlTester<ToolStrip, ToolStripTester>
+public partial class ToolStripTester : ControlTester<ToolStrip, ToolStripTester>
 {
-    /// <summary>
-    /// Initializes a new instance of the ToolStripTester class.
-    /// </summary>
     public ToolStripTester()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the ToolStripTester class targeting 
-    /// a named ToolStrip on a given form instance.
-    /// </summary>
-    /// <param name="name">The name of the ToolStrip control.</param>
-    /// <param name="form">The Form containing the ToolStrip.</param>
     public ToolStripTester(string name, Form form)
         : base(name, form)
     {
     }
 
-    /// <summary>
-    /// ...targeting a named ToolStrip on a named form.
-    /// </summary>
     public ToolStripTester(string name, string formName)
         : base(name, formName)
     {
     }
 
-    /// <summary>
-    /// ...targeting a named ToolStrip on the active form.
-    /// </summary>
     public ToolStripTester(string name)
         : base(name)
     {
     }
 
-    /// <summary>
-    /// Initializes by cloning another tester for indexed item access.
-    /// </summary>
     public ToolStripTester(ToolStripTester tester, int index)
-        : base(tester, index)
+        : base((ControlTester<ToolStrip, ToolStripTester>)tester, index)
     {
     }
-
+    
     /// <summary>
-    /// Retrieves a ToolStripItemTester for the specified item name.
-    /// </summary>
+         /// Retrieves a ToolStripItemTester for the specified item name.
+         /// </summary>
     public ToolStripItemTester GetItem(string itemName)
     {
         return new ToolStripItemTester(itemName, Properties.FindForm());
     }
 }
-#endif

@@ -33,11 +33,34 @@
 
 using System.Windows.Forms;
 
+namespace NUnit.WinForms.Testers;
 
-namespace NUnit.Extensions.Forms.Testers;
-
-public partial class LinkLabelTester
+public class LinkLabelTester : ControlTester<LinkLabel, LinkLabelTester>
 {
+    public LinkLabelTester()
+    {
+    }
+
+    public LinkLabelTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public LinkLabelTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public LinkLabelTester(string name)
+        : base(name)
+    {
+    }
+
+    public LinkLabelTester(LinkLabelTester tester, int index)
+        : base((ControlTester<LinkLabel, LinkLabelTester>)tester, index)
+    {
+    }
+
     ///<summary>
     /// Clicks the LinkLabel.
     /// NOTE: Should this do "LinkClick" instead?

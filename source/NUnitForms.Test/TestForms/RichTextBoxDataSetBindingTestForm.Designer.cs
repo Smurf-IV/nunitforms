@@ -3,7 +3,7 @@ using System.Data;
 using System.Windows.Forms;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 partial class RichTextBoxDataSetBindingTestForm
 {

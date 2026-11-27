@@ -2,9 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
+using System;
+
+//#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 #pragma warning disable IDE0130
-namespace System.Diagnostics.CodeAnalysis;
+namespace NUnit.WinForms.Util;
 #pragma warning restore IDE0130
 
 /// <summary>Specifies that <see langword="null" /> is allowed as an input even if the corresponding type disallows it.</summary>
@@ -53,4 +55,4 @@ public sealed class DoesNotReturnIfAttribute : Attribute
     public bool ParameterValue { get; }
 }
 
-#endif
+//#endif

@@ -31,14 +31,13 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using TreeViewTester = NUnit.WinForms.Testers.TreeViewTester;
 
-using TreeViewTester = NUnit.Extensions.Forms.Testers.TreeViewTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class TreeViewTest : NUnitFormTest

@@ -34,16 +34,14 @@
 using System;
 using System.Collections.Specialized;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
+using ListBoxTester = NUnit.WinForms.Testers.ListBoxTester;
 
-using ListBoxTester = NUnit.Extensions.Forms.Testers.ListBoxTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ListBoxTest : NUnitFormTest

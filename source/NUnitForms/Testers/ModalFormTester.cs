@@ -36,11 +36,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using NUnit.WinForms.Util;
 
-using NUnit.Extensions.Forms.Util;
-
-
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// Used to specify a handler for a Modal form that is displayed during testing.
@@ -78,6 +76,8 @@ public class ModalFormTester : IDisposable
     /// Gets or sets the handler for modal form events.
     /// </summary>
     public ModalFormHandler? FormHandler { get; set; }
+
+    internal bool HasPendingModernHandler => FormHandler != null && FormHandler != (ModalFormHandler)Adapter;
 
     private Win32.CBTCallback? callback;
     private IntPtr handleToHook = IntPtr.Zero;
@@ -176,23 +176,19 @@ public class ModalFormTester : IDisposable
     /// </summary>
     public Result Verify()
     {
-        if (handlers.Count == 0)
-        {
-            var res = new Result(FormHandler == null, unexpectedModals);
-            unexpectedModals = [];
-            return res;
-        }
-
-        // the old interface was used
+        bool allModalsShown = !HasPendingModernHandler;
         foreach (string name in handlers.Keys)
         {
             var h = (Handler)handlers[name];
             if (!h.Verify())
             {
-                return new Result(false, []);
+                allModalsShown = false;
             }
         }
-        return new Result(true, []);
+
+        var result = new Result(allModalsShown, unexpectedModals);
+        unexpectedModals = [];
+        return result;
     }
 
     private void BeginListening()
@@ -226,8 +222,12 @@ public class ModalFormTester : IDisposable
             h = UnexpectedModal;
         }
 
+        bool isLegacyHandler = h == (ModalFormHandler)Adapter;
         h(name, hWnd, form);
-        FormHandler = null; // It has been invoked so set to null for the verify to pass
+        if (!isLegacyHandler && FormHandler == h)
+        {
+            FormHandler = null; // It has been invoked so set to null for the verify to pass
+        }
     }
 
     private List<string> unexpectedModals;
@@ -331,7 +331,7 @@ public class ModalFormTester : IDisposable
         handlers[name] = new Handler(handler, (expected ? 1 : 0), name);
     }
 
-    private void Adapter(string name, IntPtr hWnd, Form f)
+    private void Adapter(string? name, IntPtr hWnd, Form? f)
     {
         if (name == null)
         {
@@ -344,9 +344,15 @@ public class ModalFormTester : IDisposable
         }
 
         // Vista 64 hack
-        if (name == "Save as" || name == "Enregistrer sous")
+        if (name.Equals("Save as", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("Enregistrer sous", StringComparison.OrdinalIgnoreCase))
         {
             name = FileDialogTester.InitialFileDialogName;
+        }
+
+        if (handlers[name] == null && f != null && handlers[f.Text] != null)
+        {
+            name = f.Text;
         }
 
         if (handlers[name] is not Handler namedHandler)
@@ -356,7 +362,6 @@ public class ModalFormTester : IDisposable
                     "UnexpectedModal"), 0);
         }
         namedHandler.Invoke(hWnd);
-        FormHandler = Adapter;
     }
 
     ///<summary>

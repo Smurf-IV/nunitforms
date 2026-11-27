@@ -33,15 +33,15 @@
 
 using System;
 using System.IO;
-
-using NUnit.Extensions.Forms.Testers;
+using System.Threading;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
-[Explicit("This dialog caused my tests to hang.")]
+[Apartment(ApartmentState.STA)]
 public class SaveFileDialogTestOld : NUnitFormTest
 {
     private readonly LabelTester label1 = new("lblFileName");
@@ -85,19 +85,11 @@ public class SaveFileDialogTestOld : NUnitFormTest
     public void SaveDefaultFileHandler()
     {
         var dlg_tester = new SaveFileDialogTester("Save As");
-        dlg_tester.SaveFile();
+        dlg_tester.SaveFile(_fileName);
     }
 
-    private void EnsureFileDoesntExist()
-    {
-        // If exists remove it
-        if (File.Exists(_fileName))
-        {
-            File.Delete(_fileName);
-        }
-    }
 
-    [Test, STAThread]
+    [Test]
     public void CancelTest()
     {
         ExpectFileDialog("CancelFileHandler");
@@ -105,27 +97,25 @@ public class SaveFileDialogTestOld : NUnitFormTest
         Assert.AreEqual(label1.Text, "cancel pressed");
     }
 
-    [Test, STAThread]
+    [Test]
     public void SaveTest()
     {
         ExpectFileDialog("SaveFileHandler");
 
         // Generate a temporary file
-        _fileName = $"{Path.GetTempPath()}NUnitFormsTestFile.tmp";
-        EnsureFileDoesntExist();
+        _fileName = Path.Combine(Path.GetTempPath(), $"NUnitFormsTestFile_{Guid.NewGuid():N}.tmp");
 
         ClickSaveButton();
         Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
     }
 
 
-    [Test, STAThread]
+    [Test]
     public void SaveWithDefaultFile()
     {
         ExpectFileDialog("SaveDefaultFileHandler");
 
-        _fileName = $"{Path.GetTempPath()}NUnitFormsDefaultTestFile.tmp";
-        EnsureFileDoesntExist();
+        _fileName = Path.Combine(Path.GetTempPath(), $"NUnitFormsDefaultTestFile_{Guid.NewGuid():N}.tmp");
 
         form.SetDefaultTestFileName(_fileName);
         ClickSaveButton();

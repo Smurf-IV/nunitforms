@@ -33,11 +33,11 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using NUnit.Extensions.Forms.Util;
+using NUnit.WinForms.Util;
 
-[assembly: InternalsVisibleTo("NUnitForms.Test")]
+[assembly: InternalsVisibleTo("NUnit.WinForms.Test")]
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// Do not use directly.  Just use base test class and it takes care of it.

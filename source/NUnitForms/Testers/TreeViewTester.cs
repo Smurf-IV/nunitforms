@@ -33,19 +33,43 @@
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A ControlTester for testing TreeViews.
 /// </summary>
 /// <remarks>
 /// There is a convenience method for selecting a node in the tree.</remarks>
-public partial class TreeViewTester
+public partial class TreeViewTester : ControlTester<TreeView, TreeViewTester>
 {
+    public TreeViewTester()
+    {
+    }
+
+    public TreeViewTester(string name, Form form)
+        : base(name, form)
+    {
+    }
+
+    public TreeViewTester(string name, string formName)
+        : base(name, formName)
+    {
+    }
+
+    public TreeViewTester(string name)
+        : base(name)
+    {
+    }
+
+    public TreeViewTester(TreeViewTester tester, int index)
+        : base((ControlTester<TreeView, TreeViewTester>)tester, index)
+    {
+    }
+    
     /// <summary>
-    /// Selects a node in the tree.
-    /// </summary>
-    /// <param name="indices">an array of the indexes of the node to select</param>
+         /// Selects a node in the tree.
+         /// </summary>
+         /// <param name="indices">an array of the indexes of the node to select</param>
     public void SelectNode(params int[] indices)
     {
         TreeNode? currentNode = null;

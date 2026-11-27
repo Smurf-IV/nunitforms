@@ -1,9 +1,8 @@
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 public partial class SaveFileDialogTestForm : Form
 {
@@ -21,12 +20,12 @@ public partial class SaveFileDialogTestForm : Form
 
     private void btSave_Click(object sender, EventArgs e)
     {
-        var save_dlg = new SaveFileDialog();
+        var save_dlg = new SaveFileDialog { AutoUpgradeEnabled = false };
         if (defaultFilename != string.Empty)
         {
-            save_dlg.InitialDirectory = Path.GetDirectoryName(defaultFilename);
-            save_dlg.FileName = Path.GetFileName(defaultFilename);
+            save_dlg.FileName = defaultFilename;
         }
+        save_dlg.RestoreDirectory = true;
 
         if (save_dlg.ShowDialog() == DialogResult.OK)
         {

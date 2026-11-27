@@ -32,11 +32,9 @@
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Generic_Testers;
-
 
 #pragma warning disable IDE0130
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 
 public class StatusStripTester : ControlTester<StatusStrip, StatusStripTester>
@@ -61,7 +59,7 @@ public class StatusStripTester : ControlTester<StatusStrip, StatusStripTester>
     }
 
     public StatusStripTester(StatusStripTester tester, int index)
-        : base(tester, index)
+        : base((ControlTester<StatusStrip, StatusStripTester>)tester, index)
     {
     }
 
@@ -70,3 +68,4 @@ public class StatusStripTester : ControlTester<StatusStrip, StatusStripTester>
         return new ToolStripItemTester(itemName, Properties.FindForm());
     }
 }
+

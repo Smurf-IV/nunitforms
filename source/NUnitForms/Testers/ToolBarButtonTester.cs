@@ -35,7 +35,7 @@
 
 using System.Windows.Forms;
 
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 /// <summary>
 /// A tester for toolbar buttons.

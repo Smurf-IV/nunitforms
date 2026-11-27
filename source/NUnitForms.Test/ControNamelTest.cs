@@ -31,13 +31,13 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.TestApplications.CustomTesters;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.CustomTesters;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ControlNameTest : NUnitFormTest

@@ -33,12 +33,13 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
+using NUnit.WinForms.Testers;
+using NUnit.WinForms.Testers;
+using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
 
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// Experimental "FIT" interface.

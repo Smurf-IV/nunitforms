@@ -31,12 +31,12 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.SupportedAPI;
+namespace NUnit.WinForms.Test.SupportedAPI;
 
 [TestFixture]
 public class SupportFormSpecificationTest : NUnitFormTest

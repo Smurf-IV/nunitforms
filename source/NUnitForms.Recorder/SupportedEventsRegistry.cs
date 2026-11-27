@@ -34,7 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Util;
+using NUnit.WinForms.Util;
 
 namespace NUnitForms.Recorder;
 

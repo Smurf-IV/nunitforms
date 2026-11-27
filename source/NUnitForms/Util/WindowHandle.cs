@@ -34,7 +34,7 @@
 using System;
 using System.Text;
 
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 ///<summary>
 /// Additional methods for working with Window Handles.

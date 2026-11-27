@@ -33,13 +33,13 @@
 
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class MainMenuTest : NUnitFormTest

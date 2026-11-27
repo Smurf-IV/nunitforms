@@ -32,15 +32,13 @@
 #endregion
 
 using System;
-
-using NUnit.Extensions.Forms.Testers;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
+using NUnit.WinForms.Test.TestForms;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
+using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
 
-using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
 
-
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 [Category("DisplayHidden")]

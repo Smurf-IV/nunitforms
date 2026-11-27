@@ -31,7 +31,7 @@
 
 #endregion
 
-namespace NUnit.Extensions.Forms.SendKey;
+namespace NUnit.WinForms.SendKey;
 
 public interface ISendKeys
 {

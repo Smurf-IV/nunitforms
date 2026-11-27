@@ -37,13 +37,12 @@ using System.Linq;
 using System.Windows.Forms;
 
 using FakeItEasy;
-
-using NUnit.Extensions.Forms.SendKey;
-using NUnit.Extensions.Forms.Win32Interop;
 using NUnit.Framework;
+using NUnit.WinForms.SendKey;
+using NUnit.WinForms.Win32Interop;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class SendKeysTests : MockingTestFixture
@@ -150,28 +149,16 @@ public class SendKeysTests : MockingTestFixture
     }
 
     [Test]
-    [Ignore("This test is keyboard layout dependent.")]
     public void SendWait_SimpleText()
     {
         StubFormatter("aA {{}1.", "aA {1.", "", Keys.None);
 
         keyboardSendKeys.SendWait("aA {{}1.");
 
-        ExpectKeyDownAndRelease(Keys.A);
-
-        ExpectKeyDown(Keys.ShiftKey);
-        ExpectKeyDownAndRelease(Keys.A);
-        ExpectKeyUp(Keys.ShiftKey);
-
-        ExpectKeyDownAndRelease(Keys.Space);
-
-        // This will be keyboard layout dependent
-        ExpectKeyDown(Keys.ShiftKey);
-        ExpectKeyDownAndRelease(Keys.Oem4); // '[' key shifted to give '{'
-        ExpectKeyUp(Keys.ShiftKey);
-
-        ExpectKeyDownAndRelease(Keys.NumPad1);
-        ExpectKeyDownAndRelease(Keys.OemPeriod);
+        foreach (char character in "aA {1.")
+        {
+            A.CallTo(() => keyboardInput.SendChar(window, character)).MustHaveHappenedOnceExactly();
+        }
     }
 
     private void ExpectKeyDown(Keys keyCode)

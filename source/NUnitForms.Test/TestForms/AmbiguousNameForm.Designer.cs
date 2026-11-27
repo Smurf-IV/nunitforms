@@ -2,10 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using NUnit.WinForms.Exceptions;
 
-using NUnit.Extensions.Forms.Exceptions;
-
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 /// <summary>
 /// Form for use in testing <see cref="AmbiguousNameException"/>.

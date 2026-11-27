@@ -33,7 +33,7 @@
 
 using NUnit.Framework;
 
-namespace NUnit.Extensions.Forms;
+namespace NUnit.WinForms;
 
 /// <summary>
 /// One of three base classes for your NUnitForms tests.  This one can be

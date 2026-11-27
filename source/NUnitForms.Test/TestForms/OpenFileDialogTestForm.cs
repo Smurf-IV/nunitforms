@@ -35,7 +35,7 @@ using System;
 using System.Windows.Forms;
 
 
-namespace NUnit.Extensions.Forms.TestApplications.TestForms;
+namespace NUnit.WinForms.Test.TestForms;
 
 ///<summary>
 /// Test form for the OpenFileDialogTester
@@ -43,7 +43,7 @@ namespace NUnit.Extensions.Forms.TestApplications.TestForms;
 public partial class OpenFileDialogTestForm : Form
 {
     /// <summary>
-    /// Constructes a new OpenFileDialogTestForm.
+    /// Constructs a new OpenFileDialogTestForm.
     /// </summary>
     public OpenFileDialogTestForm()
     {
@@ -52,7 +52,7 @@ public partial class OpenFileDialogTestForm : Form
 
     private void btOpenFile_Click(object sender, EventArgs e)
     {
-        var open_dlg = new OpenFileDialog();
+        var open_dlg = new OpenFileDialog { AutoUpgradeEnabled = false };
         if (open_dlg.ShowDialog() == DialogResult.OK)
         {
             lblFileName.Text = open_dlg.FileName;

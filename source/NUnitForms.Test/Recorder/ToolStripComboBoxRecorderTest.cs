@@ -31,17 +31,14 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 using NUnitForms.Recorder;
 
-namespace NUnit.Extensions.Forms.TestApplications.Recorder;
+namespace NUnit.WinForms.Test.Recorder;
 
 [TestFixture]
 [Category("Recorder")]
-#if NETCOREAPP
-[Explicit("To be replaced by supported type")]
-#endif
 public class ToolStripComboBoxRecorderTest : NUnitFormTest
 {
     [Test]

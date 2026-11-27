@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
+[Apartment(ApartmentState.STA)]
 public class OuterTestTest
 {
-    [Test, STAThread]
-    [Explicit("Hangs for some reason - Does not show the first dialog")]
+    [Test]
     public void RunTwiceWithoutFailure()
     {
         using (var nuf = new OuterTest())
         {
-            using (var dlg = new OpenFileDialog())
+            using (var dlg = new OpenFileDialog { AutoUpgradeEnabled = false })
             {
                 dlg.CheckFileExists = false;
 
@@ -32,7 +31,7 @@ public class OuterTestTest
         }
         using (var nuf = new OuterTest())
         {
-            using (var dlg = new OpenFileDialog())
+            using (var dlg = new OpenFileDialog { AutoUpgradeEnabled = false })
             {
                 dlg.CheckFileExists = false;
 

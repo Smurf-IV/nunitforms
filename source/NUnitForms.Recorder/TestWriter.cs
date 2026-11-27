@@ -35,9 +35,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.Finders;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Finders;
 
 
 namespace NUnitForms.Recorder;
@@ -211,23 +210,20 @@ public class TestWriter
     {
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         string findName = name.Replace("_", ".");
+        MenuItem? menuItem = null;
 #else
         string findName = name;
 #endif
         Control? control = null;
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
-        findName = name.Replace("_", ".");
-        MenuItem? menuItem = null;
         try
-#endif
         {
             control = new Finder<Control>(findName, form).Find();
         }
-#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         catch (NoSuchControlException)
         {
         }
 
+#if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
         try
         {
             menuItem = new Finder<MenuItem>(findName, form).Find();
@@ -241,6 +237,11 @@ public class TestWriter
             )
         {
             throw new AmbiguousNameException(name);
+        }
+#else
+        if (control == null)
+        {
+            _ = new Finder<ToolStripItem>(findName, form).Find();
         }
 #endif
     }

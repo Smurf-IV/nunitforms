@@ -1,11 +1,11 @@
 #if !NETFRAMEWORK
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Test.TestForms;
+using NUnit.WinForms.Testers;
 using NUnit.Framework;
 
-using ToolBarTester = NUnit.Extensions.Forms.Testers.ToolBarTester;
+using ToolBarTester = NUnit.WinForms.Testers.ToolBarTester;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ToolbarTest : NUnitFormTest

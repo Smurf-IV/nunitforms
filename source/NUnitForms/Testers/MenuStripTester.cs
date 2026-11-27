@@ -32,11 +32,9 @@
 #endregion
 
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Generic_Testers;
-
 
 #pragma warning disable IDE0130
-namespace NUnit.Extensions.Forms.Testers;
+namespace NUnit.WinForms.Testers;
 
 
 public class MenuStripTester : ControlTester<MenuStrip, MenuStripTester>
@@ -61,7 +59,7 @@ public class MenuStripTester : ControlTester<MenuStrip, MenuStripTester>
     }
 
     public MenuStripTester(MenuStripTester tester, int index)
-        : base(tester, index)
+        : base((ControlTester<MenuStrip, MenuStripTester>)tester, index)
     {
     }
 

@@ -34,7 +34,7 @@
 #if NETFRAMEWORK  // https://github.com/dotnet/designs/blob/main/accepted/2020/net5/net5.md#preprocessor-symbols
 using System;
 using System.Windows.Forms;
-using NUnit.Extensions.Forms.Testers;
+using NUnit.WinForms.Testers;
 
 namespace NUnitForms.Recorder;
 

@@ -35,7 +35,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NUnit.Extensions.Forms.Util;
+namespace NUnit.WinForms.Util;
 
 /// <summary>
 /// Installs a GetMessageHook, and maintains a list of user supplied callbacks.
@@ -112,7 +112,7 @@ public static class GetMessageHook
         {
             unsafe
             {
-                Win32.MSG* msg = (Win32.MSG*)lParam;
+                var msg = (Win32.MSG*)lParam;
                 if (msg->message == (uint)s_msgId)
                 {
                     List<Callback> tmp = s_callbacks;

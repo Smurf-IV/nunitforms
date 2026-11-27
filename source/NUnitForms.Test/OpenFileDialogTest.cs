@@ -32,20 +32,19 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Threading;
 using System.Windows.Forms;
-
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Testers;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 ///<summary>
 /// Test Fixture for the OpenFileDialogTester class.
 ///</summary>
 [TestFixture]
-[Explicit("This dialog caused my tests to hang.")]
+[Apartment(ApartmentState.STA)]
 public class OpenFileDialogTest : NUnitFormTest
 {
 
@@ -64,7 +63,7 @@ public class OpenFileDialogTest : NUnitFormTest
     public void OpenFileHandler(string name, IntPtr hWnd, Form form)
     {
         var dlg_tester = new OpenFileDialogTester(hWnd);
-        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+        string fileName = typeof(OpenFileDialogTester).Assembly.Location;
         dlg_tester.OpenFile(fileName);
     }
 
@@ -80,7 +79,7 @@ public class OpenFileDialogTest : NUnitFormTest
     ///<summary>
     /// Tests cancelling.
     ///</summary>
-    [Test, STAThread]
+    [Test]
     public void CancelTest()
     {
         var f = new TestForms.OpenFileDialogTestForm();
@@ -104,14 +103,14 @@ public class OpenFileDialogTest : NUnitFormTest
     ///<summary>
     /// Tests opening a file.
     ///</summary>
-    [Test, STAThread]
+    [Test]
     public void OpenTest()
     {
         var f = new TestForms.OpenFileDialogTestForm();
         f.Show();
         var label1 = new LabelTester("lblFileName");
         ModalFormHandler = OpenFileHandler;
-        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+        string fileName = typeof(OpenFileDialogTester).Assembly.Location;
         var open_btn = new ButtonTester("btOpenFile");
         open_btn.Click();
 
@@ -142,7 +141,7 @@ public class OpenFileDialogTest : NUnitFormTest
 
             var label1 = new LabelTester("lblFileName");
             ModalFormHandler = OpenFileHandler;
-            string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NUnitForms.dll");
+            string fileName = typeof(OpenFileDialogTester).Assembly.Location;
             var open_btn = new ButtonTester("btOpenFile");
             open_btn.Click();
 

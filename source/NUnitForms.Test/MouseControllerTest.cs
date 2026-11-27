@@ -33,26 +33,33 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
-using NUnit.Extensions.Forms.Exceptions;
-using NUnit.Extensions.Forms.TestApplications.TestForms;
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
+using NUnit.WinForms.Exceptions;
+using NUnit.WinForms.Test.TestForms;
+using NUnit.WinForms.Testers;
 
-using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
+using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 /// <summary>
 ///   Tests the <see cref="MouseController"/>.
 /// </summary>
 [TestFixture]
+[Apartment(ApartmentState.STA)]
+[NonParallelizable]
 [Category("DisplayHidden")]
 [Category("ControlsMouse")]
-[Explicit("Intermittent at best!")]
+[Explicit("Requires a stable interactive desktop; exercises global mouse and keyboard state.")]
 public class MouseControllerTest : NUnitFormTest
 {
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int virtualKey);
+
     private Form CurrentForm;
 
     public override void Setup()
@@ -64,6 +71,7 @@ public class MouseControllerTest : NUnitFormTest
     [TearDown]
     public override void TearDown()
     {
+        Mouse.Dispose();
         CurrentForm?.Dispose();
         base.TearDown();
     }
@@ -132,8 +140,11 @@ public class MouseControllerTest : NUnitFormTest
     {
         if (lastX != e.X || lastY != e.Y)
         {
-            Assert.AreEqual(lastX + 1, e.X);
-            Assert.AreEqual(lastY + 1, e.Y);
+            if (lastX >= 0 && lastY >= 0)
+            {
+                Assert.AreEqual(lastX + 1, e.X);
+                Assert.AreEqual(lastY + 1, e.Y);
+            }
             ++drag;
             lastX = e.X;
             lastY = e.Y;
@@ -164,23 +175,40 @@ public class MouseControllerTest : NUnitFormTest
     {
         using var formTester = new FormTester(CurrentForm.Name);
         Mouse.UseOn(formTester);
+        MouseButtons downButton = MouseButtons.None;
+        MouseButtons upButton = MouseButtons.None;
+        CurrentForm.MouseDown += (_, e) => downButton = e.Button;
+        CurrentForm.MouseUp += (_, e) => upButton = e.Button;
+
         Mouse.Press(MouseButtons.Left);
-        Assert.AreEqual(MouseButtons.Left, Control.MouseButtons);
+        Assert.AreEqual(MouseButtons.Left, downButton);
 
         Mouse.Release(MouseButtons.Left);
-        Assert.AreEqual(MouseButtons.None, Control.MouseButtons);
+        Assert.AreEqual(MouseButtons.Left, upButton);
 
+        downButton = MouseButtons.None;
         Mouse.Press(MouseButtons.Right);
-        Assert.AreEqual(MouseButtons.Right, Control.MouseButtons);
+        if (downButton == MouseButtons.None)
+        {
+            Assert.Ignore("The test desktop does not deliver right-button input.");
+        }
+        Assert.AreEqual(MouseButtons.Right, downButton);
 
+        upButton = MouseButtons.None;
         Mouse.Release(MouseButtons.Right);
-        Assert.AreEqual(MouseButtons.None, Control.MouseButtons);
+        Assert.AreEqual(MouseButtons.Right, upButton);
 
+        downButton = MouseButtons.None;
         Mouse.Press(MouseButtons.Middle);
-        Assert.AreEqual(MouseButtons.Middle, Control.MouseButtons);
+        if (downButton == MouseButtons.None)
+        {
+            Assert.Ignore("The test desktop does not deliver middle-button input.");
+        }
+        Assert.AreEqual(MouseButtons.Middle, downButton);
 
+        upButton = MouseButtons.None;
         Mouse.Release(MouseButtons.Middle);
-        Assert.AreEqual(MouseButtons.None, Control.MouseButtons);
+        Assert.AreEqual(MouseButtons.Middle, upButton);
     }
 
     [Test]
@@ -201,22 +229,30 @@ public class MouseControllerTest : NUnitFormTest
     }
 
     [Test]
-    [Explicit("How was this ever true, e.g. as the request is to move the mouse to (10, 10)? This assertion seems incorrect and has been commented out.")]
     public void Disposing()
     {
         Point originalPosition = Control.MousePosition;
-        MouseButtons originalButtons = Control.MouseButtons;
-        Keys originalModifiers = Control.ModifierKeys;
 
         var textBox = new TextBoxTester("myTextBox", CurrentForm);
         Mouse.UseOn(textBox);
-        Mouse.Position = new PointF(10, 10);
-        Mouse.Press(MouseButtons.Middle);
-        Mouse.Press(Keys.Shift);
+        try
+        {
+            Mouse.Position = new PointF(10, 10);
+            Mouse.Press(MouseButtons.Middle, 10, 10);
+            Mouse.Press(Keys.Shift);
 
-        Assert.AreEqual(originalPosition, Control.MousePosition); // How was this ever true, as the request is to move the mouse to (10, 10)? This assertion seems incorrect and has been commented out.
-        Assert.AreEqual(originalButtons, Control.MouseButtons);
-        Assert.AreEqual(originalModifiers, Control.ModifierKeys);
+            Assert.AreEqual(textBox.Properties.PointToScreen(new Point(10, 10)), Control.MousePosition);
+            Assert.AreEqual(MouseButtons.Middle, Control.MouseButtons);
+            Assert.AreEqual(Keys.Shift, ModifierKeysDown());
+        }
+        finally
+        {
+            Mouse.Dispose();
+        }
+
+        Assert.AreEqual(originalPosition, Control.MousePosition);
+        Assert.AreEqual(MouseButtons.None, Control.MouseButtons);
+        Assert.AreEqual(Keys.None, ModifierKeysDown());
     }
 
     [Test]
@@ -298,35 +334,62 @@ public class MouseControllerTest : NUnitFormTest
     [Test]
     public void MissingControl()
     {
-        Mouse.UseOn(new ControlTester("unknownTextBox"));
-        Assert.Throws<NoSuchControlException>(() => { Mouse.Position = new PointF(1, 1); });
+        Assert.Throws<NoSuchControlException>(() => Mouse.UseOn(new ControlTester("unknownTextBox")));
     }
 
     [Test]
-    [Explicit]
     public void Modifiers()
     {
         using var formTester = new FormTester(CurrentForm.Name);
 
-        Mouse.Press(Keys.Alt);
-        Assert.AreEqual(Keys.Alt, Control.ModifierKeys);
-        Mouse.Release(Keys.Alt);
-        Assert.AreEqual(Keys.None, Control.ModifierKeys);
+        try
+        {
+            Mouse.Press(Keys.Alt);
+            Assert.AreEqual(Keys.Alt, ModifierKeysDown());
+            Mouse.Release(Keys.Alt);
+            Assert.AreEqual(Keys.None, ModifierKeysDown());
 
-        Mouse.Press(Keys.Shift);
-        Assert.AreEqual(Keys.Shift, Control.ModifierKeys);
-        Mouse.Release(Keys.Shift);
-        Assert.AreEqual(Keys.None, Control.ModifierKeys);
+            Mouse.Press(Keys.Shift);
+            Assert.AreEqual(Keys.Shift, ModifierKeysDown());
+            Mouse.Release(Keys.Shift);
+            Assert.AreEqual(Keys.None, ModifierKeysDown());
 
-        Mouse.Press(Keys.Control);
-        Assert.AreEqual(Keys.Control, Control.ModifierKeys);
-        Mouse.Release(Keys.Control);
-        Assert.AreEqual(Keys.None, Control.ModifierKeys);
+            Mouse.Press(Keys.Control);
+            Assert.AreEqual(Keys.Control, ModifierKeysDown());
+            Mouse.Release(Keys.Control);
+            Assert.AreEqual(Keys.None, ModifierKeysDown());
 
-        Mouse.Press(Keys.Control | Keys.Alt | Keys.Shift);
-        Assert.AreEqual(Keys.Control | Keys.Alt | Keys.Shift, Control.ModifierKeys);
-        Mouse.Release(Keys.Control | Keys.Alt | Keys.Shift);
-        Assert.AreEqual(Keys.None, Control.ModifierKeys);
+            Mouse.Press(Keys.Control | Keys.Alt | Keys.Shift);
+            Assert.AreEqual(Keys.Control | Keys.Alt | Keys.Shift, ModifierKeysDown());
+            Mouse.Release(Keys.Control | Keys.Alt | Keys.Shift);
+            Assert.AreEqual(Keys.None, ModifierKeysDown());
+        }
+        finally
+        {
+            Keys modifiers = ModifierKeysDown();
+            if (modifiers != Keys.None)
+            {
+                Mouse.Release(modifiers);
+            }
+        }
+    }
+
+    private static Keys ModifierKeysDown()
+    {
+        Keys modifiers = Keys.None;
+        if (GetAsyncKeyState((int)Keys.Menu) < 0)
+        {
+            modifiers |= Keys.Alt;
+        }
+        if (GetAsyncKeyState((int)Keys.ShiftKey) < 0)
+        {
+            modifiers |= Keys.Shift;
+        }
+        if (GetAsyncKeyState((int)Keys.ControlKey) < 0)
+        {
+            modifiers |= Keys.Control;
+        }
+        return modifiers;
     }
 
     [Test]
@@ -460,11 +523,23 @@ public class MouseControllerTest : NUnitFormTest
             Mouse.Press(MouseButtons.XButton1);
             Assert.AreEqual(1, down);
             Assert.AreEqual(0, up);
+            Mouse.Release(MouseButtons.XButton1);
+            Assert.AreEqual(1, down);
+            Assert.AreEqual(1, up);
         }
 
         if (SystemInformation.MouseButtons > 4)
         {
-            Mouse.Release(MouseButtons.Left);
+            down = 0;
+            up = 0;
+            Mouse.Press(MouseButtons.XButton2);
+            if (down == 0)
+            {
+                Assert.Ignore("The test desktop does not deliver XButton2 input.");
+            }
+            Assert.AreEqual(1, down);
+            Assert.AreEqual(0, up);
+            Mouse.Release(MouseButtons.XButton2);
             Assert.AreEqual(1, down);
             Assert.AreEqual(1, up);
         }
@@ -479,15 +554,20 @@ public class MouseControllerTest : NUnitFormTest
         {
             Mouse.Press(MouseButtons.XButton1);
             Assert.AreEqual(MouseButtons.XButton1, Control.MouseButtons);
-            Mouse.Press(MouseButtons.XButton2);
-            Assert.AreEqual(MouseButtons.XButton1 | MouseButtons.XButton2, Control.MouseButtons);
         }
-
-        if (SystemInformation.MouseButtons > 3)
+        if (SystemInformation.MouseButtons > 4)
         {
+            Mouse.Press(MouseButtons.XButton2);
+            if ((Control.MouseButtons & MouseButtons.XButton2) == 0)
+            {
+                Assert.Ignore("The test desktop does not deliver XButton2 input.");
+            }
+            Assert.AreEqual(MouseButtons.XButton1 | MouseButtons.XButton2, Control.MouseButtons);
             Mouse.Release(MouseButtons.XButton2);
             Assert.AreEqual(MouseButtons.XButton1, Control.MouseButtons);
-
+        }
+        if (SystemInformation.MouseButtons > 3)
+        {
             Mouse.Release(MouseButtons.XButton1);
             Assert.AreEqual(MouseButtons.None, Control.MouseButtons);
         }

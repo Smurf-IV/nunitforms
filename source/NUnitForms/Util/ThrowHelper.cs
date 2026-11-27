@@ -33,16 +33,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-using NUnit.Extensions.Forms.Exceptions;
+using NUnit.WinForms.Exceptions;
 
+
+namespace NUnit.WinForms.Util;
 // ReSharper disable UnusedMember.Global
-
-
-namespace NUnit.Extensions.Forms.Util;
 
 
 /// <summary>

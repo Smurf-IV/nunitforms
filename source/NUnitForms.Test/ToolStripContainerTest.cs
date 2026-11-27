@@ -31,13 +31,13 @@
 
 #endregion
 
-using NUnit.Extensions.Forms.Testers;
 using NUnit.Framework;
-using TextBoxTester = NUnit.Extensions.Forms.Testers.TextBoxTester;
-using ToolStripContainerTestForm = NUnit.Extensions.Forms.TestApplications.TestForms.ToolStripContainerTestForm;
+using NUnit.WinForms.Testers;
+using TextBoxTester = NUnit.WinForms.Testers.TextBoxTester;
+using ToolStripContainerTestForm = NUnit.WinForms.Test.TestForms.ToolStripContainerTestForm;
 
 
-namespace NUnit.Extensions.Forms.TestApplications;
+namespace NUnit.WinForms.Test;
 
 [TestFixture]
 public class ToolStripContainerTest : NUnitFormTest
