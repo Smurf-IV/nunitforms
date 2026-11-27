@@ -60,6 +60,7 @@ public class TesterContractTest : NUnitFormTest
                 .SetName($"CommonTesterContract_{testerType.Name}"));
     }
 
+    [Test]
     [TestCaseSource(nameof(ConcreteTesterTypes))]
     [Apartment(ApartmentState.STA)]
     public void CommonTesterContract(Type testerType)

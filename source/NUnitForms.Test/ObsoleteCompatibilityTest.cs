@@ -219,6 +219,7 @@ public class ObsoleteCompatibilityTest : NUnitFormTest
         Assert.That(new LabelTester("lblFileName", form).Text, Is.EqualTo("cancel pressed"));
     }
 
+    [Test]
     [TestCaseSource(nameof(FileDialogTesterTypes))]
     public void StringConstructorFindsDialogByTitle(Type testerType)
     {

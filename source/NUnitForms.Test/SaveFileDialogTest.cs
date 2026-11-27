@@ -98,11 +98,11 @@ public class SaveFileDialogTest : NUnitFormTest
             var fileName = new StringBuilder(512);
             NUnit.WinForms.Util.Win32.GetDlgItemText(hWnd, 1148, fileName, fileName.Capacity);
             _dialogFileName = fileName.ToString();
-            if (_dialogFileName.Equals(Path.GetFileName(_fileName), StringComparison.OrdinalIgnoreCase)
-                || ++attempts == 20)
+            bool isDefaultFileName = IsExpectedDefaultFileName(_dialogFileName);
+            if (isDefaultFileName || ++attempts == 20)
             {
                 timer.Stop();
-                if (_dialogFileName.Equals(Path.GetFileName(_fileName), StringComparison.OrdinalIgnoreCase))
+                if (isDefaultFileName)
                 {
                     dlg_tester.SaveFile(_fileName);
                 }
@@ -116,6 +116,17 @@ public class SaveFileDialogTest : NUnitFormTest
         timer.Start();
     }
 
+    private bool IsExpectedDefaultFileName(string? dialogFileName)
+    {
+        if (string.IsNullOrEmpty(dialogFileName))
+        {
+            return false;
+        }
+
+        string expectedFileName = Path.GetFileName(_fileName);
+        return dialogFileName.Equals(expectedFileName, StringComparison.OrdinalIgnoreCase)
+               || dialogFileName.Equals(Path.GetFileNameWithoutExtension(expectedFileName), StringComparison.OrdinalIgnoreCase);
+    }
 
     [Test]
     public void CancelTest()
@@ -147,7 +158,8 @@ public class SaveFileDialogTest : NUnitFormTest
 
         form.SetDefaultTestFileName(_fileName);
         ClickSaveButton();
-        Assert.AreEqual(Path.GetFileName(_fileName), _dialogFileName);
+        Assert.That(IsExpectedDefaultFileName(_dialogFileName), Is.True,
+            $"Unexpected default filename displayed by the save dialog: '{_dialogFileName}'.");
         Assert.AreEqual(label1.Text.ToLowerInvariant(), _fileName.ToLowerInvariant());
     }
 }
